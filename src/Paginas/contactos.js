@@ -14,15 +14,15 @@ const Contactos = () => {
         <div className="contacto-items">
           <div className="contacto-item">
             <FaMapMarkerAlt className="icono" />
-            <p>Av. Principal #123, Ciudad Fitness, Ecuador</p>
+            <p>Calle 1b # 181, Ciudad Soacha, Cundinamarca</p>
           </div>
           <div className="contacto-item">
             <FaPhoneAlt className="icono" />
-            <p>+593 99 999 9999</p>
+            <p>(+57) 3204937514</p>
           </div>
           <div className="contacto-item">
             <FaEnvelope className="icono" />
-            <p>info@apologym.com</p>
+            <p>apologym@hotmail.com</p>
           </div>
           <div className="contacto-item">
             <FaWhatsapp className="icono" />

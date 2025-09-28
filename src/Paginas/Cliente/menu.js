@@ -51,7 +51,7 @@ const Menu = () => {
 
          <Link to="/historial" className="menu-item">
           <FaUserTie className="menu-icon" />
-          <span>historial</span>
+          <span>Historial</span>
         </Link>
 
          

@@ -17,7 +17,7 @@ export default function Reportes(){
     <div className="container page" style={{padding:20}}>
       <h2>Reportes</h2>
         <div className="back-line">
-        <button className="btn-back-menu" onClick={() => navigate("/dashboard")}>
+        <button className="btn-back-menu" onClick={() => navigate("/admin")}>
             ← Regresar al menú
         </button>
         </div>

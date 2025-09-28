@@ -187,7 +187,7 @@ export default function UsuariosRoles() {
             <button onClick={save}>{form.id ? "Actualizar" : "Crear"}</button>
           </div>
           <div className="back-line">
-            <button className="btn-back-menu" onClick={() => navigate("/menu")}>
+            <button className="btn-back-menu" onClick={() => navigate("/admin")}>
               ← Regresar al menú
             </button>
           </div>
