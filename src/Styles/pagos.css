@@ -1,0 +1,92 @@
+:root{
+  --bg:#f6f7fb;
+  --text:#111827;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --card:#fff;
+  --primary:#2563eb;
+  --primary-2:#1d4ed8;
+  --danger:#ef4444;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--text);}
+
+.pay-page{ max-width:1180px; margin:0 auto; padding:24px 22px 44px; }
+.pay-top{ display:flex; gap:16px; align-items:center; margin-bottom:10px; }
+.btn-link{ appearance:none; background:transparent; border:0; color:var(--primary); font-weight:800; cursor:pointer; padding:0; }
+.title{ margin:0; font-size:28px; font-weight:900; }
+
+.grid{ display:grid; grid-template-columns: 1.5fr 1fr; gap:16px; }
+
+/* Card genérica */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:16px;
+  box-shadow:0 8px 22px rgba(0,0,0,.06);
+}
+.h2{ margin:0 0 10px; font-weight:900; }
+
+.row{ display:grid; gap:8px; margin-bottom:10px; }
+.row.two{ grid-template-columns: 1fr 1fr; gap:12px; }
+.row .two{ display:grid; grid-template-columns: 60px 60px 1fr; gap:10px; }
+
+label{ font-size:12px; color:#374151; font-weight:800; }
+input, select{
+  width:100%; padding:10px 12px; border-radius:12px; border:1px solid var(--line); background:#fff;
+}
+small.err{ color:#b91c1c; margin-top:4px; display:block; }
+small.ok{ color:#065f46; margin-top:4px; display:block; }
+
+.tabs{ display:flex; gap:8px; }
+.tab{
+  appearance:none; border:1px solid var(--line); background:#fff; color:#111827;
+  border-radius:999px; padding:8px 12px; cursor:pointer; font-weight:800;
+}
+.tab.active{ background:#eef2ff; border-color:#c7d2fe; color:#1e3a8a; }
+
+.cardbox{ margin-top:6px; border:1px dashed var(--line); border-radius:12px; padding:12px; }
+.help p{ margin:6px 0; }
+
+/* Resumen */
+.right .sum-line{
+  display:flex; justify-content:space-between; margin:6px 0; color:#374151;
+}
+.right .sum-line.total{ font-weight:900; color:#111827; }
+.btn{
+  appearance:none; border:1px solid var(--line); background:#fff; color:#111827;
+  border-radius:12px; padding:10px 14px; cursor:pointer;
+}
+.btn.primary{ background:var(--primary); color:#fff; border-color:var(--primary-2); }
+.btn.primary:hover{ background:var(--primary-2); }
+.btn.primary.big{ padding:14px 18px; font-weight:900; width:100%; margin-top:12px; }
+.note{ color:#6b7280; font-size:12px; margin-top:6px; }
+.mini-legal{ color:#9ca3af; font-size:12px; margin-top:10px; }
+
+/* Responsivo suave */
+@media (max-width: 980px){
+  .grid{ grid-template-columns: 1fr; }
+}
+.pagos .pay-grid{
+  display:grid; grid-template-columns: 1fr 1fr; gap:16px;
+}
+.pay-card{
+  background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:14px;
+}
+.pay-card h3{ margin:6px 0 12px; }
+.pay-card label{ font-weight:700; display:block; margin:8px 0 4px; }
+.pay-card input, .pay-card select{
+  width:100%; border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px;
+}
+.btn-primary{
+  margin-top:12px;
+  background:#2563eb; color:#fff; border:1px solid #1d4ed8; border-radius:10px;
+  padding:10px 12px; font-weight:800; cursor:pointer;
+}
+.muted{ color:#6b7280; }
+.pay-list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+.pay-list li{
+  border:1px solid #f1f5f9; border-radius:10px; padding:10px 12px; background:#fafafa;
+}

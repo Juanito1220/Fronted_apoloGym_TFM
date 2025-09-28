@@ -1,0 +1,81 @@
+:root{
+  --bg:#f6f7fb;
+  --text:#111827;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --green:#16a34a;
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--text);}
+
+.al-page{
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 28px 22px 40px;
+}
+
+.al-header{
+  display:flex; align-items:center; justify-content:space-between;
+  gap: 16px; margin-bottom: 18px;
+}
+.al-title-wrap{ display:grid; gap:4px; }
+.al-title{ margin:0; font-size: 28px; font-weight: 900; letter-spacing:.2px; }
+.al-sub{ margin:0; color:var(--muted); }
+
+.al-btn-home{
+  appearance:none; cursor:pointer; border-radius:12px; padding:10px 14px; font-weight:700;
+  border:1px solid var(--line); background:#fff; color:var(--text);
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+}
+.al-btn-home:hover{ background:#f9fafb; }
+
+.al-grid{
+  display:grid; gap: 22px; grid-template-columns: 1fr 1.4fr;
+}
+
+/* Cards */
+.card{
+  background:#fff; border:1px solid var(--line); border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.06); padding: 18px;
+}
+
+/* Summary (ring + macros) */
+.al-summary{ display:grid; gap: 18px; align-content:start; }
+.al-ring{
+  width: 260px; height:260px; border-radius:50%; display:grid; place-items:center; background:#e5e7eb; margin: 8px auto 0;
+}
+.al-ring-inner{
+  width: 208px; height:208px; border-radius:50%; background:#fff;
+  display:grid; place-items:center; box-shadow: inset 0 0 0 1px var(--line);
+}
+.al-kcal-rem{ font-size:46px; font-weight:900; line-height:1; }
+.al-kcal-caption{ color:var(--muted); font-size:14px; }
+.al-kcal-sub{ color:var(--muted); font-size:12px; margin-top: 4px; }
+
+.al-macros{ display:grid; gap:12px; }
+.al-macro{ display:grid; gap:6px; }
+.al-macro-label{ font-weight:800; font-size:14px; }
+.al-macro-grams{ font-size:13px; color:var(--muted); }
+.al-bar{ height:10px; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#f3f4f6; }
+.al-fill{ height:100%; width:0; background: linear-gradient(90deg, #34d399, var(--green)); }
+
+/* Detail column */
+.al-detail{ display:grid; gap:10px; align-content:start; }
+.al-tabs{ display:flex; gap:8px; flex-wrap:wrap; }
+.al-tab{
+  appearance:none; border:1px solid var(--line); background:#fff; color:var(--text);
+  padding:8px 14px; border-radius:999px; cursor:pointer; font-weight:700;
+}
+.al-tab.active{ background:#e8f7ee; border-color:#bfe8cc; color:#0f5132; }
+
+.al-hint{ color:var(--muted); font-size:13px; margin-top: -2px; }
+
+.al-table{ width:100%; border-collapse: collapse; margin-top: 6px; }
+.al-table th, .al-table td{
+  border-bottom:1px solid var(--line); padding:10px 10px; text-align:left;
+}
+.al-table th{ font-size:12px; color:#374151; text-transform:uppercase; letter-spacing:.7px; }
+.al-table tbody tr:hover{ background:#fafafa; }
+
+.al-note{ font-size:12px; color:var(--muted); margin-top: 8px; }

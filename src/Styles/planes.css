@@ -1,0 +1,300 @@
+:root{
+  --bg: #0b1020;
+  --card: #0f162b;
+  --card-2: #121b34;
+  --text: #e5e7eb;
+  --muted: #9aa3b2;
+  --line: rgba(255,255,255,.08);
+  --primary: #6aa8ff;
+  --primary-2: #4f8df3;
+  --ok: #22c55e;
+  --no: #f43f5e;
+  --shadow: 0 20px 50px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg)}
+
+.plans-page{
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(1000px 500px at -5% -10%, rgba(80,120,255,.15), transparent 50%),
+    radial-gradient(800px 600px at 120% 10%, rgba(0,200,255,.15), transparent 50%);
+  padding-bottom:64px;
+}
+
+.hero{
+  max-width:1100px;
+  margin: 0 auto;
+  padding: 48px 20px 16px;
+  text-align:center;
+}
+.hero-title{
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 900;
+  letter-spacing: .6px;
+  margin:0 0 8px;
+  background: linear-gradient(90deg,#fff,#a5b4fc);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color: transparent;
+}
+.hero-subtitle{
+  margin:0;
+  color: var(--muted);
+  font-size: clamp(14px, 2.2vw, 18px);
+}
+
+.plans-grid{
+  max-width:1100px;
+  margin: 28px auto 0;
+  padding: 0 20px;
+  display:grid;
+  gap: 22px;
+  grid-template-columns: repeat(1, minmax(0,1fr));
+}
+@media (min-width: 860px){
+  .plans-grid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+}
+
+.plan-card{
+  position: relative;
+  background: linear-gradient(180deg, var(--card), var(--card-2));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 22px 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.plan-card:hover{
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,.18);
+  box-shadow: 0 30px 70px rgba(0,0,0,.4);
+}
+
+.plan-card.black{ outline: 1px solid rgba(255,255,255,.06); }
+.plan-card.fit{ }
+.plan-card.smart{ }
+
+.ribbon{
+  position:absolute;
+  top:14px;
+  right:-8px;
+  background: linear-gradient(90deg, #ffbf47, #ff914d);
+  color:#1f2937;
+  font-weight: 800;
+  font-size: 12px;
+  padding:6px 14px;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  box-shadow: 0 6px 16px rgba(255,145,77,.35);
+}
+.ribbon-icon{ color:#7c3e00; }
+
+.plan-header{
+  display:grid;
+  gap: 6px;
+}
+.plan-name{
+  margin:0;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing:.3px;
+}
+.plan-tag{
+  margin:0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.divider{
+  height:1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+
+.price-wrap{
+  display:grid;
+  gap:8px;
+  margin-bottom: 10px;
+}
+.price-label{
+  color: var(--muted);
+  font-size: 12px;
+  letter-spacing: 1.5px;
+}
+.price{
+  display:flex;
+  align-items:flex-end;
+  gap:2px;
+  line-height: 1;
+}
+.price .currency{
+  font-size:20px;
+  opacity:.85;
+}
+.price .int{
+  font-size:40px;
+  font-weight: 900;
+}
+.price .dec{
+  font-size:22px;
+  opacity:.9;
+  font-weight:700;
+}
+.price .per{
+  margin-left:6px;
+  font-size:13px;
+  color: var(--muted);
+}
+
+.features{
+  list-style:none;
+  padding:0;
+  margin: 8px 0 16px;
+  display:grid;
+  gap:10px;
+}
+.feature-row{
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  font-size:14px;
+  color:#e8ecf3;
+}
+.icon{
+  flex:0 0 auto;
+  margin-top:2px;
+  font-size:18px;
+}
+.icon.ok{ color: var(--ok); }
+.icon.no{ color: var(--no); opacity:.9; }
+
+.cta-wrap{
+  display:grid;
+  gap:6px;
+  margin-top:auto;
+}
+.btn-primary{
+  appearance:none;
+  border:0;
+  border-radius: 12px;
+  padding: 12px 16px;
+  color:#0b1020;
+  font-weight: 800;
+  letter-spacing:.3px;
+  cursor:pointer;
+  background: linear-gradient(180deg, var(--primary), var(--primary-2));
+  box-shadow: 0 10px 20px rgba(106,168,255,.2);
+  transition: transform .15s ease, box-shadow .15s ease, filter .15s ease;
+}
+.btn-primary:hover{
+  transform: translateY(-1px);
+  filter: brightness(1.03);
+  box-shadow: 0 14px 28px rgba(106,168,255,.28);
+}
+.cta-note{
+  margin:0;
+  color: var(--muted);
+  font-size:12px;
+}
+
+/* Footer de la página de planes */
+.plans-footer{
+  max-width:1100px;
+  margin: 18px auto 0;
+  padding: 0 20px;
+  display:flex;
+  justify-content:center;
+}
+.btn-outline{
+  background: transparent;
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 16px;
+  cursor:pointer;
+}
+.btn-outline:hover{
+  border-color: rgba(255,255,255,.25);
+}
+
+/* Accesibilidad / reducción de movimiento */
+@media (prefers-reduced-motion: reduce){
+  .plan-card, .btn-primary{ transition: none; }
+}
+/* Selección visual del plan */
+.plan-card.selected{
+  outline: 2px solid #7c3aed;
+  box-shadow: 0 12px 28px rgba(124,58,237,.25);
+}
+
+/* Configurador */
+.plan-config{
+  max-width: 1100px;
+  margin: 18px auto;
+  padding: 16px;
+}
+.plan-config h2{
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.config-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+  gap: 14px;
+  margin-bottom: 14px;
+}
+.config-block .lbl{
+  font-weight: 700; margin-bottom: 8px; display:block;
+}
+
+/* Chips */
+.choices{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  border:1px solid #cbd5e1; background:#fff; color:#111827;
+  padding:8px 12px; border-radius:999px; cursor:pointer; font-weight:700;
+}
+.chip small{ font-weight:600; opacity:.8; }
+.chip.active{
+  border-color:#7c3aed; color:#1e1b4b;
+  background: linear-gradient(90deg, #a78bfa, #60a5fa);
+}
+
+/* Add-ons */
+.addons{ list-style:none; padding:0; margin:0; display:grid; gap:8px; }
+.addon-row{
+  display:grid; grid-template-columns:auto 1fr auto; gap:10px;
+  align-items:center; background:#fff; border:1px solid #e2e8f0; border-radius:12px; padding:10px 12px;
+}
+.addon-price{ font-weight:800; color:#0f172a; }
+
+/* Date input */
+.date-input{
+  width: 100%; padding:10px; border:1px solid #cbd5e1; border-radius:10px;
+}
+
+/* Summary */
+.summary{
+  display:grid; grid-template-columns: 1fr 320px; gap:16px;
+  background:#f8fafc; border:1px solid #e2e8f0; border-radius:16px; padding:14px;
+}
+.sum-left{ display:grid; gap:8px; }
+.sum-line{ display:grid; grid-template-columns:140px 1fr; gap:10px; }
+.sum-label{ color:#64748b; font-weight:700; }
+.sum-value{ font-weight:700; color:#0f172a; }
+
+.sum-right{ display:grid; gap:10px; align-content:start; }
+.sum-amount{ background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:12px; }
+.sum-caption{ color:#334155; font-weight:700; }
+.sum-price{ font-size:1.8rem; font-weight:900; color:#0f172a; line-height:1; }
+.sum-note{ color:#475569; font-size:.9rem; }
+
+/* Botones */
+.btn-primary.big{ padding:12px 16px; border-radius:12px; font-weight:900; }

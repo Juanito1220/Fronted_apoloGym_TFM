@@ -36,3 +36,65 @@
     transform: rotate(360deg);
   }
 }
+/* Línea contenedora (alineación y separación) */
+.back-line{
+  display:flex;
+  justify-content:flex-start; /* alinea a la izquierda */
+  margin:12px 0 18px;
+}
+
+/* Botón principal: “← Regresar al menú” */
+.btn-back-menu{
+  appearance:none;
+  border:1px solid #e5e7eb;
+  background:#ffffff;
+  color:#111827;
+  padding:10px 14px;
+  border-radius:10px;
+  font-weight:800;
+  cursor:pointer;
+  line-height:1;
+  transition:
+    transform .05s ease,
+    box-shadow .15s ease,
+    background-color .15s ease,
+    border-color .15s ease;
+}
+
+/* Hover / Active */
+.btn-back-menu:hover{
+  background:#f9fafb;
+  border-color:#dde1e6;
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+}
+.btn-back-menu:active{
+  transform:translateY(1px);
+}
+
+/* Accesibilidad: focus visible para teclado */
+.btn-back-menu:focus{
+  outline:none;
+}
+.btn-back-menu:focus-visible{
+  box-shadow:0 0 0 3px #c7d2fe; /* anillo suave */
+  border-color:#93c5fd;
+}
+
+/* Variante compacta (opcional): añade la clase extra si la necesitas */
+.btn-back-menu.small{
+  padding:8px 12px;
+  border-radius:8px;
+  font-weight:700;
+  font-size:0.95rem;
+}
+
+/* Variante “oscura” (opcional), útil si el fondo es oscuro */
+.dark .btn-back-menu{
+  background:#1f2937;
+  color:#f8fafc;
+  border-color:#374151;
+}
+.dark .btn-back-menu:hover{
+  background:#111827;
+  border-color:#4b5563;
+}

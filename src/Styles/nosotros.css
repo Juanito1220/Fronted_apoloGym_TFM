@@ -1,0 +1,103 @@
+/* nosotros.css (versión refinada) */
+:root{
+  --brand: #28a745;           /* tu verde */
+  --text: #333;
+  --text-dim: #555;
+  --bg: #f8f8f8;
+  --shadow: 0 10px 20px rgba(0,0,0,.2);
+}
+
+.nosotros-page {
+  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  color: var(--text);
+  background: #fff;
+}
+
+/* Banner con overlay para mejorar contraste del texto */
+.banner-nosotros {
+  position: relative;
+  background-image: url('https://images.unsplash.com/photo-1605296867304-46d5465a13f1');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  text-align: center;
+  padding: 100px 20px;
+  isolation: isolate; /* para overlay */
+}
+.banner-nosotros::before{
+  content:"";
+  position:absolute; inset:0;
+  background: linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.45));
+  z-index:-1;
+}
+.banner-nosotros h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  margin: 0 0 10px 0;
+  letter-spacing: .2px;
+}
+.banner-nosotros p {
+  font-size: clamp(1rem, 2.6vw, 1.5rem);
+  font-weight: 300;
+  margin: 0;
+  opacity: .95;
+}
+
+/* Contenido principal con contenedor centrado */
+.contenido-nosotros {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 60px 20px;
+  background: var(--bg);
+  align-items: center;
+  justify-content: center;
+}
+.contenido-nosotros .wrap{
+  width: 100%;
+  max-width: 1200px;
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.texto-nosotros {
+  flex: 1 1 520px;
+  min-width: 280px;
+}
+.texto-nosotros h2 {
+  color: var(--brand);
+  margin: 0 0 16px 0;
+  font-size: clamp(1.4rem, 3.2vw, 1.9rem);
+}
+.texto-nosotros p {
+  line-height: 1.65;
+  margin: 0 0 14px 0;
+  font-size: 1.05rem;
+  color: var(--text-dim);
+}
+
+.imagen-nosotros {
+  flex: 1 1 420px;
+  min-width: 280px;
+  text-align: center;
+}
+.imagen-nosotros img {
+  max-width: 100%;
+  display: block;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .contenido-nosotros { padding: 40px 16px; }
+  .contenido-nosotros .wrap { gap: 28px; }
+  .banner-nosotros { padding: 70px 16px; }
+}
+
+/* Accesibilidad: respeta preferencias de movimiento */
+@media (prefers-reduced-motion: reduce){
+  * { animation: none !important; transition: none !important; }
+}

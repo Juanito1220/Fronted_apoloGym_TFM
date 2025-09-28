@@ -1,0 +1,9 @@
+.notifs-head{ display:flex; justify-content:flex-end; margin-bottom:8px; }
+.notif-list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
+.notif{
+  border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff;
+}
+.notif .title{ font-weight:900; margin-bottom:4px; }
+.notif .body{ color:#111827; margin-bottom:6px; }
+.notif .date{ color:#6b7280; font-size:12px; }
+.muted{ color:#6b7280; }

@@ -1,0 +1,58 @@
+.registro-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 2rem;
+  border: 1px solid #594886;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.form-registro input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+/* si tu contenedor principal se llama .registro-page, usa ese nombre en lugar de body */
+html {
+  /* degradado violeta a azul elegante */
+  background: linear-gradient(120deg, #2b2251 0%, #2c3e8d 50%, #1d4ea1 100%);
+  min-height: 100vh;
+}
+
+
+.form-registro button {
+  width: 100%;
+  padding: 10px;
+  background-color: #3f51b5;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.form-registro button:hover {
+  background-color: #303f9f;
+}
+
+.mensaje {
+  margin-top: 15px;
+  color: green;
+  font-weight: bold;
+}
+.btn-volver {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  background-color: #999;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-volver:hover {
+  background-color: #777;
+}

@@ -1,0 +1,87 @@
+/* ==== Footer elegante (drop-in) ==== */
+:root{
+  --f-bg: #0b1020;                 /* base */
+  --f-grad-a: #0ea5e9;             /* azul cielo suave */
+  --f-grad-b: #7c3aed;             /* violeta */
+  --f-text: #e6eaf2;
+  --f-dim: #b6c0d4;
+  --f-ring: 0 0 0 3px rgba(124,58,237,.35);
+}
+
+.footer{
+  position: relative;
+  background: radial-gradient(1200px 600px at 80% -20%, rgba(124,58,237,.18), transparent 60%),
+              radial-gradient(1000px 600px at 0% 120%, rgba(14,165,233,.18), transparent 60%),
+              var(--f-bg);
+  color: var(--f-text);
+  padding: 44px 20px 28px;
+  text-align: center;
+  overflow: hidden;
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+.footer::before{
+  /* borde superior con glow sutil */
+  content:"";
+  position:absolute; left:0; right:0; top:0; height:2px;
+  background: linear-gradient(90deg, var(--f-grad-a), var(--f-grad-b));
+  opacity:.5;
+}
+
+.footer-text{
+  font-size: clamp(1rem, 2.5vw, 1.15rem);
+  margin: 0 0 14px 0;
+  color: var(--f-text);
+  letter-spacing:.2px;
+}
+
+.footer-icons{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 16px;
+}
+
+.footer-icons a{
+  width: 40px; height: 40px;
+  display: grid; place-items: center;
+  color: var(--f-text);
+  text-decoration: none;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  transition: transform .15s ease, box-shadow .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+  backdrop-filter: blur(8px);
+}
+.footer-icons a:hover{
+  transform: translateY(-2px);
+  background: rgba(255,255,255,.12);
+  border-color: rgba(255,255,255,.25);
+  box-shadow: 0 10px 24px rgba(2,6,23,.35);
+  color: #ffffff;
+}
+.footer-icons a:focus{
+  outline: none;
+  box-shadow: var(--f-ring);
+}
+
+/* línea separadora suave antes del copy */
+.footer hr{
+  width: min(760px, 92%);
+  margin: 16px auto;
+  border: none;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.18), transparent);
+}
+
+.footer-copy{
+  font-size: .9rem;
+  color: var(--f-dim);
+  letter-spacing:.2px;
+}
+
+/* Altura y espaciado en móviles */
+@media (max-width: 600px){
+  .footer{ padding: 36px 16px 24px; }
+  .footer-icons a{ width: 38px; height: 38px; border-radius: 10px; }
+}

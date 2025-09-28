@@ -1,0 +1,116 @@
+/* Paleta y utilidades */
+:root{
+  --bg1: #0b1020;           /* base oscura azulada */
+  --gradA: #7c3aed;         /* violeta */
+  --gradB: #06b6d4;         /* celeste */
+  --brand: #f9aa33;         /* tu acento del título */
+}
+
+/* Sección con fondo compuesto (foto + gradientes + patrón) */
+.inicio-section{
+  position: relative;
+  padding: 60px 20px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  overflow: hidden;
+  background: var(--bg1);
+}
+
+/* Capa: imagen y degradados suaves (no tapa el contenido) */
+.inicio-section::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 500px at 80% -10%, rgba(124,58,237,.35), transparent 60%),
+    radial-gradient(700px 500px at -10% 85%, rgba(6,182,212,.25), transparent 55%),
+    linear-gradient(180deg, rgba(11,16,32,0) 0%, rgba(11,16,32,.7) 65%, rgba(11,16,32,1) 100%),
+    url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1600&auto=format&fit=crop") center/cover no-repeat;
+  filter: saturate(1.05) contrast(1.03) brightness(1);
+  z-index:0;
+  transform: scale(1.03);
+}
+
+/* Capa: patrón sutil tipo ruido para textura */
+.inicio-section::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+  opacity:.25;
+  z-index:0;
+}
+
+/* Contenido (queda por encima) */
+.inicio-content{
+  position: relative;
+  z-index:1;
+  display:flex;
+  flex-direction: row;
+  align-items:center;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1200px;
+  width:100%;
+  flex-wrap: wrap;
+}
+
+/* Caja de texto con “glass” suave */
+.text-box{
+  flex:1; min-width:300px;
+  backdrop-filter: blur(8px);
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+}
+
+.text-box h1{
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  margin-bottom: 14px;
+  color: var(--brand);
+  letter-spacing: .2px;
+}
+
+.text-box p{
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #eef2ff;
+}
+
+/* Imagen con borde redondo y brillo */
+.image-box{ flex:1; min-width:300px; }
+.image-box img{
+  width:100%; max-height:400px; object-fit:cover;
+  border-radius: 16px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.18);
+}
+
+/* Botones opcionales dentro del texto */
+.text-box .acciones{
+  display:flex; gap:12px; margin-top:16px; flex-wrap:wrap;
+}
+.text-box .btn{
+  padding:10px 16px; border-radius:12px; border:1px solid transparent;
+  font-weight:700; cursor:pointer; text-decoration:none; color:#0b1020;
+  background: linear-gradient(90deg, var(--gradA), var(--gradB));
+  box-shadow: 0 8px 22px rgba(124,58,237,.35);
+  transition: transform .12s ease, box-shadow .18s ease;
+}
+.text-box .btn:hover{ transform: translateY(-1px); box-shadow: 0 12px 26px rgba(124,58,237,.45); }
+
+/* Responsivo */
+@media (max-width: 768px){
+  .text-box{ padding:18px; }
+  .image-box img{ max-height: 320px; }
+}
+
+/* Respeto accesibilidad: reduce animaciones si el usuario lo pide */
+@media (prefers-reduced-motion: reduce){
+  .inicio-section::before{ transform: none; }
+}

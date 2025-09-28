@@ -1,0 +1,59 @@
+.contacto-section {
+  background-color: #111;
+  color: white;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.contacto-contenido {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.contacto-title {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  color: #4ed57d;
+}
+
+.contacto-descripcion {
+  font-size: 1.1rem;
+  margin-bottom: 40px;
+  color: #ccc;
+}
+
+.contacto-items {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.contacto-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-size: 1.1rem;
+  justify-content: center;
+}
+
+.contacto-item .icono {
+  font-size: 1.5rem;
+  color: #ff7a45;
+}
+
+.redes-title {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.redes-sociales a {
+  font-size: 1.8rem;
+  margin: 0 10px;
+  color: white;
+  transition: color 0.3s ease;
+}
+
+.redes-sociales a:hover {
+  color: #ff7a45;
+}

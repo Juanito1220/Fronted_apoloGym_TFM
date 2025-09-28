@@ -1,0 +1,110 @@
+/* ---------- Cards elegantes para reservas ---------- */
+:root{
+  --res-grad-a:#0ea5e9;   /* azul cielo */
+  --res-grad-b:#7c3aed;   /* violeta */
+  --res-bg:#0b1020;       /* fondo profundo opcional si usas sección */
+  --res-card:rgba(255,255,255,.06);
+  --res-card-b:rgba(255,255,255,.14);
+  --res-text:#e6eaf2;
+  --res-dim:#b8c0d4;
+  --res-ring:0 0 0 3px rgba(124,58,237,.35);
+}
+
+/* Título y subtítulo */
+.res-title{ margin-top:6px; font-weight:800; letter-spacing:.2px; }
+.res-subtitle{ margin-top:18px; }
+
+/* Controles */
+.res-controls{
+  display:flex; flex-wrap:wrap; gap:12px; margin:12px 0 18px;
+}
+.res-controls label{ display:block; font-weight:600; margin-bottom:6px; }
+.res-controls input[type="date"],
+.res-controls select{
+  padding:10px; border:1px solid #cbd5e1; border-radius:10px;
+}
+
+/* Grid */
+.res-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap:16px;
+}
+
+/* Card */
+.res-card{
+  background: var(--res-card);
+  border: 1px solid var(--res-card-b);
+  border-radius: 16px;
+  backdrop-filter: blur(8px);
+  color: var(--res-text);
+  padding: 14px;
+  box-shadow: 0 8px 24px rgba(2,6,23,.35);
+  transition: transform .2s ease, box-shadow .25s ease, border-color .2s ease;
+  position: relative;
+  overflow: hidden;
+}
+.res-card::before{
+  /* brillo diagonal suave */
+  content:"";
+  position:absolute; inset: -40% -40% auto auto;
+  width: 60%; height: 60%;
+  background: radial-gradient(closest-side, rgba(255,255,255,.08), transparent 70%);
+  transform: rotate(25deg);
+}
+.res-card:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 14px 36px rgba(2,6,23,.45);
+  border-color: rgba(255,255,255,.22);
+}
+
+/* Head */
+.res-card-head{
+  display:flex; align-items:center; justify-content:space-between; gap:8px;
+  margin-bottom:10px;
+}
+.res-time{
+  font-size: 1.6rem; font-weight: 800; letter-spacing:.3px;
+  background: linear-gradient(90deg, var(--res-grad-a), var(--res-grad-b));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.res-date{
+  font-size:.95rem; color: var(--res-dim);
+}
+
+/* Body */
+.res-card-body{ display:grid; gap:10px; margin-bottom: 10px; }
+.res-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.res-badge{
+  padding:6px 10px; border-radius:999px; font-weight:700; font-size:.85rem;
+  background: rgba(14,165,233,.18); color:#e0f2fe; border:1px solid rgba(14,165,233,.35);
+}
+.sala-pesas      .res-badge{ background:rgba(34,197,94,.18);  border-color:rgba(34,197,94,.35);  color:#dcfce7; }
+.sala-cardio     .res-badge{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.35); color:#e0f2fe; }
+.sala-funcional  .res-badge{ background:rgba(234,179,8,.18);  border-color:rgba(234,179,8,.35);  color:#fef3c7; }
+.sala-spinning   .res-badge{ background:rgba(168,85,247,.18); border-color:rgba(168,85,247,.35); color:#f3e8ff; }
+
+.res-meta{ color: var(--res-dim); font-weight:600; }
+.res-instructor{ color:#fff; font-weight:600; }
+
+/* Botón */
+.res-action{
+  width:100%; padding:12px;
+  border:none; border-radius:12px;
+  color:#0b1020; font-weight:800; letter-spacing:.2px; cursor:pointer;
+  background: linear-gradient(90deg, var(--res-grad-a), var(--res-grad-b));
+  box-shadow: 0 8px 22px rgba(124,58,237,.35);
+  transition: transform .12s ease, box-shadow .2s ease;
+}
+.res-action:hover{ transform: translateY(-2px); box-shadow: 0 12px 28px rgba(124,58,237,.45); }
+.res-action:focus{ outline:none; box-shadow: var(--res-ring); }
+
+/* Lista de reservas */
+.res-list{ margin:10px 0 0; padding:0; list-style:none; display:grid; gap:8px; }
+.res-item{ background:#0f172a; color:#e2e8f0; padding:10px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+.res-chip{ background:#0b1220; border:1px solid #334155; padding:4px 8px; border-radius:999px; }
+.res-chip.strong{ background:#111827; border-color:#4b5563; }
+.res-dot{ opacity:.6; }
+
+/* Modo claro/oscuro opcional: ajusta según tu página */
+.page.reserva { color: inherit; }

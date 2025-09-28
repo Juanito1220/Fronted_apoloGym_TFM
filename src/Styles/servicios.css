@@ -1,0 +1,116 @@
+/* Paleta */
+:root{
+  --bg-deep: #0b1020;
+  --grad-a: #0ea5e9;   /* azul cielo */
+  --grad-b: #47da87;   /* violeta */
+  --mint:   #39dc8b;   /* tu acento */
+  --card:   rgba(255,255,255,.06);
+  --card-b: rgba(255,255,255,.14);
+  --text:   #f8fafc;
+  --text-d: #cbd5e1;
+}
+
+/* Sección con fondo compuesto (gradientes + foto + textura) */
+.servicios-section{
+  position: relative;
+  padding: 4rem 2rem;
+  color: var(--text);
+  text-align: center;
+  overflow: hidden;
+  background: var(--bg-deep);
+  isolation: isolate;
+}
+.servicios-section::before{
+  content:"";
+  position:absolute; inset:0;
+  background:
+    radial-gradient(900px 520px at 85% -10%, rgba(124,58,237,.35), transparent 60%),
+    radial-gradient(800px 520px at -10% 90%, rgba(14,165,233,.28), transparent 58%),
+    linear-gradient(180deg, rgba(11,16,32,0) 0%, rgba(11,16,32,.75) 70%, rgba(11,16,32,1) 100%),
+    url("https://images.unsplash.com/photo-1517836357463-d25dfeac3438?q=80&w=1600&auto=format&fit=crop") center/cover no-repeat;
+  z-index:-2;
+  filter: saturate(1.05) contrast(1.03);
+}
+.servicios-section::after{
+  content:"";
+  position:absolute; inset:0;
+  background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+  background-size: 3px 3px;
+  mix-blend-mode: overlay;
+  opacity:.25;
+  z-index:-1;
+}
+
+/* Título */
+.servicios-title{
+  font-size: clamp(2rem, 4.8vw, 2.8rem);
+  margin-bottom: 2rem;
+  font-weight: 800;
+  letter-spacing: .2px;
+  background: linear-gradient(90deg, var(--grad-a), var(--grad-b));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-shadow: 0 10px 30px rgba(124,58,237,.25);
+}
+
+/* Grid */
+.servicios-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  animation: fadeInUp 0.8s ease-out both;
+}
+
+/* Tarjeta “glass” */
+.servicio-card{
+  background-color: var(--card);
+  border: 1px solid var(--card-b);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(2,6,23,.35);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  backdrop-filter: blur(8px);
+}
+.servicio-card:hover{
+  transform: translateY(-8px);
+  box-shadow: 0 14px 36px rgba(2,6,23,.45);
+  border-color: rgba(255,255,255,.22);
+}
+
+/* Imagen */
+.servicio-card img{
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  filter: saturate(1.05);
+}
+
+/* Contenido */
+.servicio-info{
+  padding: 1.4rem;
+}
+.servicio-info h3{
+  font-size: 1.2rem;
+  margin-bottom: .4rem;
+  color: var(--mint);
+  text-shadow: 0 0 10px rgba(0,255,179,.25);
+}
+.servicio-info p{
+  font-size: .98rem;
+  color: var(--text-d);
+  line-height: 1.6;
+}
+
+/* Animación */
+@keyframes fadeInUp{
+  from{ opacity:0; transform: translateY(16px); }
+  to  { opacity:1; transform: translateY(0); }
+}
+
+/* Accesibilidad */
+@media (prefers-reduced-motion: reduce){
+  .servicios-grid{ animation: none; }
+  .servicio-card{ transition: none; }
+}

@@ -1,0 +1,5 @@
+.hist-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:14px; }
+.hist-grid .card{ background:#fff; border:1px solid #e5e7eb; border-radius:12px; padding:12px; }
+.hist-grid table{ width:100%; border-collapse:collapse; }
+.hist-grid th, .hist-grid td{ border-bottom:1px solid #f1f5f9; padding:8px; text-align:left; }
+.muted{ color:#6b7280; }

@@ -1,0 +1,100 @@
+/* landing.css */
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9f9f9;
+  color: #333;
+}
+
+/* Contenedor principal: flex para separar contenido info + slider */
+.landing-main {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 30px 50px;
+  gap: 40px;
+  justify-content: center;
+  background: #fff;
+  max-width: 1200px;
+  margin: 40px auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border-radius: 12px;
+}
+
+/* Información del gimnasio a la izquierda */
+.info-gym {
+  flex: 1 1 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.info-gym h1 {
+  font-size: 3rem;
+  color: #28a745; /* verde Apolo */
+  margin-bottom: 15px;
+}
+
+.info-gym p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Botones de login y registro */
+.btn-group {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+}
+
+.btn {
+  padding: 12px 30px;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(40, 167, 69, 0.4);
+}
+
+.btn-login {
+  background-color: #28a745;
+  color: white;
+  border: none;
+}
+
+.btn-login:hover {
+  background-color: #218838;
+}
+
+.btn-register {
+  background-color: white;
+  color: #28a745;
+  border: 2px solid #28a745;
+}
+
+.btn-register:hover {
+  background-color: #28a745;
+  color: white;
+}
+
+/* Aside slider: a la derecha, con sombra */
+.slider-aside {
+  flex: 1 1 400px;
+  max-width: 450px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+/* Responsive: en pantallas pequeñas apila vertical */
+@media (max-width: 900px) {
+  .landing-main {
+    flex-direction: column;
+    padding: 20px;
+  }
+  .slider-aside {
+    max-width: 100%;
+  }
+}

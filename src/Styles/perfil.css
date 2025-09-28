@@ -1,0 +1,6 @@
+.perfil-form{ max-width:520px; display:grid; gap:8px; }
+.perfil-form label{ font-weight:800; }
+.perfil-form input{
+  border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px;
+}
+.perfil .row{ margin-top:8px; }

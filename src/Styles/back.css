@@ -1,0 +1,19 @@
+.backbar{
+  display:flex;
+  gap:12px;
+  margin: 12px 0 20px;
+}
+.btn-back, .btn-home{
+  appearance:none;
+  border:1px solid #e5e7eb;
+  background:#fff;
+  color:#111827;
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+}
+.btn-back:hover, .btn-home:hover{
+  background:#f9fafb;
+}

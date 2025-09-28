@@ -1,0 +1,285 @@
+/* Contenedor principal */
+.menu-wrapper {
+  display: flex;
+  height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f7fa;
+  color: #333;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 240px;
+  background-color: #1e293b; /* azul oscuro */
+  color: #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  gap: 1.5rem;
+  box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+:root{
+  --bg:#f6f7fb;
+  --text:#111827;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --card:#ffffff;
+  --primary:#2563eb;
+  --primary-2:#1d4ed8;
+  --aside:#111827;        /* negro “claro” del header */
+}
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.menu-item:hover {
+  background-color: #0f172a;
+}
+
+.menu-icon {
+  font-size: 1.5rem;
+  color: #60a5fa; /* azul claro */
+}
+
+/* Contenido principal */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+  background-color: #f9fafb;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.user-menu {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-icon {
+  font-size: 2rem;
+  color: #374151;
+}
+
+.user-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 2.5rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+  padding: 1rem;
+  min-width: 160px;
+  z-index: 10;
+  flex-direction: column;
+}
+
+.user-menu:hover .user-dropdown {
+  display: flex;
+}
+
+.user-dropdown a,
+.user-dropdown button {
+  background: none;
+  border: none;
+  color: #374151;
+  padding: 0.5rem 0;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.user-dropdown a:hover,
+.user-dropdown button:hover {
+  color: #2563eb;
+}
+
+/* Mensaje de bienvenida */
+.welcome-message {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #111827;
+}
+
+.welcome-message h1 {
+  font-size: 2.8rem;
+  margin-bottom: 0.3rem;
+  font-weight: 700;
+}
+
+.welcome-message p {
+  font-size: 1.2rem;
+  color: #4b5563;
+}
+
+/* Imagen banner */
+.banner-image {
+  width: 100%;
+  max-height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* Contenedor de tarjetas */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.8rem;
+}
+
+/* Tarjeta individual */
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  padding: 1.5rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card-icon {
+  font-size: 2.8rem;
+  color: #3b82f6; /* azul */
+  margin-bottom: 1rem;
+}
+/* === Icono de perfil de usuario en esquina superior derecha === */
+.user-topbar {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+.user-icon-container {
+  cursor: pointer;
+}
+
+.card h3 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #68a2f3;
+}
+
+.card p {
+  text-align: center;
+  font-size: 0.95rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.card button {
+  background-color: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.5rem 1.3rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.card button:hover {
+  background-color: #1e40af;
+}
+
+/* Scrollbar para main-content (opcional) */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.main-content::-webkit-scrollbar-thumb {
+  background-color: #a5b4fc;
+  border-radius: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .menu-wrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .menu-item {
+    flex: 0 0 auto;
+    padding: 0.5rem 1rem;
+  }
+
+  .main-content {
+    padding: 1rem 1.5rem;
+  }
+}
+/* menu*/
+/* enlaces del sidebar como items clicables */
+.sidebar .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  color: #d9dbe2;
+  text-decoration: none;
+}
+.sidebar .menu-item:hover {
+  background: #f3f4f6;
+}
+
+/* botones de las cards */
+.cards-container .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+}
+.cards-container .btn:hover { background: #1d4ed8; }
+/* Barra superior del dashboard del cliente */
+.client-topbar{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:10px;
+  background:#fff;
+  border-bottom:1px solid #e5e7eb;
+  padding:10px 16px;
+  position:sticky;
+  top:0;
+  z-index:5;
+}
+.client-topbar .spacer{ flex:1; } /* empuja el avatar a la derecha */

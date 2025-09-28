@@ -1,0 +1,95 @@
+:root{
+  --bg:#fff7ed;           /* tono cálido como la referencia */
+  --text:#111827;
+  --muted:#6b7280;
+  --line:#e5e7eb;
+  --card:#fff;
+  --weight:#ef4444;       /* rojo del gráfico */
+  --bmi-1:#60a5fa;        /* bajo */
+  --bmi-2:#22c55e;        /* saludable */
+  --bmi-3:#f59e0b;        /* sobrepeso */
+  --bmi-4:#ef4444;        /* obesidad */
+}
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--text);}
+
+.prog-page{ max-width:1100px; margin:0 auto; padding:24px 20px 40px; }
+
+.prog-top{
+  display:flex; align-items:flex-end; justify-content:space-between; gap:16px;
+  margin-bottom:16px;
+}
+.title{ margin:0; font-size:28px; font-weight:900; }
+.sub{ margin:2px 0 0; color:var(--muted); }
+.btn-link{
+  appearance:none; background:transparent; border:0; color:#2563eb; font-weight:800; cursor:pointer; padding:0;
+}
+
+.delta{
+  font-size:34px; font-weight:900;
+}
+.delta.down{ color:#16a34a; }  /* bajó peso */
+.delta.up{   color:#ef4444; }  /* subió peso */
+
+.grid{
+  display:grid; gap:22px; grid-template-columns: 1.4fr 1fr;
+}
+
+/* Cards */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:16px;
+  box-shadow:0 8px 22px rgba(0,0,0,.06);
+}
+.card-head{
+  display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;
+}
+.chip{
+  display:inline-block; padding:6px 12px; border-radius:999px; font-weight:800; font-size:12px;
+  background:#fde68a; color:#7c2d12;
+}
+.chip-weight{ background:#fecaca; color:#7f1d1d; }
+.chip-bmi{ background:#fee2e2; color:#7f1d1d; }
+.btn-ghost{
+  appearance:none; border:0; background:transparent; color:#2563eb; font-weight:800; cursor:pointer;
+}
+
+/* Chart */
+.chart-wrap{ position:relative; padding: 6px 6px 2px; }
+.chart{ width:100%; height:auto; }
+.line{ fill:none; stroke:var(--weight); stroke-width:3; }
+.area{ }
+.dot{ fill:#fff; stroke:var(--weight); stroke-width:2.2; }
+.tag-last{
+  position:absolute; right:10px; bottom:8px;
+  background:#fff; border:1px solid var(--line); box-shadow:0 4px 12px rgba(0,0,0,.08);
+  border-radius:999px; padding:4px 10px; font-weight:800; color:#ef4444;
+}
+
+/* BMI */
+.bmi-value{ font-weight:900; font-size:22px; }
+.bmi-scale{
+  position:relative; margin-top:8px; height:14px; border-radius:999px; overflow:hidden; display:grid; grid-template-columns: repeat(4, 1fr);
+  border:1px solid var(--line);
+}
+.seg{ height:100%; }
+.seg-1{ background: var(--bmi-1); }
+.seg-2{ background: var(--bmi-2); }
+.seg-3{ background: var(--bmi-3); }
+.seg-4{ background: var(--bmi-4); }
+.bmi-marker{
+  position:absolute; top:-6px; width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent;
+  border-bottom:10px solid #111827; transform:translateX(-50%);
+}
+
+.bmi-legend{
+  display:flex; gap:16px; margin-top:10px; color:#374151; font-size:13px;
+}
+.box{ display:inline-block; width:12px; height:12px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+.box-1{ background:var(--bmi-1); }
+.box-2{ background:var(--bmi-2); }
+.box-3{ background:var(--bmi-3); }
+.box-4{ background:var(--bmi-4); }
