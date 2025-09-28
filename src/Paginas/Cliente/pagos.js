@@ -2,6 +2,7 @@ import React, { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import BackToMenu from "../../Componentes/backtoMenu";
 import "../../Styles/pagos.css";
+import { addPayment } from "../../Data/Stores/pagos.store";
 
 /* ======= Datos de ejemplo ======= */
 const PLANS = [
@@ -9,28 +10,17 @@ const PLANS = [
   { id: "fit",   name: "Plan Fit",   price: 21.9 },
   { id: "smart", name: "Plan Smart", price: 25.9 },
 ];
-const TAX_RATE = 0.12;       // IVA 12%
-const COUPONS = {            // cupones demo
-  BIENVENIDA10: 0.10,        // 10% off
-  GYM5: 0.05
-};
-const PAY_KEY = "demo_pagos"; // clave única para Historial
+const TAX_RATE = 0.12;
+const COUPONS = { BIENVENIDA10: 0.10, GYM5: 0.05 };
+const PAY_KEY = "demo_pagos";
 
 /* ======= Utilidades ======= */
 const money = (n) => n.toLocaleString("es-EC", { style: "currency", currency: "USD" });
 const onlyDigits = (s) => s.replace(/\D+/g, "");
+const hasOnlyDigitsAndSpaces = (s) => /^[\d\s]*$/.test(s);
+// HINT: ejemplo clásico (no obligatorio para pagar)
+const EXAMPLE_CARD = "4111 1111 1111 1111";
 
-// Luhn (verificación básica de tarjeta)
-function luhnCheck(num) {
-  const s = onlyDigits(num);
-  let sum = 0, alt = false;
-  for (let i = s.length - 1; i >= 0; i--) {
-    let n = parseInt(s[i], 10);
-    if (alt) { n *= 2; if (n > 9) n -= 9; }
-    sum += n; alt = !alt;
-  }
-  return (sum % 10) === 0 && s.length >= 13 && s.length <= 19;
-}
 function isFuture(mm, yy) {
   const m = Number(mm), y = Number("20" + yy);
   if (!m || !y) return false;
@@ -78,24 +68,40 @@ export default function Pagos() {
   const tax = taxedBase * TAX_RATE;
   const total = taxedBase + tax;
 
-  // formateo de número de tarjeta (XXXX XXXX XXXX ...)
+  // XXXX XXXX XXXX ....
   const formatCardNumber = (v) =>
     onlyDigits(v).slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ");
 
-  // validaciones
+  // validaciones base
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const nameOk = name.trim().length >= 2;
 
+  // VALIDACIONES TARJETA (sin Luhn, pero con reglas sólidas)
+  const cardNumOnlyDigits = hasOnlyDigitsAndSpaces(cardNumber);
+  const cardDigitsCount = onlyDigits(cardNumber).length;
+  const cardNumLengthOk = cardDigitsCount >= 13 && cardDigitsCount <= 19;
+
+  // Solo letras para el nombre en tarjeta (con tildes/ñ)
+  const cardNameOnlyLetters = /^[A-Za-zÁÉÍÓÚÜáéíóúüÑñ\s]*$/.test(cardName);
+
+  const expOk =
+    /^\d{2}$/.test(expMonth) &&
+    /^\d{2}$/.test(expYear) &&
+    Number(expMonth) >= 1 &&
+    Number(expMonth) <= 12 &&
+    isFuture(expMonth, expYear);
+
+  const cvvOk = /^\d{3,4}$/.test(cvv);
+
   const cardOk =
-    method !== "card" ||
-    (cardName.trim().length >= 2 &&
-      luhnCheck(cardNumber) &&
-      /^\d{2}$/.test(expMonth) &&
-      /^\d{2}$/.test(expYear) &&
-      Number(expMonth) >= 1 &&
-      Number(expMonth) <= 12 &&
-      isFuture(expMonth, expYear) &&
-      /^\d{3,4}$/.test(cvv));
+    method !== "card" || (
+      cardName.trim().length >= 2 &&
+      cardNameOnlyLetters &&
+      cardNumOnlyDigits &&
+      cardNumLengthOk &&
+      expOk &&
+      cvvOk
+    );
 
   const canPay = nameOk && emailOk && (method !== "card" || cardOk) && !submitting;
 
@@ -109,6 +115,7 @@ export default function Pagos() {
       id: randomReceipt(),
       ts: new Date().toISOString(),
       plan: plan.name,
+      planId,
       subtotal,
       discount,
       tax,
@@ -119,30 +126,42 @@ export default function Pagos() {
       last4: method === "card" ? onlyDigits(cardNumber).slice(-4) : null,
     };
 
-    // Guardar en localStorage (para Historial)
     try {
+      // Historial (localStorage)
       const prev = JSON.parse(localStorage.getItem(PAY_KEY) || "[]");
       prev.unshift(receipt);
       localStorage.setItem(PAY_KEY, JSON.stringify(prev));
-    } catch {}
 
-    // limpiar datos sensibles de tarjeta
-    setCardNumber("");
-    setCvv("");
+      // Store (para Reportes)
+      await addPayment({
+        userId: email || name || "anon",
+        planId,
+        total,
+        method,
+      });
 
-    setSuccess({ id: receipt.id, total: receipt.total, plan: receipt.plan });
-    setSubmitting(false);
+      setSuccess({ id: receipt.id, total: receipt.total, plan: receipt.plan });
+      // Si quieres ir directo:
+      // navigate("/admin/reportes");
+    } catch (err) {
+      console.error("No se pudo registrar el pago:", err);
+      alert("Hubo un problema registrando el pago. Inténtalo nuevamente.");
+    } finally {
+      setCardNumber("");
+      setCvv("");
+      setSubmitting(false);
+    }
   }
 
   return (
     <div className="pay-page">
       {/* Top */}
       <div className="pay-top">
-        <BackToMenu /> {/* ← botón estándar */}
+        <BackToMenu />
         <h1 className="title">Pagos</h1>
       </div>
 
-      {/* Mensaje de éxito no modal */}
+      {/* Mensaje de éxito */}
       {success && (
         <div className="success-box" role="status" aria-live="polite">
           <div className="sb-title">Pago registrado correctamente</div>
@@ -151,13 +170,16 @@ export default function Pagos() {
           </div>
           <div className="sb-actions">
             <Link className="btn outline" to="/historial">Ver historial</Link>
+            <button className="btn outline" onClick={() => navigate("/admin/reportes")}>
+              Ver reportes
+            </button>
             <button className="btn link" onClick={()=>setSuccess(null)}>Cerrar</button>
           </div>
         </div>
       )}
 
       <form className="grid" onSubmit={handlePay}>
-        {/* Panel izquierdo: datos y método */}
+        {/* Izquierda */}
         <section className="card left">
           <h2 className="h2">Datos del cliente</h2>
           <div className="row two">
@@ -169,7 +191,9 @@ export default function Pagos() {
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Ej. Ana López"
                 required
+                aria-invalid={!nameOk && name.length > 0}
               />
+              {!nameOk && name.length > 0 && <small className="err">Ingresa al menos 2 caracteres.</small>}
             </div>
             <div>
               <label>Email</label>
@@ -179,6 +203,7 @@ export default function Pagos() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ana@example.com"
                 required
+                aria-invalid={!emailOk && email.length > 0}
               />
               {!emailOk && email.length > 0 && <small className="err">Email inválido</small>}
             </div>
@@ -221,6 +246,7 @@ export default function Pagos() {
           {method === "card" && (
             <div className="cardbox">
               <h3>Datos de la tarjeta</h3>
+
               <div className="row">
                 <label>Nombre en la tarjeta</label>
                 <input
@@ -229,62 +255,93 @@ export default function Pagos() {
                   onChange={(e) => setCardName(e.target.value)}
                   placeholder="Como aparece en la tarjeta"
                   required
+                  aria-invalid={(cardName.length > 0 && (!cardNameOnlyLetters || cardName.trim().length < 2))}
                 />
+                {cardName && !cardNameOnlyLetters && <small className="err">Ingrese solo letras</small>}
+                {cardName && cardNameOnlyLetters && cardName.trim().length < 2 && <small className="err">Ingresa al menos 2 caracteres.</small>}
               </div>
+
               <div className="row two">
                 <div>
                   <label>Número</label>
                   <input
                     inputMode="numeric"
+                    pattern="[\d\s]*"
+                    title="Ingrese solo números"
                     value={cardNumber}
-                    onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
-                    placeholder="1234 5678 9012 3456"
-                    maxLength={22} // 19 dígitos + 3 espacios
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (!hasOnlyDigitsAndSpaces(v)) {
+                        setCardNumber(v); // muestra tal cual para ver el error
+                      } else {
+                        setCardNumber(formatCardNumber(v));
+                      }
+                    }}
+                    placeholder={EXAMPLE_CARD}
+                    maxLength={22}
                     required
+                    aria-invalid={(!cardNumOnlyDigits || !cardNumLengthOk) && cardNumber.length > 0}
                   />
-                  {cardNumber && !luhnCheck(cardNumber) && (
-                    <small className="err">Número inválido</small>
+                  {!cardNumOnlyDigits && <small className="err">Ingrese solo números</small>}
+                  {cardNumOnlyDigits && !cardNumLengthOk && cardNumber && (
+                    <small className="err">El número debe tener entre 13 y 19 dígitos</small>
+                  )}
+                  {/* Aviso solo informativo */}
+                  {cardNumOnlyDigits && cardNumLengthOk && (
+                    <small className="hint">Ejemplo válido: {EXAMPLE_CARD}</small>
                   )}
                 </div>
+
                 <div className="two">
                   <div>
                     <label>MM</label>
                     <input
                       inputMode="numeric"
+                      pattern="\d*"
+                      title="Ingrese solo números"
                       maxLength={2}
                       value={expMonth}
                       onChange={(e) => setExpMonth(onlyDigits(e.target.value).slice(0, 2))}
                       placeholder="MM"
                       required
+                      aria-invalid={!/^\d{2}$/.test(expMonth) && expMonth.length > 0}
                     />
+                    {expMonth && !/^\d{2}$/.test(expMonth) && <small className="err">Ingrese solo números</small>}
                   </div>
                   <div>
                     <label>YY</label>
                     <input
                       inputMode="numeric"
+                      pattern="\d*"
+                      title="Ingrese solo números"
                       maxLength={2}
                       value={expYear}
                       onChange={(e) => setExpYear(onlyDigits(e.target.value).slice(0, 2))}
                       placeholder="YY"
                       required
+                      aria-invalid={!/^\d{2}$/.test(expYear) && expYear.length > 0}
                     />
+                    {expYear && !/^\d{2}$/.test(expYear) && <small className="err">Ingrese solo números</small>}
                   </div>
                   <div>
                     <label>CVV</label>
                     <input
                       inputMode="numeric"
+                      pattern="\d*"
+                      title="Ingrese solo números"
                       maxLength={4}
                       value={cvv}
                       onChange={(e) => setCvv(onlyDigits(e.target.value).slice(0, 4))}
                       placeholder="***"
                       required
+                      aria-invalid={!/^\d{3,4}$/.test(cvv) && cvv.length > 0}
                     />
+                    {cvv && !/^\d{3,4}$/.test(cvv) && <small className="err">Ingrese solo números (3–4 dígitos)</small>}
                   </div>
                 </div>
               </div>
-              {!isFuture(expMonth, expYear) && expMonth && expYear && (
-                <small className="err">La tarjeta está vencida</small>
-              )}
+
+              {!expOk && expMonth && expYear && (<small className="err">La tarjeta está vencida</small>)}
             </div>
           )}
 
@@ -306,7 +363,7 @@ export default function Pagos() {
           )}
         </section>
 
-        {/* Panel derecho: resumen */}
+        {/* Derecha */}
         <aside className="card right">
           <h2 className="h2">Resumen</h2>
           <div className="sum-line"><span>Plan</span><span>{plan.name}</span></div>
@@ -321,12 +378,21 @@ export default function Pagos() {
           </button>
 
           {!canPay && (
-            <div className="note">Completa los datos requeridos para continuar.</div>
+            <div className="note">
+              {(!nameOk || !emailOk) && <div>Completa nombre y email válidos.</div>}
+              {method === "card" && (
+                <>
+                  {cardName && !cardNameOnlyLetters && <div>Nombre en la tarjeta: solo letras.</div>}
+                  {cardNumber && !cardNumOnlyDigits && <div>Número de tarjeta: solo números.</div>}
+                  {cardNumber && cardNumOnlyDigits && !cardNumLengthOk && <div>La tarjeta debe tener entre 13 y 19 dígitos.</div>}
+                  {!expOk && (expMonth || expYear) && <div>Revisa MM/YY (debe ser a futuro).</div>}
+                  {cvv && !cvvOk && <div>CVV inválido (3–4 dígitos).</div>}
+                </>
+              )}
+            </div>
           )}
 
-          <div className="mini-legal">
-            Demo frontend. No se procesa ningún cobro real.
-          </div>
+          <div className="mini-legal">Demo frontend. No se procesa ningún cobro real.</div>
 
           <div className="next-links">
             ¿Quieres ver tus pagos? <Link to="/historial">Ir al historial</Link>

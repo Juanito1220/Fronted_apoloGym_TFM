@@ -8,8 +8,8 @@ import {
   setRole,
   setActive,
   removeUser,
-} from "../../Data/Stores/usuario.store"; 
-import { audit } from "../../Data/Stores/audit.store"; 
+} from "../../Data/Stores/usuario.store"; // ← respeta tu casing/ruta real
+import { audit } from "../../Data/Stores/audit.store"; // ajusta si tu ruta difiere
 
 export default function UsuariosRoles() {
   const [users, setUsers] = useState(() => listUsers());
@@ -20,18 +20,10 @@ export default function UsuariosRoles() {
     role: "cliente",
     active: true,
   });
-  const [error, setError] = useState("");   // ⬅ estado del error
-  const navigate = useNavigate();
-
+ const navigate = useNavigate();   // ← agrega esta línea
   const save = () => {
-    if (!form.nombre.trim() || !form.email.trim()) {
-      setError("⚠️ Debes ingresar Nombre y Email.");
-      return;
-    }
-    setError(""); // limpia error si todo va bien
-
-    saveUser(form);
-    setUsers(listUsers());
+    const arr = saveUser(form); // upsert: crea o edita
+    setUsers(arr);
     audit(form.id ? "USER_UPDATE" : "USER_CREATE", {
       id: form.id || "(nuevo)",
       email: form.email,
@@ -43,20 +35,20 @@ export default function UsuariosRoles() {
   const edit = (u) => setForm(u);
 
   const del = (id) => {
-    removeUser(id);
-    setUsers(listUsers());
+    const arr = removeUser(id);
+    setUsers(arr);
     audit("USER_DELETE", { id });
   };
 
   const changeRole = (id, role) => {
-    setRole(id, role);
-    setUsers(listUsers());
+    const arr = setRole(id, role);
+    setUsers(arr);
     audit("USER_SET_ROLE", { id, role });
   };
 
   const toggleActiveRow = (id, checked) => {
-    setActive(id, checked);
-    setUsers(listUsers());
+    const arr = setActive(id, checked); // setter explícito
+    setUsers(arr);
     audit("USER_SET_ACTIVE", { id, active: checked });
   };
 
@@ -65,7 +57,6 @@ export default function UsuariosRoles() {
       <h2>Usuarios y roles</h2>
 
       <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }}>
-        {/* 📋 Tabla de usuarios */}
         <div>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
@@ -118,7 +109,6 @@ export default function UsuariosRoles() {
           </table>
         </div>
 
-        {/* 📝 Formulario */}
         <div
           style={{
             background: "#fff",
@@ -128,23 +118,6 @@ export default function UsuariosRoles() {
           }}
         >
           <h3>{form.id ? "Editar" : "Crear"} usuario</h3>
-
-          {/* 🔴 Aquí mostramos el error si existe */}
-          {error && (
-            <div
-              style={{
-                background: "#fee2e2", // rojo claro
-                color: "#b91c1c",      // rojo oscuro
-                border: "1px solid #fca5a5",
-                borderRadius: 8,
-                padding: "10px 12px",
-                marginBottom: 10,
-              }}
-            >
-              {error}
-            </div>
-          )}
-
           <input
             placeholder="Nombre"
             value={form.nombre}
@@ -182,18 +155,19 @@ export default function UsuariosRoles() {
             />
             Activo
           </label>
-
+          
           <div style={{ marginTop: 10 }}>
             <button onClick={save}>{form.id ? "Actualizar" : "Crear"}</button>
           </div>
-          <div className="back-line">
-            <button className="btn-back-menu" onClick={() => navigate("/admin")}>
-              ← Regresar al menú
-            </button>
-          </div>
+           <div className="back-line">
+        <button className="btn-back-menu" onClick={() => navigate("/menu")}>
+            ← Regresar al menú
+        </button>
+         </div>
         </div>
       </div>
     </div>
+    
   );
 }
 

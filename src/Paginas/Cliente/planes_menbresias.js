@@ -1,9 +1,10 @@
 import React, { useMemo, useState } from "react";
-import '../../Styles/planes.css';
+import "../../Styles/planes.css";
 import { FaCheckCircle, FaMinusCircle, FaAward } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { listActivePlans, toClientCardShape } from "../../Data/Stores/planes.store";
 
-/* ======= DATA ======= */
+/* ======= DATA (estático como fallback) ======= */
 const FEATURES = [
   "Área de peso libre, peso integrado, cardio y clases grupales",
   "Acceso a todas las áreas del gimnasio",
@@ -145,7 +146,7 @@ function PlanCard({ plan, selected, onSelect }) {
 
       <ul className="features">
         {FEATURES.map((f) => (
-          <FeatureRow key={f} label={f} enabled={Boolean(plan.features[f])} />
+          <FeatureRow key={f} label={f} enabled={Boolean(plan.features?.[f])} />
         ))}
       </ul>
 
@@ -163,23 +164,39 @@ function PlanCard({ plan, selected, onSelect }) {
 export default function Planes() {
   const navigate = useNavigate();
 
-  const [selectedPlanId, setSelectedPlanId] = useState(PLANS[0].id);
+  // 1) Leer planes activos del Admin y convertirlos al shape de tarjetas
+  //    (No uses top-level consts para evitar TDZ y permitir futuros rerenders)
+  const adminPlansRaw = listActivePlans();
+  const adminCards = useMemo(
+    () => (adminPlansRaw || []).map(toClientCardShape).filter(Boolean),
+    [adminPlansRaw]
+  );
+
+  // 2) Decidir fuente: Admin o fallback estático
+  const plansData = adminCards.length ? adminCards : PLANS;
+
+  // 3) Estado inicial seguro usando la fuente real
+  const [selectedPlanId, setSelectedPlanId] = useState(plansData[0]?.id);
   const [membershipId, setMembershipId] = useState(MEMBERSHIPS[0].id);
   const [billing, setBilling] = useState("mensual"); // mensual | anual (-10%)
-  const [addons, setAddons] = useState(() => Object.fromEntries(ADDONS.map(a => [a.id, false])));
-  const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0,10));
+  const [addons, setAddons] = useState(() =>
+    Object.fromEntries(ADDONS.map((a) => [a.id, false]))
+  );
+  const [startDate, setStartDate] = useState(() =>
+    new Date().toISOString().slice(0, 10)
+  );
 
   const plan = useMemo(
-    () => PLANS.find(p => p.id === selectedPlanId),
-    [selectedPlanId]
+    () => plansData.find((p) => p.id === selectedPlanId),
+    [plansData, selectedPlanId]
   );
   const membership = useMemo(
-    () => MEMBERSHIPS.find(m => m.id === membershipId),
+    () => MEMBERSHIPS.find((m) => m.id === membershipId),
     [membershipId]
   );
 
   const addonsTotal = useMemo(
-    () => ADDONS.filter(a => addons[a.id]).reduce((acc, a) => acc + a.price, 0),
+    () => ADDONS.filter((a) => addons[a.id]).reduce((acc, a) => acc + a.price, 0),
     [addons]
   );
 
@@ -196,16 +213,17 @@ export default function Planes() {
     return { label: "Total mensual", amount: baseMensual };
   }, [billing, baseMensual]);
 
-  const toggleAddon = (id) => setAddons(prev => ({ ...prev, [id]: !prev[id] }));
+  const toggleAddon = (id) => setAddons((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const confirmar = () => {
+    // Guarda un "checkout" para que /pagos pueda leerlo
     const payload = {
       planId: plan.id,
       planName: plan.name,
       membershipId: membership.id,
       membershipLabel: membership.label,
       billing, // mensual/anual
-      addons: ADDONS.filter(a => addons[a.id]),
+      addons: ADDONS.filter((a) => addons[a.id]),
       startDate,
       totalLabel: total.label,
       totalAmount: Number(total.amount.toFixed(2)),
@@ -233,7 +251,7 @@ export default function Planes() {
 
       {/* GRID de planes */}
       <section className="plans-grid">
-        {PLANS.map((p) => (
+        {plansData.map((p) => (
           <PlanCard
             key={p.id}
             plan={p}
@@ -251,7 +269,7 @@ export default function Planes() {
           <div className="config-block">
             <label className="lbl">Membresía</label>
             <div className="choices">
-              {MEMBERSHIPS.map(m => (
+              {MEMBERSHIPS.map((m) => (
                 <button
                   key={m.id}
                   className={`chip ${membershipId === m.id ? "active" : ""}`}
@@ -284,7 +302,7 @@ export default function Planes() {
           <div className="config-block">
             <label className="lbl">Extras</label>
             <ul className="addons">
-              {ADDONS.map(a => (
+              {ADDONS.map((a) => (
                 <li key={a.id}>
                   <label className="addon-row">
                     <input
@@ -305,7 +323,7 @@ export default function Planes() {
             <input
               type="date"
               value={startDate}
-              onChange={(e)=>setStartDate(e.target.value)}
+              onChange={(e) => setStartDate(e.target.value)}
               className="date-input"
             />
           </div>
@@ -323,13 +341,17 @@ export default function Planes() {
             </div>
             <div className="sum-line">
               <span className="sum-label">Ciclo</span>
-              <span className="sum-value">{billing === "anual" ? "Anual (-10%)" : "Mensual"}</span>
+              <span className="sum-value">
+                {billing === "anual" ? "Anual (-10%)" : "Mensual"}
+              </span>
             </div>
-            {ADDONS.filter(a => addons[a.id]).length > 0 && (
+            {ADDONS.filter((a) => addons[a.id]).length > 0 && (
               <div className="sum-line">
                 <span className="sum-label">Extras</span>
                 <span className="sum-value">
-                  {ADDONS.filter(a => addons[a.id]).map(a => a.label).join(", ")}
+                  {ADDONS.filter((a) => addons[a.id])
+                    .map((a) => a.label)
+                    .join(", ")}
                 </span>
               </div>
             )}
@@ -344,10 +366,14 @@ export default function Planes() {
               <div className="sum-caption">{total.label}</div>
               <div className="sum-price">${total.amount.toFixed(2)}</div>
               {billing === "anual" && (
-                <div className="sum-note">Equivale a ${(baseMensual*0.9).toFixed(2)}/mes con descuento.</div>
+                <div className="sum-note">
+                  Equivale a ${(baseMensual * 0.9).toFixed(2)}/mes con descuento.
+                </div>
               )}
               {billing === "mensual" && (
-                <div className="sum-note">Subtotal mensual: ${baseMensual.toFixed(2)}</div>
+                <div className="sum-note">
+                  Subtotal mensual: ${baseMensual.toFixed(2)}
+                </div>
               )}
             </div>
             <button className="btn-primary big" onClick={confirmar}>

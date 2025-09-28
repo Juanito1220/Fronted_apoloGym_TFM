@@ -1,33 +1,111 @@
 import React, { useState } from "react";
-import { listPlans, savePlan, deletePlan } from "../../Data/Stores/planes.store";
+import {
+  listPlans,
+  savePlan,
+  deletePlan,
+  setPlanStatus,
+} from "../../Data/Stores/planes.store";
 import { audit } from "../../Data/Stores/audit.store";
 import { useNavigate } from "react-router-dom";
-// import BackToMenu from "../../Componentes/backtoMenu.js"; // no se usa aquí
 
-export default function PlanesConfig(){
+
+/* Helpers de validación locales (no rompen tu estructura) */
+const ONLY_LETTERS = /^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$/;
+const ONLY_NUMBER_DEC = /^\d+(\.\d{1,2})?$/;
+
+const keepLetters = (s = "") => s.replace(/[^A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+/g, "");
+const keepNumberDec = (s = "") => s.replace(/[^0-9.]+/g, "").replace(/(\..*)\./g, "$1"); // solo un punto
+
+export default function PlanesConfig() {
   const [planes, setPlanes] = useState(() => listPlans());
-  const [form, setForm] = useState({ id:"", nombre:"", precio:0, beneficios:"", status:"activo" });
+  const [form, setForm] = useState({
+    id: "",
+    nombre: "",
+    precio: "",
+    beneficios: "",
+    status: "activo",
+  });
+
+  const [errors, setErrors] = useState({}); // { nombre, precio }
   const navigate = useNavigate();
 
+  /* Validación por campo con mensaje */
+  const validateField = (name, value) => {
+    if (name === "nombre") {
+      if (!value.trim()) return "Ingrese nombre";
+      if (!ONLY_LETTERS.test(value.trim()))
+        return "Ingrese solo letras";
+    }
+    if (name === "precio") {
+      if (!String(value).trim()) return "Ingrese precio";
+      if (!ONLY_NUMBER_DEC.test(String(value).trim()))
+        return "Ingrese solo números (hasta 2 decimales)";
+    }
+    return "";
+  };
+
+  const onChange = (e) => {
+    const { name, value } = e.target;
+
+    // Sanitiza mientras escribe
+    let v = value;
+    if (name === "nombre") v = keepLetters(value);
+    if (name === "precio") v = keepNumberDec(value);
+
+    setForm((f) => ({ ...f, [name]: v }));
+
+    // Valida y muestra mensaje en vivo
+    const msg = validateField(name, v);
+    setErrors((er) => ({ ...er, [name]: msg }));
+  };
+
   const guardar = () => {
+    // Validar todo antes de guardar
+    const eNombre = validateField("nombre", form.nombre);
+    const ePrecio = validateField("precio", form.precio);
+    const newErrors = { nombre: eNombre, precio: ePrecio };
+    setErrors(newErrors);
+
+    if (eNombre || ePrecio) {
+      // no guardar si hay errores
+      return;
+    }
+
     const arr = savePlan({
       ...form,
-      precio: Number(form.precio) || 0,
+      // precio numérico seguro
+      precio: Number(String(form.precio).replace(",", ".")) || 0,
       beneficios: parseBeneficios(form.beneficios),
     });
     setPlanes(arr);
-    audit(form.id ? "PLAN_UPDATE" : "PLAN_CREATE", { id: form.id, nombre: form.nombre });
-    setForm({ id:"", nombre:"", precio:0, beneficios:"", status:"activo" });
+
+    audit(form.id ? "PLAN_UPDATE" : "PLAN_CREATE", {
+      id: form.id,
+      nombre: form.nombre,
+    });
+
+    setForm({ id: "", nombre: "", precio: "", beneficios: "", status: "activo" });
+    setErrors({});
   };
 
-  const editar = (p) => setForm({ ...p, beneficios: (p.beneficios || []).join("\n") });
-  const borrar = (id) => { setPlanes(deletePlan(id)); audit("PLAN_DELETE", { id }); };
+  const editar = (p) =>
+    setForm({
+      ...p,
+      precio: String(p.precio ?? ""),
+      beneficios: (p.beneficios || []).join("\n"),
+    });
+
+  const borrar = (id) => {
+    setPlanes(deletePlan(id));
+    audit("PLAN_DELETE", { id });
+  };
 
   return (
     <div className="container page" style={{ padding: 20 }}>
       <h2>Planes</h2>
 
       <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }}>
+        {/* Tabla */}
         <div>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
@@ -54,63 +132,93 @@ export default function PlanesConfig(){
               ))}
               {!planes.length && (
                 <tr>
-                  <td style={td} colSpan={4}>Sin planes</td>
+                  <td style={td} colSpan={4}>
+                    Sin planes
+                  </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
 
-        {/* BOTÓN REGRESAR → al dashboard de Admin dentro del AdminLayout */}
-        <div className="back-line">
-          {/* Opción A: relativa (desde /admin/planes sube a /admin) */}
+        {/* Volver al panel Admin */}
+        <div className="back-line" style={{ alignSelf: "start" }}>
           <button
             className="btn-back-menu"
             onClick={() => navigate("..", { replace: true, relative: "path" })}
           >
             ← Regresar al panel
           </button>
-
-          {/* Opción B: absoluta (si prefieres ruta fija) */}
-          {/* <button className="btn-back-menu" onClick={() => navigate("/admin")}>← Regresar al panel</button> */}
         </div>
 
+        {/* Formulario */}
         <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 12 }}>
           <h3>{form.id ? "Editar" : "Nuevo"} plan</h3>
+
+          <label style={lbl}>Nombre</label>
           <input
+            name="nombre"
             style={inp}
-            placeholder="Nombre"
+            placeholder="Ej. Black, Fit, Smart..."
             value={form.nombre}
-            onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
+            onChange={onChange}
           />
+          {errors.nombre && <div style={err}>{errors.nombre}</div>}
+
+          <label style={lbl}>Precio</label>
           <input
+            name="precio"
             style={inp}
-            placeholder="Precio"
+            placeholder="Ingrese precio"
             value={form.precio}
-            onChange={(e) => setForm((f) => ({ ...f, precio: e.target.value }))}
+            onChange={onChange}
+            inputMode="decimal"
           />
+          {errors.precio && <div style={err}>{errors.precio}</div>}
+
+          <label style={lbl}>Beneficios</label>
           <textarea
+            name="beneficios"
             style={{ ...inp, height: 100 }}
             placeholder={"Beneficios (uno por línea)"}
             value={form.beneficios}
-            onChange={(e) => setForm((f) => ({ ...f, beneficios: e.target.value }))}
+            onChange={onChange}
           />
+
+          <label style={lbl}>Estatus</label>
           <select
+            name="status"
             style={inp}
             value={form.status}
-            onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
+            onChange={onChange}
           >
             <option value="activo">activo</option>
             <option value="inactivo">inactivo</option>
           </select>
-          <button onClick={guardar}>{form.id ? "Actualizar" : "Crear"}</button>
+
+          <button onClick={guardar} style={{ marginTop: 6 }}>
+            {form.id ? "Actualizar" : "Crear"}
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-const parseBeneficios = (txt) => txt.split("\n").map((s) => s.trim()).filter(Boolean);
+const parseBeneficios = (txt) =>
+  String(txt || "")
+    .split("\n")
+    .map((s) => s.trim())
+    .filter(Boolean);
+
 const th = { padding: "8px 10px", borderBottom: "1px solid #e5e7eb" };
 const td = { padding: "8px 10px", borderBottom: "1px solid #f3f4f6" };
-const inp = { width: "100%", padding: "10px 12px", margin: "6px 0", border: "1px solid #e5e7eb", borderRadius: 10 };
+const inp = {
+  width: "100%",
+  padding: "10px 12px",
+  margin: "6px 0",
+  border: "1px solid #e5e7eb",
+  borderRadius: 10,
+};
+const lbl = { fontWeight: 700, marginTop: 6, display: "block" };
+const err = { color: "#b91c1c", fontWeight: 700, marginTop: -4, marginBottom: 8 };

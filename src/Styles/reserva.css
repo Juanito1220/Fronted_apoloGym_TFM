@@ -1,110 +1,255 @@
-/* ---------- Cards elegantes para reservas ---------- */
+/* src/Styles/reserva.css */
+
+/* ====== Diseño base ====== */
 :root{
-  --res-grad-a:#0ea5e9;   /* azul cielo */
-  --res-grad-b:#7c3aed;   /* violeta */
-  --res-bg:#0b1020;       /* fondo profundo opcional si usas sección */
-  --res-card:rgba(255,255,255,.06);
-  --res-card-b:rgba(255,255,255,.14);
-  --res-text:#e6eaf2;
-  --res-dim:#b8c0d4;
-  --res-ring:0 0 0 3px rgba(124,58,237,.35);
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e5e7eb;
+  --primary: #4f46e5;      /* indigo */
+  --primary-600: #4338ca;
+  --primary-700: #3730a3;
+  --ring: rgba(79,70,229,.35);
+  --shadow: 0 8px 22px rgba(2, 6, 23, 0.07);
+  --shadow-pressed: 0 6px 14px rgba(2, 6, 23, 0.12);
+  --radius: 14px;
 }
 
-/* Título y subtítulo */
-.res-title{ margin-top:6px; font-weight:800; letter-spacing:.2px; }
-.res-subtitle{ margin-top:18px; }
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg: #0b1020;
+    --card: #0f172a;
+    --text: #e5e7eb;
+    --muted: #94a3b8;
+    --border: #1f2a44;
+    --shadow: 0 10px 24px rgba(0,0,0,.45);
+    --shadow-pressed: 0 8px 18px rgba(0,0,0,.55);
+  }
+}
 
-/* Controles */
+.container.page.reserva{
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100%;
+  padding-bottom: 24px;
+}
+
+/* ====== Encabezados y texto ====== */
+.reserva h1{
+  font-size: clamp(22px, 2.4vw, 32px);
+  font-weight: 900;
+  letter-spacing: .2px;
+  margin: 6px 0 8px;
+}
+
+.reserva .lead{
+  color: var(--muted);
+  margin: 0 0 16px;
+}
+
+.reserva a{
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+}
+.reserva a:hover{ border-color: var(--primary); }
+
+/* ====== Controles superiores ====== */
 .res-controls{
-  display:flex; flex-wrap:wrap; gap:12px; margin:12px 0 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(180px, 1fr));
+  gap: 12px;
+  margin: 10px 0 18px;
 }
-.res-controls label{ display:block; font-weight:600; margin-bottom:6px; }
+.res-controls label{
+  display:block;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
 .res-controls input[type="date"],
 .res-controls select{
-  padding:10px; border:1px solid #cbd5e1; border-radius:10px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  color: var(--text);
+  outline: none;
+  transition: box-shadow .2s ease, border-color .2s ease, transform .06s ease;
+}
+.res-controls input[type="date"]:focus,
+.res-controls select:focus{
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px var(--ring);
 }
 
-/* Grid */
+/* ====== Grid de slots ====== */
 .res-grid{
-  display:grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap:16px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+  gap: 14px;
 }
 
-/* Card */
-.res-card{
-  background: var(--res-card);
-  border: 1px solid var(--res-card-b);
-  border-radius: 16px;
-  backdrop-filter: blur(8px);
-  color: var(--res-text);
+@media (max-width: 1024px){
+  .res-grid{ grid-template-columns: repeat(2, minmax(220px, 1fr)); }
+}
+@media (max-width: 640px){
+  .res-controls{ grid-template-columns: 1fr; }
+  .res-grid{ grid-template-columns: 1fr; }
+}
+
+/* ====== Tarjeta de slot ====== */
+.res-slot{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   padding: 14px;
-  box-shadow: 0 8px 24px rgba(2,6,23,.35);
-  transition: transform .2s ease, box-shadow .25s ease, border-color .2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
   position: relative;
-  overflow: hidden;
+  isolation: isolate;
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
 }
-.res-card::before{
-  /* brillo diagonal suave */
+
+.res-slot::after{
   content:"";
-  position:absolute; inset: -40% -40% auto auto;
-  width: 60%; height: 60%;
-  background: radial-gradient(closest-side, rgba(255,255,255,.08), transparent 70%);
-  transform: rotate(25deg);
-}
-.res-card:hover{
-  transform: translateY(-4px);
-  box-shadow: 0 14px 36px rgba(2,6,23,.45);
-  border-color: rgba(255,255,255,.22);
+  position:absolute;
+  inset:0;
+  border-radius: inherit;
+  background: linear-gradient(180deg, rgba(79,70,229,.06), transparent 40%);
+  opacity: 0;
+  transition: opacity .15s ease;
+  pointer-events: none;
 }
 
-/* Head */
-.res-card-head{
-  display:flex; align-items:center; justify-content:space-between; gap:8px;
-  margin-bottom:10px;
+.res-slot:hover{
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-pressed);
+  border-color: rgba(79,70,229,.25);
 }
-.res-time{
-  font-size: 1.6rem; font-weight: 800; letter-spacing:.3px;
-  background: linear-gradient(90deg, var(--res-grad-a), var(--res-grad-b));
-  -webkit-background-clip:text; background-clip:text; color:transparent;
+.res-slot:hover::after{ opacity: 1; }
+
+.res-slot .big{
+  font-size: 26px;
+  font-weight: 900;
+  line-height: 1;
 }
-.res-date{
-  font-size:.95rem; color: var(--res-dim);
+.res-slot .muted{
+  color: var(--muted);
+  font-size: 14px;
+}
+.res-slot .sep{
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+.res-slot strong{ font-weight: 800; }
+
+/* ====== Botón primario ====== */
+.btn-primary{
+  margin-top: 8px;
+  appearance: none;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .12s ease, background-color .12s ease;
+  box-shadow: 0 8px 14px rgba(79,70,229,.25);
+}
+.btn-primary:hover{
+  background: var(--primary-600);
+  transform: translateY(-1px);
+}
+.btn-primary:active{
+  background: var(--primary-700);
+  transform: translateY(0);
+  box-shadow: 0 6px 10px rgba(79,70,229,.28);
+}
+.btn-primary:focus{
+  outline: none;
+  box-shadow: 0 0 0 4px var(--ring);
 }
 
-/* Body */
-.res-card-body{ display:grid; gap:10px; margin-bottom: 10px; }
-.res-row{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.res-badge{
-  padding:6px 10px; border-radius:999px; font-weight:700; font-size:.85rem;
-  background: rgba(14,165,233,.18); color:#e0f2fe; border:1px solid rgba(14,165,233,.35);
+/* ====== Lista de reservas (historial dentro de la vista) ====== */
+.res-list{
+  list-style: none;
+  padding: 0;
+  margin: 8px 0 0;
+  display: grid;
+  gap: 8px;
 }
-.sala-pesas      .res-badge{ background:rgba(34,197,94,.18);  border-color:rgba(34,197,94,.35);  color:#dcfce7; }
-.sala-cardio     .res-badge{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.35); color:#e0f2fe; }
-.sala-funcional  .res-badge{ background:rgba(234,179,8,.18);  border-color:rgba(234,179,8,.35);  color:#fef3c7; }
-.sala-spinning   .res-badge{ background:rgba(168,85,247,.18); border-color:rgba(168,85,247,.35); color:#f3e8ff; }
-
-.res-meta{ color: var(--res-dim); font-weight:600; }
-.res-instructor{ color:#fff; font-weight:600; }
-
-/* Botón */
-.res-action{
-  width:100%; padding:12px;
-  border:none; border-radius:12px;
-  color:#0b1020; font-weight:800; letter-spacing:.2px; cursor:pointer;
-  background: linear-gradient(90deg, var(--res-grad-a), var(--res-grad-b));
-  box-shadow: 0 8px 22px rgba(124,58,237,.35);
-  transition: transform .12s ease, box-shadow .2s ease;
+.res-list li{
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  color: var(--text);
+  box-shadow: var(--shadow);
 }
-.res-action:hover{ transform: translateY(-2px); box-shadow: 0 12px 28px rgba(124,58,237,.45); }
-.res-action:focus{ outline:none; box-shadow: var(--res-ring); }
+.res-list strong{ font-weight: 900; }
+.res-list em{ color: var(--muted); }
 
-/* Lista de reservas */
-.res-list{ margin:10px 0 0; padding:0; list-style:none; display:grid; gap:8px; }
-.res-item{ background:#0f172a; color:#e2e8f0; padding:10px 12px; border-radius:12px; display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-.res-chip{ background:#0b1220; border:1px solid #334155; padding:4px 8px; border-radius:999px; }
-.res-chip.strong{ background:#111827; border-color:#4b5563; }
-.res-dot{ opacity:.6; }
+/* ====== Banner del plan seleccionado (si lo muestras con inline styles ya se ve bien) ====== */
 
-/* Modo claro/oscuro opcional: ajusta según tu página */
-.page.reserva { color: inherit; }
+/* ====== Accesibilidad y motion ====== */
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; }
+}
+/* ====== COMPACTO ++ (aún más pequeño) ====== */
+:root{
+  --radius: 8px;
+  --shadow: 0 3px 8px rgba(2,6,23,.06);
+  --shadow-pressed: 0 3px 10px rgba(2,6,23,.10);
+}
+
+/* Títulos/texto un poquito más chicos */
+.reserva h1{ font-size: clamp(16px, 1.8vw, 22px); margin: 2px 0 6px; }
+.reserva .lead{ margin-bottom: 10px; }
+
+/* Controles superiores */
+.res-controls{ gap: 6px; margin: 4px 0 10px; }
+.res-controls input[type="date"],
+.res-controls select{ padding: 6px 10px; border-radius: 8px; }
+
+/* Grid: tarjetas más angostas y menor separación */
+.res-grid{
+  gap: 8px;
+  grid-template-columns: repeat(4, minmax(140px, 1fr));
+}
+@media (max-width: 1200px){ .res-grid{ grid-template-columns: repeat(3, minmax(140px, 1fr)); } }
+@media (max-width: 900px){  .res-grid{ grid-template-columns: repeat(2, minmax(140px, 1fr)); } }
+@media (max-width: 640px){  .res-grid{ grid-template-columns: 1fr; } }
+
+/* Tarjeta */
+.res-slot{
+  padding: 8px;
+  gap: 4px;
+  border-radius: 8px;
+}
+.res-slot .big{ font-size: 18px; }
+.res-slot .muted{ font-size: 11px; }
+.res-slot .sep{ margin: 4px 0; }
+.res-slot strong{ font-weight: 800; }
+
+/* Botón más bajo/angosto */
+.btn-primary{
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 4px 8px rgba(79,70,229,.18);
+}
+
+/* Lista de reservas compacta */
+.res-list{ gap: 6px; }
+.res-list li{
+  padding: 6px 8px;
+  border-radius: 8px;
+  font-size: 14px;
+}
