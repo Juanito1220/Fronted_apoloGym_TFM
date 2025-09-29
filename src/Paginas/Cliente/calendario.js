@@ -1,5 +1,4 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import "../../Styles/calendario.css";
@@ -11,8 +10,6 @@ function formatKey(d) {
 }
 
 export default function Calendario() {
-  const navigate = useNavigate();
-
   // Fecha seleccionada en el calendario
   const [date, setDate] = useState(new Date());
 
@@ -74,11 +71,6 @@ export default function Calendario() {
       {/* Barra superior */}
       <div className="cal-top">
         <div className="left">
-          {/* ← Regresar al menú */}
-          <button className="btn-link" onClick={() => navigate("/menu")}>
-            ← Regresar al menú
-          </button>
-
           <h1 className="cal-title">Calendario</h1>
           <div className="cal-sub">Planifica tus entrenamientos y clases</div>
         </div>
@@ -90,7 +82,7 @@ export default function Calendario() {
         </div>
       </div>
 
-          {/* Layout dos columnas */}
+      {/* Layout dos columnas */}
       <div className="cal-grid">
         {/* Columna 1: calendario (selector de día) */}
         <section className="cal-col card">

@@ -1,10 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "../../Styles/miplan.css";
 
-const DAYS = ["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado","Domingo"];
+const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
 const START_HOUR = 6;   // 06:00
-const END_HOUR   = 22;  // 22:00
+const END_HOUR = 22;  // 22:00
 const STORAGE_KEY = "apolo_gym_schedule";
 
 // util
@@ -23,8 +22,6 @@ function emptySchedule() {
 }
 
 export default function MiPlan() {
-  const navigate = useNavigate();
-
   const [schedule, setSchedule] = useState(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY);
@@ -35,7 +32,7 @@ export default function MiPlan() {
   });
 
   // editor “popover” dentro de la celda
-  const [editing, setEditing] = useState(null); 
+  const [editing, setEditing] = useState(null);
   // { dayIdx, hour, title, color, notes }
 
   useEffect(() => {
@@ -78,9 +75,9 @@ export default function MiPlan() {
   const applyTemplate = (name) => {
     const data = emptySchedule();
     if (name === "fullbody") {
-      data[keyOf(1, 7)]  = { title: "Full Body A", color: "#16a34a", notes: "Banca / Sentadilla / Remo" };
+      data[keyOf(1, 7)] = { title: "Full Body A", color: "#16a34a", notes: "Banca / Sentadilla / Remo" };
       data[keyOf(3, 19)] = { title: "Full Body B", color: "#f59e0b", notes: "Militar / Peso muerto / Dominadas" };
-      data[keyOf(5, 9)]  = { title: "Cardio + Core", color: "#06b6d4", notes: "30’ HIIT + 15’ core" };
+      data[keyOf(5, 9)] = { title: "Cardio + Core", color: "#06b6d4", notes: "30’ HIIT + 15’ core" };
     }
     if (name === "ppl") {
       data[keyOf(1, 7)] = { title: "PUSH", color: "#ef4444", notes: "Pecho Hombro Tríceps" };
@@ -103,9 +100,6 @@ export default function MiPlan() {
       {/* Top */}
       <div className="mp-top">
         <div className="left">
-          <button className="btn-link" onClick={() => navigate("/menu")}>
-            ← Regresar al menú
-          </button>
           <h1 className="mp-title">Mi plan semanal</h1>
           <div className="mp-sub">Horario de ejercicios en formato calendario</div>
         </div>

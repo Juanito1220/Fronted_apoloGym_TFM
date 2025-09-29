@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import "../../Styles/progreso.css";
 
 // ====== Datos de ejemplo ======
@@ -48,7 +47,6 @@ function useLinePath(points, { w = 560, h = 220, pad = 24 }) {
 }
 
 export default function Progreso() {
-  const navigate = useNavigate();
   const last = WEIGHT_POINTS[WEIGHT_POINTS.length - 1];
   const first = WEIGHT_POINTS[0];
   const delta = last.pesoKg - first.pesoKg; // negativo = bajó
@@ -64,7 +62,6 @@ export default function Progreso() {
     <div className="prog-page">
       <div className="prog-top">
         <div>
-          <button className="btn-link" onClick={() => navigate("/menu")}>← Regresar al menú</button>
           <h1 className="title">Seguimiento de progreso</h1>
           <p className="sub">Últimos {WEIGHT_POINTS.length} registros</p>
         </div>
@@ -86,8 +83,8 @@ export default function Progreso() {
               {/* gradiente */}
               <defs>
                 <linearGradient id="grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.7"/>
-                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0.05"/>
+                  <stop offset="0%" stopColor="#ef4444" stopOpacity="0.7" />
+                  <stop offset="100%" stopColor="#ef4444" stopOpacity="0.05" />
                 </linearGradient>
               </defs>
 

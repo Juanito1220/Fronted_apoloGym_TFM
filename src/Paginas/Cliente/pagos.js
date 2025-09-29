@@ -1,12 +1,11 @@
 import React, { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import BackToMenu from "../../Componentes/backtoMenu";
+import { Link } from "react-router-dom";
 import "../../Styles/pagos.css";
 
 /* ======= Datos de ejemplo ======= */
 const PLANS = [
   { id: "black", name: "Plan Black", price: 29.9 },
-  { id: "fit",   name: "Plan Fit",   price: 21.9 },
+  { id: "fit", name: "Plan Fit", price: 21.9 },
   { id: "smart", name: "Plan Smart", price: 25.9 },
 ];
 const TAX_RATE = 0.12;       // IVA 12%
@@ -43,8 +42,6 @@ function randomReceipt() {
 }
 
 export default function Pagos() {
-  const navigate = useNavigate();
-
   // estado general
   const [planId, setPlanId] = useState(PLANS[0].id);
   const [coupon, setCoupon] = useState("");
@@ -124,7 +121,7 @@ export default function Pagos() {
       const prev = JSON.parse(localStorage.getItem(PAY_KEY) || "[]");
       prev.unshift(receipt);
       localStorage.setItem(PAY_KEY, JSON.stringify(prev));
-    } catch {}
+    } catch { }
 
     // limpiar datos sensibles de tarjeta
     setCardNumber("");
@@ -138,7 +135,6 @@ export default function Pagos() {
     <div className="pay-page">
       {/* Top */}
       <div className="pay-top">
-        <BackToMenu /> {/* ← botón estándar */}
         <h1 className="title">Pagos</h1>
       </div>
 
@@ -151,7 +147,7 @@ export default function Pagos() {
           </div>
           <div className="sb-actions">
             <Link className="btn outline" to="/historial">Ver historial</Link>
-            <button className="btn link" onClick={()=>setSuccess(null)}>Cerrar</button>
+            <button className="btn link" onClick={() => setSuccess(null)}>Cerrar</button>
           </div>
         </div>
       )}
@@ -313,7 +309,7 @@ export default function Pagos() {
           <div className="sum-line"><span>Subtotal</span><span>{money(subtotal)}</span></div>
           <div className="sum-line"><span>Descuento</span><span>- {money(discount)}</span></div>
           <div className="sum-line"><span>Base imponible</span><span>{money(taxedBase)}</span></div>
-          <div className="sum-line"><span>IVA ({Math.round(TAX_RATE*100)}%)</span><span>{money(tax)}</span></div>
+          <div className="sum-line"><span>IVA ({Math.round(TAX_RATE * 100)}%)</span><span>{money(tax)}</span></div>
           <div className="sum-line total"><span>Total</span><span>{money(total)}</span></div>
 
           <button className="btn primary big" disabled={!canPay} type="submit">

@@ -79,17 +79,17 @@ const PLANS = [
 /* Tipos de membresía disponibles */
 const MEMBERSHIPS = [
   { id: "individual", label: "Individual", factor: 1.0, desc: "1 titular" },
-  { id: "duo",       label: "Duo",       factor: 1.8, desc: "2 personas" },
-  { id: "familiar",  label: "Familiar",  factor: 2.6, desc: "Hasta 4 personas" },
-  { id: "estudiante",label: "Estudiante",factor: 0.85,desc: "Descuento aplicado" },
+  { id: "duo", label: "Duo", factor: 1.8, desc: "2 personas" },
+  { id: "familiar", label: "Familiar", factor: 2.6, desc: "Hasta 4 personas" },
+  { id: "estudiante", label: "Estudiante", factor: 0.85, desc: "Descuento aplicado" },
 ];
 
 /* Add-ons opcionales por mes */
 const ADDONS = [
   { id: "locker", label: "Locker fijo", price: 5 },
   { id: "toalla", label: "Servicio de toallas", price: 3 },
-  { id: "coach",  label: "Coach 1:1 (x4 sesiones)", price: 15 },
-  { id: "spa",    label: "Zona spa / masajes", price: 10 },
+  { id: "coach", label: "Coach 1:1 (x4 sesiones)", price: 15 },
+  { id: "spa", label: "Zona spa / masajes", price: 10 },
 ];
 
 /* ======= UI helpers ======= */
@@ -167,7 +167,7 @@ export default function Planes() {
   const [membershipId, setMembershipId] = useState(MEMBERSHIPS[0].id);
   const [billing, setBilling] = useState("mensual"); // mensual | anual (-10%)
   const [addons, setAddons] = useState(() => Object.fromEntries(ADDONS.map(a => [a.id, false])));
-  const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0,10));
+  const [startDate, setStartDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   const plan = useMemo(
     () => PLANS.find(p => p.id === selectedPlanId),
@@ -223,12 +223,6 @@ export default function Planes() {
         <p className="hero-subtitle">
           Área de peso libre, peso integrado, cardio y clases grupales
         </p>
-      </div>
-
-      <div className="back-line">
-        <button className="btn-back-home" onClick={() => navigate("/menu")}>
-          ⮐ Ir al inicio
-        </button>
       </div>
 
       {/* GRID de planes */}
@@ -305,7 +299,7 @@ export default function Planes() {
             <input
               type="date"
               value={startDate}
-              onChange={(e)=>setStartDate(e.target.value)}
+              onChange={(e) => setStartDate(e.target.value)}
               className="date-input"
             />
           </div>
@@ -344,7 +338,7 @@ export default function Planes() {
               <div className="sum-caption">{total.label}</div>
               <div className="sum-price">${total.amount.toFixed(2)}</div>
               {billing === "anual" && (
-                <div className="sum-note">Equivale a ${(baseMensual*0.9).toFixed(2)}/mes con descuento.</div>
+                <div className="sum-note">Equivale a ${(baseMensual * 0.9).toFixed(2)}/mes con descuento.</div>
               )}
               {billing === "mensual" && (
                 <div className="sum-note">Subtotal mensual: ${baseMensual.toFixed(2)}</div>

@@ -18,7 +18,8 @@ import Registro from "./Paginas/Principal/registro";
 import RecuperarContraseña from "./Paginas/Principal/recuperarPassword";
 
 // Cliente
-import Menu from "./Paginas/Cliente/menu";
+import ClientLayout from "./Paginas/Cliente/ClientLayout";
+import ClienteDashboard from "./Paginas/Cliente/cliente_dashboard";
 import Calendario from "./Paginas/Cliente/calendario";
 import Alimentacion from "./Paginas/Cliente/alimentacion";
 import Progreso from "./Paginas/Cliente/progreso";
@@ -54,7 +55,7 @@ function AppContent() {
   // Ocultar header/footer en vistas internas (cliente menú, admin, entrenador)
   const path = location.pathname;
   const ocultarHeaderYFooter =
-    path === "/menu" || path.startsWith("/admin") || path.startsWith("/entrenador");
+    path === "/menu" || path.startsWith("/admin") || path.startsWith("/entrenador") || path.startsWith("/cliente");
 
   return (
     <>
@@ -70,19 +71,35 @@ function AppContent() {
         <Route path="/registro" element={<Registro />} />
         <Route path="/recuperar" element={<RecuperarContraseña />} />
 
-        {/* Cliente */}
-        <Route path="/menu" element={<Menu />} />
-        <Route path="/calendario" element={<Calendario />} />
-        <Route path="/progreso" element={<Progreso />} />
-        <Route path="/miplan" element={<MiPlan />} />
-        <Route path="/alimentacion" element={<Alimentacion />} />
-        <Route path="/planes" element={<Planes />} />
-        <Route path="/rutinas" element={<Rutinas />} />
-        <Route path="/reserva" element={<Reservacion />} />
-        <Route path="/pagos" element={<Pago />} />
-        <Route path="/notificaciones" element={<Notificaciones />} />
-        <Route path="/historial" element={<Historial />} />
-        <Route path="/perfil" element={<Perfil />} />
+        {/* Cliente (anidadas con layout) */}
+        <Route path="/cliente" element={<ClientLayout />}>
+          <Route index element={<ClienteDashboard />} />
+          <Route path="calendario" element={<Calendario />} />
+          <Route path="progreso" element={<Progreso />} />
+          <Route path="miplan" element={<MiPlan />} />
+          <Route path="alimentacion" element={<Alimentacion />} />
+          <Route path="planes" element={<Planes />} />
+          <Route path="rutinas" element={<Rutinas />} />
+          <Route path="reserva" element={<Reservacion />} />
+          <Route path="pagos" element={<Pago />} />
+          <Route path="notificaciones" element={<Notificaciones />} />
+          <Route path="historial" element={<Historial />} />
+          <Route path="perfil" element={<Perfil />} />
+        </Route>
+
+        {/* Rutas legacy para compatibilidad (redirigen al nuevo layout) */}
+        <Route path="/menu" element={<Navigate to="/cliente" replace />} />
+        <Route path="/calendario" element={<Navigate to="/cliente/calendario" replace />} />
+        <Route path="/progreso" element={<Navigate to="/cliente/progreso" replace />} />
+        <Route path="/miplan" element={<Navigate to="/cliente/miplan" replace />} />
+        <Route path="/alimentacion" element={<Navigate to="/cliente/alimentacion" replace />} />
+        <Route path="/planes" element={<Navigate to="/cliente/planes" replace />} />
+        <Route path="/rutinas" element={<Navigate to="/cliente/rutinas" replace />} />
+        <Route path="/reserva" element={<Navigate to="/cliente/reserva" replace />} />
+        <Route path="/pagos" element={<Navigate to="/cliente/pagos" replace />} />
+        <Route path="/notificaciones" element={<Navigate to="/cliente/notificaciones" replace />} />
+        <Route path="/historial" element={<Navigate to="/cliente/historial" replace />} />
+        <Route path="/perfil" element={<Navigate to="/cliente/perfil" replace />} />
 
         {/* Admin (anidadas) */}
         <Route path="/admin" element={<AdminLayout />}>

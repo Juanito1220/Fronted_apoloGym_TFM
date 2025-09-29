@@ -7,6 +7,20 @@
   color: #333;
 }
 
+/* Client Main Content Area */
+.client-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #f6f7fb;
+}
+
+.client-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+}
+
 /* Sidebar - now using professional-sidebar classes */
 .sidebar {
   width: 280px;

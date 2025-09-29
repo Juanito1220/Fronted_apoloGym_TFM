@@ -1,0 +1,69 @@
+/* Cliente Dashboard Styles */
+.cliente-dashboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f6f7fb 0%, #f1f3f9 100%);
+    padding: 4rem 2rem;
+}
+
+.dashboard-header {
+    text-align: center;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.dashboard-header h1 {
+    font-size: 4.5rem;
+    font-weight: 900;
+    background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 50%, #a78bfa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.025em;
+    text-shadow: 0 4px 20px rgba(124, 58, 237, 0.3);
+    line-height: 1.1;
+}
+
+.dashboard-header p {
+    font-size: 1.25rem;
+    color: #64748b;
+    font-weight: 500;
+    margin: 0;
+    opacity: 0.8;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .cliente-dashboard {
+        padding: 1rem;
+    }
+
+    .dashboard-header h1 {
+        font-size: 3rem;
+    }
+
+    .dashboard-header p {
+        font-size: 1.1rem;
+    }
+}
+
+/* Animation for dashboard entrance */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dashboard-header {
+    animation: fadeInUp 0.8s ease forwards;
+}
