@@ -1,116 +1,211 @@
-import React, { useState } from "react";
-import { listPlans, savePlan, deletePlan } from "../../Data/Stores/planes.store";
-import { audit } from "../../Data/Stores/audit.store";
-import { useNavigate } from "react-router-dom";
-// import BackToMenu from "../../Componentes/backtoMenu.js"; // no se usa aquí
+import React, { useState, useEffect, useMemo } from "react";
+import { toast } from 'react-hot-toast';
+import planService from "../../Data/Services/planService";
+import PlanModal from "../../Componentes/Admin/PlanModal";
+import PlanTable from "../../Componentes/Admin/PlanTable";
+import "../../Styles/user-management.css";
 
-export default function PlanesConfig(){
-  const [planes, setPlanes] = useState(() => listPlans());
-  const [form, setForm] = useState({ id:"", nombre:"", precio:0, beneficios:"", status:"activo" });
-  const navigate = useNavigate();
+export default function PlanesConfig() {
+  // Estados principales
+  const [planes, setPlanes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterEstado, setFilterEstado] = useState('todos');
+  const [showModal, setShowModal] = useState(false);
+  const [editingPlan, setEditingPlan] = useState(null);
 
-  const guardar = () => {
-    const arr = savePlan({
-      ...form,
-      precio: Number(form.precio) || 0,
-      beneficios: parseBeneficios(form.beneficios),
-    });
-    setPlanes(arr);
-    audit(form.id ? "PLAN_UPDATE" : "PLAN_CREATE", { id: form.id, nombre: form.nombre });
-    setForm({ id:"", nombre:"", precio:0, beneficios:"", status:"activo" });
+  // Cargar planes al montar el componente
+  useEffect(() => {
+    loadPlanes();
+  }, []);
+
+  const loadPlanes = async () => {
+    try {
+      setLoading(true);
+      const response = await planService.fetchPlans(true); // Incluir inactivos
+      if (response.success) {
+        setPlanes(response.data);
+      }
+    } catch (error) {
+      toast.error('Error al cargar los planes');
+      console.error('Error loading plans:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const editar = (p) => setForm({ ...p, beneficios: (p.beneficios || []).join("\n") });
-  const borrar = (id) => { setPlanes(deletePlan(id)); audit("PLAN_DELETE", { id }); };
+  // Filtrado y búsqueda
+  const filteredPlanes = useMemo(() => {
+    let result = planes;
+
+    // Filtrar por estado
+    if (filterEstado !== 'todos') {
+      result = result.filter(plan => plan.estado === filterEstado);
+    }
+
+    // Buscar por término
+    if (searchTerm.trim()) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(plan =>
+        plan.nombre.toLowerCase().includes(term) ||
+        plan.beneficios.some(beneficio => beneficio.toLowerCase().includes(term))
+      );
+    }
+
+    return result;
+  }, [planes, searchTerm, filterEstado]);
+
+  // Handlers para acciones CRUD
+  const handleCreate = () => {
+    setEditingPlan(null);
+    setShowModal(true);
+  };
+
+  const handleEdit = (plan) => {
+    setEditingPlan(plan);
+    setShowModal(true);
+  };
+
+  const handleDelete = async (id) => {
+    // Confirmación con toast personalizado
+    toast((t) => (
+      <div className="flex items-center gap-3">
+        <span>¿Eliminar este plan?</span>
+        <button
+          className="bg-red-500 text-white px-3 py-1 rounded text-sm font-medium hover:bg-red-600 transition-colors"
+          onClick={async () => {
+            toast.dismiss(t.id);
+            await performDelete(id);
+          }}
+        >
+          Sí, eliminar
+        </button>
+        <button
+          className="bg-gray-200 text-gray-700 px-3 py-1 rounded text-sm font-medium hover:bg-gray-300 transition-colors"
+          onClick={() => toast.dismiss(t.id)}
+        >
+          Cancelar
+        </button>
+      </div>
+    ), {
+      duration: 5000,
+      position: 'top-center',
+    });
+  };
+
+  const performDelete = async (id) => {
+    try {
+      setLoading(true);
+      await planService.deletePlan(id);
+      await loadPlanes(); // Recargar lista
+    } catch (error) {
+      console.error('Error deleting plan:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSave = async (planData) => {
+    try {
+      setLoading(true);
+
+      if (editingPlan) {
+        await planService.updatePlan(editingPlan.id, planData);
+      } else {
+        await planService.createPlan(planData);
+      }
+
+      setShowModal(false);
+      setEditingPlan(null);
+      await loadPlanes(); // Recargar lista
+    } catch (error) {
+      console.error('Error saving plan:', error);
+      // El error ya se maneja en el service con toast
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="container page" style={{ padding: 20 }}>
-      <h2>Planes</h2>
-
-      <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }}>
-        <div>
-          <table style={{ width: "100%", borderCollapse: "collapse" }}>
-            <thead>
-              <tr style={{ background: "#f9fafb" }}>
-                <th style={th}>Nombre</th>
-                <th style={th}>Precio</th>
-                <th style={th}>Estatus</th>
-                <th style={th}>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {planes.map((p) => (
-                <tr key={p.id}>
-                  <td style={td}>{p.nombre}</td>
-                  <td style={td}>$ {Number(p.precio || 0).toFixed(2)}</td>
-                  <td style={td}>{p.status}</td>
-                  <td style={td}>
-                    <button onClick={() => editar(p)}>Editar</button>
-                    <button onClick={() => borrar(p.id)} style={{ marginLeft: 6 }}>
-                      Borrar
-                    </button>
-                  </td>
-                </tr>
-              ))}
-              {!planes.length && (
-                <tr>
-                  <td style={td} colSpan={4}>Sin planes</td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* BOTÓN REGRESAR → al dashboard de Admin dentro del AdminLayout */}
-        <div className="back-line">
-          {/* Opción A: relativa (desde /admin/planes sube a /admin) */}
+    <div className="admin-content">
+      <div className="container page user-management">
+        {/* Header */}
+        <div className="user-header">
+          <h2 className="user-title">
+            Gestión de Planes de Membresía
+          </h2>
           <button
-            className="btn-back-menu"
-            onClick={() => navigate("..", { replace: true, relative: "path" })}
+            className="btn-create-user"
+            onClick={handleCreate}
+            disabled={loading}
           >
-            ← Regresar al panel
+            + Crear Nuevo Plan
           </button>
+        </div>      {/* Filtros y Búsqueda */}
+        <div className="user-filters">
+          <div className="filter-left">
+            <select
+              value={filterEstado}
+              onChange={(e) => setFilterEstado(e.target.value)}
+              className="role-filter"
+            >
+              <option value="todos">Todos los planes</option>
+              <option value="activo">Activos</option>
+              <option value="inactivo">Inactivos</option>
+              <option value="eliminado">Eliminados</option>
+            </select>
 
-          {/* Opción B: absoluta (si prefieres ruta fija) */}
-          {/* <button className="btn-back-menu" onClick={() => navigate("/admin")}>← Regresar al panel</button> */}
+            <div className="results-count">
+              {filteredPlanes.length} plan(es) encontrado(s)
+            </div>
+          </div>
+
+          <div className="filter-right">
+            <div className="search-input-container-wide">
+              <input
+                type="text"
+                placeholder="Buscar por nombre o beneficios..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input-wide"
+              />
+              <div className="search-actions">
+                {searchTerm && (
+                  <button
+                    onClick={() => setSearchTerm("")}
+                    className="clear-search-btn"
+                  >
+                    ×
+                  </button>
+                )}
+                <div className="search-icon-right">🔍</div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: 12, padding: 12 }}>
-          <h3>{form.id ? "Editar" : "Nuevo"} plan</h3>
-          <input
-            style={inp}
-            placeholder="Nombre"
-            value={form.nombre}
-            onChange={(e) => setForm((f) => ({ ...f, nombre: e.target.value }))}
+        {/* Tabla de Planes */}
+        <PlanTable
+          planes={filteredPlanes}
+          loading={loading}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          searchTerm={searchTerm}
+        />
+
+        {/* Modal de Crear/Editar */}
+        {showModal && (
+          <PlanModal
+            plan={editingPlan}
+            onSave={handleSave}
+            onClose={() => {
+              setShowModal(false);
+              setEditingPlan(null);
+            }}
           />
-          <input
-            style={inp}
-            placeholder="Precio"
-            value={form.precio}
-            onChange={(e) => setForm((f) => ({ ...f, precio: e.target.value }))}
-          />
-          <textarea
-            style={{ ...inp, height: 100 }}
-            placeholder={"Beneficios (uno por línea)"}
-            value={form.beneficios}
-            onChange={(e) => setForm((f) => ({ ...f, beneficios: e.target.value }))}
-          />
-          <select
-            style={inp}
-            value={form.status}
-            onChange={(e) => setForm((f) => ({ ...f, status: e.target.value }))}
-          >
-            <option value="activo">activo</option>
-            <option value="inactivo">inactivo</option>
-          </select>
-          <button onClick={guardar}>{form.id ? "Actualizar" : "Crear"}</button>
-        </div>
+        )}
+
       </div>
     </div>
   );
 }
-
-const parseBeneficios = (txt) => txt.split("\n").map((s) => s.trim()).filter(Boolean);
-const th = { padding: "8px 10px", borderBottom: "1px solid #e5e7eb" };
-const td = { padding: "8px 10px", borderBottom: "1px solid #f3f4f6" };
-const inp = { width: "100%", padding: "10px 12px", margin: "6px 0", border: "1px solid #e5e7eb", borderRadius: 10 };
