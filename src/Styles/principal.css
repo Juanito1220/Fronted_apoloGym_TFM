@@ -1,3 +1,25 @@
+/* principal.css */
+.pagina-principal {
+  width: 100%;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Asegurar transiciones fluidas entre secciones */
+.pagina-principal>* {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Resetear márgenes para evitar espacios extra */
+.pagina-principal>*:first-child {
+  margin-top: 0;
+}
+
+.pagina-principal>*:last-child {
+  margin-bottom: 0;
+}
+
 /* landing.css */
 
 body {
@@ -17,7 +39,7 @@ body {
   background: #fff;
   max-width: 1200px;
   margin: 40px auto;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
   border-radius: 12px;
 }
 
@@ -31,7 +53,8 @@ body {
 
 .info-gym h1 {
   font-size: 3rem;
-  color: #28a745; /* verde Apolo */
+  color: #28a745;
+  /* verde Apolo */
   margin-bottom: 15px;
 }
 
@@ -85,7 +108,7 @@ body {
   max-width: 450px;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
 /* Responsive: en pantallas pequeñas apila vertical */
@@ -94,6 +117,7 @@ body {
     flex-direction: column;
     padding: 20px;
   }
+
   .slider-aside {
     max-width: 100%;
   }

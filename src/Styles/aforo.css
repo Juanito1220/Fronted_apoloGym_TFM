@@ -1,0 +1,365 @@
+/* ===== SISTEMA DE AFORO - ESTILOS PRINCIPALES ===== */
+
+/* Dashboard principal */
+.aforo-dashboard {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+/* Tarjetas del aforo */
+.aforo-card {
+    transition: all 0.3s ease;
+}
+
+.aforo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Efectos de hover para tarjetas */
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* ===== BOTONES DE NAVEGACIÓN MEJORADOS ===== */
+
+/* Container de navegación */
+.nav-tab-container {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-tab-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.nav-tab-container:hover::before {
+    left: 100%;
+}
+
+/* Efecto de brillar en botones activos */
+.nav-tab-active {
+    position: relative;
+    overflow: hidden;
+}
+
+.nav-tab-active::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.2) 50%, transparent 70%);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+}
+
+/* Efectos de escala suave */
+.scale-on-hover {
+    transition: transform 0.2s ease-in-out;
+}
+
+.scale-on-hover:hover {
+    transform: scale(1.02);
+}
+
+.scale-on-active {
+    transition: transform 0.2s ease-in-out;
+}
+
+.scale-on-active:active {
+    transform: scale(0.98);
+}
+
+/* Gradientes animados para los botones */
+.gradient-button {
+    background-size: 200% 200%;
+    animation: gradient-shift 4s ease infinite;
+}
+
+/* ===== ANIMACIONES ===== */
+
+/* Animación de aparición */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Efecto de brillo para botones activos */
+@keyframes shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+
+    50% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+}
+
+/* Gradientes animados */
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Animaciones de progreso circular */
+.progress-circle {
+    transition: stroke-dashoffset 0.6s ease-in-out;
+}
+
+/* Indicadores de estado con pulso */
+.status-indicator {
+    position: relative;
+}
+
+.status-indicator.critical::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(239, 68, 68, 0.4);
+    animation: pulse-critical 2s infinite;
+}
+
+.status-indicator.warning::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 50%;
+    background: rgba(245, 158, 11, 0.4);
+    animation: pulse-warning 2s infinite;
+}
+
+/* Animaciones de notificaciones */
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse-critical {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes pulse-warning {
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.05);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Efectos de carga */
+.loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+/* Estilos para botones de acción rápida */
+.quick-action-btn {
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.quick-action-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.quick-action-btn:active {
+    transform: translateY(0);
+}
+
+.quick-action-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    transition: width 0.3s ease, height 0.3s ease;
+    transform: translate(-50%, -50%);
+}
+
+.quick-action-btn:active::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Estilos responsive mejorados */
+@media (max-width: 768px) {
+    .aforo-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .notification-container {
+        left: 1rem !important;
+        right: 1rem !important;
+        max-width: none !important;
+    }
+}
+
+/* Estados de alerta visuales */
+.alert-state {
+    position: relative;
+}
+
+.alert-state.critical {
+    background: linear-gradient(135deg, #fef2f2, #fee2e2);
+    border-color: #fca5a5;
+}
+
+.alert-state.warning {
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    border-color: #fcd34d;
+}
+
+.alert-state.safe {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border-color: #86efac;
+}
+
+/* Barras de progreso mejoradas */
+.progress-bar {
+    background: linear-gradient(90deg, #e5e7eb, #f3f4f6);
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    animation: progress-shine 2s infinite;
+}
+
+@keyframes progress-shine {
+    0% {
+        left: -100%;
+    }
+
+    100% {
+        left: 100%;
+    }
+}
+
+/* Iconos animados */
+.animated-icon {
+    transition: transform 0.3s ease;
+}
+
+.animated-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+/* Mejoras de accesibilidad */
+.focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+}
+
+/* Efectos de hover para tarjetas */
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
