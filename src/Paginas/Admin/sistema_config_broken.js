@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState } from "react";
 import { db } from "../../Data/api";
 import {
   FiSettings,
@@ -11,10 +11,27 @@ import {
   FiEye,
   FiUpload,
   FiX
-} from "react-icons/fi";
-import { toast } from 'react-hot-toast';
-
-const DEFAULTS = {
+} f        {activeTab === 'horarios' && (
+          <HorariosTab 
+            cfg={cfg} 
+            updateCfg={updateCfg}
+            nuevoFeriado={nuevoFeriado}
+            setNuevoFeriado={setNuevoFeriado}
+            addFeriado={addFeriado}
+            delFeriado={delFeriado}
+          />
+        )}
+        {activeTab === 'salas' && (
+          <SalasTab 
+            cfg={cfg} 
+            updateCfg={updateCfg}
+            nuevaSala={nuevaSala}
+            setNuevaSala={setNuevaSala}
+            addSala={addSala}
+            delSala={delSala}
+          />
+        )};
+import { toast } from 'react-hot-toast'; const DEFAULTS = {
   general: {
     nombre: "Apolo Gym",
     logoUrl: "",
@@ -64,20 +81,39 @@ export default function SistemaConfig() {
   const [nuevaSala, setNuevaSala] = useState({ nombre: "", capacidad: 0 });
   const [nuevoFeriado, setNuevoFeriado] = useState("");
 
-  // Detectar cambios usando useEffect para monitorear cfg
-  useEffect(() => {
-    const hasChanged = JSON.stringify(cfg) !== JSON.stringify(initial);
+  // Detectar cambios
+  const checkForChanges = (newConfig) => {
+    const hasChanged = JSON.stringify(newConfig) !== JSON.stringify(initial);
     setHasChanges(hasChanged);
-  }, [cfg, initial]);
+  };
 
-  // Función helper para actualizar configuración
-  const updateCfg = (updater) => {
+  // Actualizar configuración
+  const updateConfig = (path, value) => {
     setCfg(prevCfg => {
-      return typeof updater === 'function' ? updater(prevCfg) : updater;
+      const newCfg = { ...prevCfg };
+      const keys = path.split('.');
+      let current = newCfg;
+      
+      for (let i = 0; i < keys.length - 1; i++) {
+        current = current[keys[i]];
+      }
+      current[keys[keys.length - 1]] = value;
+      
+      // Verificar cambios después de que el estado se actualice
+      setTimeout(() => checkForChanges(newCfg), 0);
+      return newCfg;
     });
   };
 
-  // Guardar configuración
+  // Función helper para actualizar configuración con detección de cambios
+  const updateCfg = (updater) => {
+    setCfg(prevCfg => {
+      const newCfg = typeof updater === 'function' ? updater(prevCfg) : updater;
+      // Verificar cambios después de que el estado se actualice
+      setTimeout(() => checkForChanges(newCfg), 0);
+      return newCfg;
+    });
+  };  // Guardar configuración
   const handleSave = async () => {
     setSaving(true);
     try {
@@ -96,7 +132,7 @@ export default function SistemaConfig() {
   const handleReset = () => {
     setCfg(initial);
     setHasChanges(false);
-    toast('Configuración restablecida');
+    toast.info('Configuración restablecida');
   };
 
   const addSala = () => {
@@ -200,12 +236,12 @@ export default function SistemaConfig() {
       {/* Contenido de las pestañas */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {activeTab === 'general' && (
-          <GeneralTab cfg={cfg} updateCfg={updateCfg} />
+          <GeneralTab cfg={cfg} updateConfig={updateConfig} />
         )}
         {activeTab === 'horarios' && (
           <HorariosTab
             cfg={cfg}
-            updateCfg={updateCfg}
+            setCfg={setCfg}
             nuevoFeriado={nuevoFeriado}
             setNuevoFeriado={setNuevoFeriado}
             addFeriado={addFeriado}
@@ -215,7 +251,7 @@ export default function SistemaConfig() {
         {activeTab === 'salas' && (
           <SalasTab
             cfg={cfg}
-            updateCfg={updateCfg}
+            setCfg={setCfg}
             nuevaSala={nuevaSala}
             setNuevaSala={setNuevaSala}
             addSala={addSala}
@@ -228,11 +264,11 @@ export default function SistemaConfig() {
 }
 
 // Componente para la pestaña General
-const GeneralTab = ({ cfg, updateCfg }) => {
+const GeneralTab = ({ cfg, updateConfig }) => {
   const [imageError, setImageError] = useState(false);
 
   // Reset error when URL changes
-  useEffect(() => {
+  React.useEffect(() => {
     setImageError(false);
   }, [cfg.general.logoUrl]);
 
@@ -255,7 +291,7 @@ const GeneralTab = ({ cfg, updateCfg }) => {
                 <input
                   type="text"
                   value={cfg.general.nombre}
-                  onChange={(e) => updateCfg(c => ({ ...c, general: { ...c.general, nombre: e.target.value } }))}
+                  onChange={(e) => updateConfig('general.nombre', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="Ej: Apolo Gym"
                 />
@@ -268,7 +304,7 @@ const GeneralTab = ({ cfg, updateCfg }) => {
                 <input
                   type="url"
                   value={cfg.general.logoUrl}
-                  onChange={(e) => updateCfg(c => ({ ...c, general: { ...c.general, logoUrl: e.target.value } }))}
+                  onChange={(e) => updateConfig('general.logoUrl', e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   placeholder="https://ejemplo.com/logo.png"
                 />
@@ -282,13 +318,13 @@ const GeneralTab = ({ cfg, updateCfg }) => {
                   <input
                     type="color"
                     value={cfg.general.colorPrimario}
-                    onChange={(e) => updateCfg(c => ({ ...c, general: { ...c.general, colorPrimario: e.target.value } }))}
+                    onChange={(e) => updateConfig('general.colorPrimario', e.target.value)}
                     className="w-16 h-10 border border-gray-300 rounded-lg cursor-pointer"
                   />
                   <input
                     type="text"
                     value={cfg.general.colorPrimario}
-                    onChange={(e) => updateCfg(c => ({ ...c, general: { ...c.general, colorPrimario: e.target.value } }))}
+                    onChange={(e) => updateConfig('general.colorPrimario', e.target.value)}
                     className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                   />
                 </div>
@@ -351,7 +387,7 @@ const GeneralTab = ({ cfg, updateCfg }) => {
 };
 
 // Componente para la pestaña de Horarios  
-const HorariosTab = ({ cfg, updateCfg, nuevoFeriado, setNuevoFeriado, addFeriado, delFeriado }) => {
+const HorariosTab = ({ cfg, setCfg, nuevoFeriado, setNuevoFeriado, addFeriado, delFeriado }) => {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -370,7 +406,7 @@ const HorariosTab = ({ cfg, updateCfg, nuevoFeriado, setNuevoFeriado, addFeriado
               <input
                 type="time"
                 value={cfg.horario.abre}
-                onChange={(e) => updateCfg(c => ({ ...c, horario: { ...c.horario, abre: e.target.value } }))}
+                onChange={(e) => setCfg(c => ({ ...c, horario: { ...c.horario, abre: e.target.value } }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -382,7 +418,7 @@ const HorariosTab = ({ cfg, updateCfg, nuevoFeriado, setNuevoFeriado, addFeriado
               <input
                 type="time"
                 value={cfg.horario.cierra}
-                onChange={(e) => updateCfg(c => ({ ...c, horario: { ...c.horario, cierra: e.target.value } }))}
+                onChange={(e) => setCfg(c => ({ ...c, horario: { ...c.horario, cierra: e.target.value } }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               />
             </div>
@@ -438,7 +474,7 @@ const HorariosTab = ({ cfg, updateCfg, nuevoFeriado, setNuevoFeriado, addFeriado
 };
 
 // Componente para la pestaña de Salas
-const SalasTab = ({ cfg, updateCfg, nuevaSala, setNuevaSala, addSala, delSala }) => {
+const SalasTab = ({ cfg, setCfg, nuevaSala, setNuevaSala, addSala, delSala }) => {
   return (
     <div className="space-y-6">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
@@ -501,7 +537,7 @@ const SalasTab = ({ cfg, updateCfg, nuevaSala, setNuevaSala, addSala, delSala })
                     <input
                       type="text"
                       value={sala.nombre}
-                      onChange={(e) => updateCfg(c => ({
+                      onChange={(e) => setCfg(c => ({
                         ...c,
                         salas: c.salas.map(x => x.id === sala.id ? { ...x, nombre: e.target.value } : x)
                       }))}
@@ -512,7 +548,7 @@ const SalasTab = ({ cfg, updateCfg, nuevaSala, setNuevaSala, addSala, delSala })
                     <input
                       type="number"
                       value={sala.capacidad}
-                      onChange={(e) => updateCfg(c => ({
+                      onChange={(e) => setCfg(c => ({
                         ...c,
                         salas: c.salas.map(x => x.id === sala.id ? { ...x, capacidad: Number(e.target.value) || 0 } : x)
                       }))}
