@@ -1,54 +1,145 @@
-:root{
-  --bg:#f6f7fb;
-  --text:#111827;
-  --muted:#6b7280;
-  --line:#e5e7eb;
-  --card:#ffffff;
-  --primary:#2563eb;
-  --primary-2:#1d4ed8;
-  --aside:#111827;        /* negro “claro” del header */
+:root {
+  --bg: #f6f7fb;
+  --text: #111827;
+  --muted: #6b7280;
+  --line: #e5e7eb;
+  --card: #ffffff;
+  --primary: #2563eb;
+  --primary-2: #1d4ed8;
+  --aside: #111827;
+  /* negro “claro” del header */
 }
 
-.btn{ border:1px solid var(--line); background:#fff; color:var(--text);
-  border-radius:10px; padding:10px 14px; font-weight:800; cursor:pointer; }
-.btn.primary{ background:var(--primary); color:#fff; border-color:var(--primary-2); }
-.btn.primary:hover{ background:var(--primary-2); }
-.btn.ghost{ background:transparent; }
+.btn {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--text);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.btn.primary {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary-2);
+}
+
+.btn.primary:hover {
+  background: var(--primary-2);
+}
+
+.btn.ghost {
+  background: transparent;
+}
 
 /* Shell */
-.admin-shell{
-  display:grid; grid-template-columns: 260px 1fr; min-height:100vh; background:var(--bg);
+.admin-shell {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: 100vh;
+  background: var(--bg);
 }
 
 /* Sidebar */
-.admin-aside{
-  background:var(--aside); color:#e5e7eb; display:flex; flex-direction:column; gap:8px;
-  border-right:1px solid rgba(255,255,255,.06); padding:14px 12px; position:sticky; top:0; height:100vh;
+.admin-aside {
+  background: var(--aside);
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-right: 1px solid rgba(255, 255, 255, .06);
+  padding: 14px 12px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
 }
-.admin-brand{
-  display:flex; align-items:center; gap:8px; font-weight:900; color:#fff; padding:8px; border-radius:10px;
-  cursor:pointer; background:rgba(255,255,255,.05);
-}
-.admin-nav{ display:flex; flex-direction:column; gap:4px; margin-top:6px; }
-.admin-section{ margin:12px 8px 4px; color:#9ca3af; font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
 
-.admin-link{
-  color:#e5e7eb; text-decoration:none; padding:10px 12px; border-radius:10px; display:block;
+.admin-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 900;
+  color: #fff;
+  padding: 8px;
+  border-radius: 10px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, .05);
 }
-.admin-link:hover{ background:rgba(255,255,255,.06); }
-.admin-link.active{ background:#1f2937; color:#fff; font-weight:800; }
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.admin-section {
+  margin: 12px 8px 4px;
+  color: #9ca3af;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.admin-link {
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 10px 12px;
+  border-radius: 10px;
+  display: block;
+}
+
+.admin-link:hover {
+  background: rgba(255, 255, 255, .06);
+}
+
+.admin-link.active {
+  background: #1f2937;
+  color: #fff;
+  font-weight: 800;
+}
 
 /* Main / Topbar */
-.admin-main{ display:flex; flex-direction:column; min-width:0; }
-.admin-topbar{
-  display:flex; align-items:center; justify-content:space-between; gap:10px;
-  background:#fff; border-bottom:1px solid var(--line); padding:10px 16px; position:sticky; top:0; z-index:10;
+.admin-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
-.admin-top-title{ font-weight:900; }
-.admin-top-actions{ display:flex; gap:8px; }
+
+.admin-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #fff;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 16px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.admin-top-title {
+  font-weight: 900;
+}
+
+.admin-top-actions {
+  display: flex;
+  gap: 8px;
+}
 
 /* Content */
-.admin-content{
-  padding:16px; max-width:1200px; width:100%;
+.admin-content {
+  padding: 16px;
+  max-width: 1200px;
+  width: 100%;
 }
-.container.page{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px; }
+
+.container.page {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 16px;
+}

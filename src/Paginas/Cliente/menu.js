@@ -1,62 +1,71 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "../../Styles/menu.css";
+import "../../Styles/professional-sidebar.css";
 import {
-  FaUsers,
+  FaBell,
   FaUserTie,
   FaClock,
   FaMoneyBill,
   FaClipboardList,
-  FaChartBar,
+  FaDumbbell,
   FaAppleAlt,
   FaChartLine,
   FaClipboardCheck,
+  FaHistory,
 } from "react-icons/fa";
-import AvatarMenu from "../../Componentes/AvatarMenu"; // ⬅️ menú de perfil reutilizable
+import AvatarMenu from "../../Componentes/AvatarMenu";
 
 const Menu = () => {
   return (
     <div className="menu-wrapper">
       {/* Sidebar izquierdo */}
-      <aside className="sidebar">
-        <Link to="/notificaciones" className="menu-item">
-          <FaUsers className="menu-icon" />
-          <span>Notificaciones</span>
-        </Link>
+      <aside className="professional-sidebar client-theme">
+        <div className="pro-sidebar-brand">
+          <span className="pro-brand-icon">🏋️‍♂️</span>
+          <span className="pro-brand-text">Apolo Gym</span>
+        </div>
 
-        <Link to="/planes" className="menu-item">
-          <FaClipboardList className="menu-icon" />
-          <span>Planes/Membresías</span>
-        </Link>
+        <nav className="pro-sidebar-nav">
+          <div className="pro-nav-section">Servicios</div>
 
-        <Link to="/rutinas" className="menu-item">
-          <FaChartBar className="menu-icon" />
-          <span>Entrenamientos/Rutinas</span>
-        </Link>
+          <Link to="/notificaciones" className="pro-nav-link">
+            <FaBell className="pro-nav-icon" />
+            <span>Notificaciones</span>
+          </Link>
 
-        <Link to="/reserva" className="menu-item">
-          <FaClock className="menu-icon" />
-          <span>Reservas/Turnos</span>
-        </Link>
+          <Link to="/planes" className="pro-nav-link">
+            <FaClipboardList className="pro-nav-icon" />
+            <span>Planes/Membresías</span>
+          </Link>
 
-        <Link to="/pagos" className="menu-item">
-          <FaMoneyBill className="menu-icon" />
-          <span>Pagos</span>
-        </Link>
+          <Link to="/rutinas" className="pro-nav-link">
+            <FaDumbbell className="pro-nav-icon" />
+            <span>Entrenamientos/Rutinas</span>
+          </Link>
 
-        <Link to="/entrenadores" className="menu-item">
-          <FaUserTie className="menu-icon" />
-          <span>Entrenadores</span>
-        </Link>
+          <Link to="/reserva" className="pro-nav-link">
+            <FaClock className="pro-nav-icon" />
+            <span>Reservas/Turnos</span>
+          </Link>
 
-         <Link to="/historial" className="menu-item">
-          <FaUserTie className="menu-icon" />
-          <span>Historial</span>
-        </Link>
+          <Link to="/pagos" className="pro-nav-link">
+            <FaMoneyBill className="pro-nav-icon" />
+            <span>Pagos</span>
+          </Link>
 
-         
+          <Link to="/entrenadores" className="pro-nav-link">
+            <FaUserTie className="pro-nav-icon" />
+            <span>Entrenadores</span>
+          </Link>
+
+          <Link to="/historial" className="pro-nav-link">
+            <FaHistory className="pro-nav-icon" />
+            <span>Historial</span>
+          </Link>
+        </nav>
       </aside>
-      
+
 
       {/* Contenido principal */}
       <main className="main-content">

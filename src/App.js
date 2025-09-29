@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { Toaster } from 'react-hot-toast';
 import Header from "./Componentes/header";
 import Footer from "./Componentes/footer";
@@ -33,7 +33,6 @@ import Perfil from "./Paginas/Cliente/perfil";
 
 // Admin
 import AdminLayout from "./Paginas/Admin/AdminLayout";
-import AdminMenu from "./Paginas/Admin/dashboard";
 import UsuariosRoles from "./Paginas/Admin/usuarios_roles";
 import PlanesConfig from "./Paginas/Admin/planes_config";
 import Reportes from "./Paginas/Admin/reportes";
@@ -87,7 +86,7 @@ function AppContent() {
 
         {/* Admin (anidadas) */}
         <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminMenu />} />
+          <Route index element={<Navigate to="/admin/usuarios-roles" replace />} />
           <Route path="usuarios-roles" element={<UsuariosRoles />} />
           <Route path="planes" element={<PlanesConfig />} />
           <Route path="reportes" element={<Reportes />} />

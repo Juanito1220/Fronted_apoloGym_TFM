@@ -113,7 +113,7 @@ import "../../Styles/user-management.css"; export default function UsuariosRoles
     console.log('🚨 handleDelete llamado con ID:', id);
 
     // Usar una confirmación más simple con toast
-    const confirmToast = toast((t) => (
+    toast((t) => (
       <span className="flex items-center gap-2">
         <span>¿Eliminar usuario?</span>
         <button

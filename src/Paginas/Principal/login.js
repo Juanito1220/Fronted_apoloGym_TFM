@@ -14,8 +14,8 @@ const Login = () => {
   // Usuarios de prueba
   const testUsers = [
     { email: 'admin@apolo.com', password: 'admin123', role: 'admin' },
-    { email: 'entrenador@apolosgym.com', password: 'trainer123', role: 'trainer' },
-    { email: 'cliente@apolosgym.com', password: 'client123', role: 'client' }
+    { email: 'entrenador@apolo.com', password: 'entrenador123', role: 'trainer' },
+    { email: 'cliente@apolo.com', password: 'cliente123', role: 'client' }
   ];
 
   const handleSubmit = async (e) => {
