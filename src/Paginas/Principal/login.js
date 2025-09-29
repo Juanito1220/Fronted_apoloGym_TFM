@@ -11,6 +11,13 @@ const Login = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  // Usuarios de prueba
+  const testUsers = [
+    { email: 'admin@apolo.com', password: 'admin123', role: 'admin' },
+    { email: 'entrenador@apolosgym.com', password: 'trainer123', role: 'trainer' },
+    { email: 'cliente@apolosgym.com', password: 'client123', role: 'client' }
+  ];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -18,8 +25,22 @@ const Login = () => {
 
     // Simular delay de autenticación
     setTimeout(() => {
-      if (email === 'jessicamaliza19@gmail.com' && password === '1234') {
-        navigate('/menu');
+      const user = testUsers.find(u => u.email === email && u.password === password);
+
+      if (user) {
+        // Redirigir según el rol del usuario
+        switch (user.role) {
+          case 'admin':
+            navigate('/admin');
+            break;
+          case 'trainer':
+            navigate('/entrenador');
+            break;
+          case 'client':
+          default:
+            navigate('/menu');
+            break;
+        }
       } else {
         setError('Correo o contraseña incorrectos');
       }
@@ -145,6 +166,10 @@ const Login = () => {
             <div className="feature-item">
               <span className="feature-icon">👨‍🏫</span>
               <span>Entrenadores certificados</span>
+            </div>
+            <div className="feature-item">
+              <span className="feature-icon">🕐</span>
+              <span>Horarios flexibles 24/7</span>
             </div>
           </div>
         </div>

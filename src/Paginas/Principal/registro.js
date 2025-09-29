@@ -84,6 +84,10 @@ const Register = () => {
     }
   };
 
+  const handlePreviousStep = () => {
+    setCurrentStep(currentStep - 1);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -98,26 +102,12 @@ const Register = () => {
       setMensaje('✅ ¡Usuario registrado exitosamente!');
 
       setTimeout(() => {
-        navigate('/');
+        navigate('/login');
       }, 2000);
 
       setIsLoading(false);
     }, 1500);
   };
-
-  const renderStepIndicator = () => (
-    <div className="step-indicator">
-      <div className={`step ${currentStep >= 1 ? 'active' : ''}`}>
-        <span>1</span>
-        <p>Información Personal</p>
-      </div>
-      <div className="step-line"></div>
-      <div className={`step ${currentStep >= 2 ? 'active' : ''}`}>
-        <span>2</span>
-        <p>Cuenta y Contraseña</p>
-      </div>
-    </div>
-  );
 
   return (
     <div className="register-container">
@@ -138,98 +128,95 @@ const Register = () => {
             </div>
           </div>
 
-          {renderStepIndicator()}
+          <div className="steps-indicator">
+            <div className={`step-item ${currentStep === 1 ? 'active' : ''} ${currentStep > 1 ? 'completed' : ''}`}>
+              <div className="step-number">1</div>
+              <span>Información Personal</span>
+            </div>
+            <div className="step-divider"></div>
+            <div className={`step-item ${currentStep === 2 ? 'active' : ''} ${currentStep > 2 ? 'completed' : ''}`}>
+              <div className="step-number">2</div>
+              <span>Cuenta y Contraseña</span>
+            </div>
+          </div>
 
           <form onSubmit={handleSubmit} className="register-form">
             {mensaje && (
-              <div className={`message ${mensaje.includes('exitosamente') ? 'success' : 'error'}`}>
+              <div className={mensaje.includes('exitosamente') ? 'success-message' : 'error-message'}>
                 <span>{mensaje}</span>
               </div>
             )}
 
             {currentStep === 1 && (
-              <div className="form-step">
-                <h3>Información Personal</h3>
-
-                <div className="form-row">
-                  <div className="form-group">
-                    <div className="input-wrapper">
-                      <FaUser className="input-icon" />
-                      <input
-                        type="text"
-                        name="nombre"
-                        placeholder="Nombre"
-                        value={formData.nombre}
-                        onChange={handleChange}
-                        className={`form-input ${errors.nombre ? 'error' : ''}`}
-                        required
-                      />
-                    </div>
-                    {errors.nombre && <span className="error-text">{errors.nombre}</span>}
+              <div className="form-step active">
+                <div className="form-group">
+                  <div className="input-wrapper">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      name="nombre"
+                      placeholder="Nombre"
+                      value={formData.nombre}
+                      onChange={handleChange}
+                      className={`form-input ${errors.nombre ? 'error' : ''}`}
+                      required
+                    />
                   </div>
-
-                  <div className="form-group">
-                    <div className="input-wrapper">
-                      <FaUser className="input-icon" />
-                      <input
-                        type="text"
-                        name="apellido"
-                        placeholder="Apellido"
-                        value={formData.apellido}
-                        onChange={handleChange}
-                        className={`form-input ${errors.apellido ? 'error' : ''}`}
-                        required
-                      />
-                    </div>
-                    {errors.apellido && <span className="error-text">{errors.apellido}</span>}
-                  </div>
+                  {errors.nombre && <div className="error-message">{errors.nombre}</div>}
                 </div>
 
-                <div className="form-row">
-                  <div className="form-group">
-                    <div className="input-wrapper">
-                      <FaIdCard className="input-icon" />
-                      <input
-                        type="text"
-                        name="cedula"
-                        placeholder="Cédula"
-                        value={formData.cedula}
-                        onChange={handleChange}
-                        className={`form-input ${errors.cedula ? 'error' : ''}`}
-                        required
-                      />
-                    </div>
-                    {errors.cedula && <span className="error-text">{errors.cedula}</span>}
+                <div className="form-group">
+                  <div className="input-wrapper">
+                    <FaUser className="input-icon" />
+                    <input
+                      type="text"
+                      name="apellido"
+                      placeholder="Apellido"
+                      value={formData.apellido}
+                      onChange={handleChange}
+                      className={`form-input ${errors.apellido ? 'error' : ''}`}
+                      required
+                    />
                   </div>
-
-                  <div className="form-group">
-                    <div className="input-wrapper">
-                      <FaPhone className="input-icon" />
-                      <input
-                        type="tel"
-                        name="telefono"
-                        placeholder="Teléfono"
-                        value={formData.telefono}
-                        onChange={handleChange}
-                        className={`form-input ${errors.telefono ? 'error' : ''}`}
-                        required
-                      />
-                    </div>
-                    {errors.telefono && <span className="error-text">{errors.telefono}</span>}
-                  </div>
+                  {errors.apellido && <div className="error-message">{errors.apellido}</div>}
                 </div>
 
-                <div className="form-actions">
+                <div className="form-group">
+                  <div className="input-wrapper">
+                    <FaIdCard className="input-icon" />
+                    <input
+                      type="text"
+                      name="cedula"
+                      placeholder="Cédula"
+                      value={formData.cedula}
+                      onChange={handleChange}
+                      className={`form-input ${errors.cedula ? 'error' : ''}`}
+                      required
+                    />
+                  </div>
+                  {errors.cedula && <div className="error-message">{errors.cedula}</div>}
+                </div>
+
+                <div className="form-group">
+                  <div className="input-wrapper">
+                    <FaPhone className="input-icon" />
+                    <input
+                      type="tel"
+                      name="telefono"
+                      placeholder="Teléfono"
+                      value={formData.telefono}
+                      onChange={handleChange}
+                      className={`form-input ${errors.telefono ? 'error' : ''}`}
+                      required
+                    />
+                  </div>
+                  {errors.telefono && <div className="error-message">{errors.telefono}</div>}
+                </div>
+
+                <div className="form-buttons">
                   <button
                     type="button"
-                    className="auth-btn secondary"
-                    onClick={() => navigate('/')}
-                  >
-                    Volver al login
-                  </button>
-                  <button
-                    type="button"
-                    className="auth-btn primary"
+                    className="register-btn primary"
                     onClick={handleNextStep}
                   >
                     Siguiente
@@ -239,9 +226,7 @@ const Register = () => {
             )}
 
             {currentStep === 2 && (
-              <div className="form-step">
-                <h3>Cuenta y Contraseña</h3>
-
+              <div className="form-step active">
                 <div className="form-group">
                   <div className="input-wrapper">
                     <FaMapMarkerAlt className="input-icon" />
@@ -255,7 +240,7 @@ const Register = () => {
                       required
                     />
                   </div>
-                  {errors.direccion && <span className="error-text">{errors.direccion}</span>}
+                  {errors.direccion && <div className="error-message">{errors.direccion}</div>}
                 </div>
 
                 <div className="form-group">
@@ -271,7 +256,7 @@ const Register = () => {
                       required
                     />
                   </div>
-                  {errors.email && <span className="error-text">{errors.email}</span>}
+                  {errors.email && <div className="error-message">{errors.email}</div>}
                 </div>
 
                 <div className="form-group">
@@ -294,7 +279,7 @@ const Register = () => {
                       {showPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
-                  {errors.password && <span className="error-text">{errors.password}</span>}
+                  {errors.password && <div className="error-message">{errors.password}</div>}
                 </div>
 
                 <div className="form-group">
@@ -317,30 +302,20 @@ const Register = () => {
                       {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
                     </button>
                   </div>
-                  {errors.confirmarPassword && <span className="error-text">{errors.confirmarPassword}</span>}
+                  {errors.confirmarPassword && <div className="error-message">{errors.confirmarPassword}</div>}
                 </div>
 
-                <div className="password-strength">
-                  <div className="strength-indicator">
-                    <div className={`strength-bar ${formData.password.length >= 6 ? 'active' : ''}`}></div>
-                    <div className={`strength-bar ${formData.password.length >= 8 ? 'active' : ''}`}></div>
-                    <div className={`strength-bar ${/(?=.*[a-z])(?=.*[A-Z])/.test(formData.password) ? 'active' : ''}`}></div>
-                    <div className={`strength-bar ${/(?=.*\d)/.test(formData.password) ? 'active' : ''}`}></div>
-                  </div>
-                  <p>La contraseña debe tener al menos 6 caracteres</p>
-                </div>
-
-                <div className="form-actions">
+                <div className="form-buttons">
                   <button
                     type="button"
-                    className="auth-btn secondary"
-                    onClick={() => setCurrentStep(1)}
+                    className="register-btn secondary"
+                    onClick={handlePreviousStep}
                   >
-                    Atrás
+                    Anterior
                   </button>
                   <button
                     type="submit"
-                    className="auth-btn primary"
+                    className="register-btn primary"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -353,30 +328,38 @@ const Register = () => {
               </div>
             )}
           </form>
+
+          <div className="register-footer">
+            <p>¿Ya tienes una cuenta?</p>
+            <button
+              className="login-link"
+              onClick={() => navigate('/login')}
+            >
+              Iniciar sesión
+            </button>
+          </div>
         </div>
 
         <div className="register-info">
-          <h3>¿Por qué elegir Apolo GYM?</h3>
-          <div className="benefits-grid">
-            <div className="benefit-card">
-              <span className="benefit-icon">🏋️‍♂️</span>
-              <h4>Equipamiento Premium</h4>
-              <p>Máquinas de última tecnología para todos los niveles</p>
+          <h3>Transforma tu vida</h3>
+          <p>Únete a más de 50 miembros que ya han transformado su vida con nuestros programas de entrenamiento personalizado.</p>
+
+          <div className="feature-list">
+            <div className="feature-item">
+              <span className="feature-icon">🏋️‍♂️</span>
+              <span>Entrenamientos personalizados</span>
             </div>
-            <div className="benefit-card">
-              <span className="benefit-icon">👨‍🏫</span>
-              <h4>Entrenadores Certificados</h4>
-              <p>Profesionales con experiencia en diferentes disciplinas</p>
+            <div className="feature-item">
+              <span className="feature-icon">👨‍🏫</span>
+              <span>Entrenadores certificados</span>
             </div>
-            <div className="benefit-card">
-              <span className="benefit-icon">📱</span>
-              <h4>App Móvil</h4>
-              <p>Seguimiento de rutinas y progreso desde tu smartphone</p>
-            </div>
-            <div className="benefit-card">
-              <span className="benefit-icon">🕐</span>
-              <h4>Horarios Flexibles</h4>
-              <p>Acceso 24/7 para que entrenes cuando puedas</p>
+            {/* <div className="feature-item">
+              <span className="feature-icon">📱</span>
+              <span>App móvil incluida</span>
+            </div> */}
+            <div className="feature-item">
+              <span className="feature-icon">🕐</span>
+              <span>Horarios flexibles 24/7</span>
             </div>
           </div>
         </div>
