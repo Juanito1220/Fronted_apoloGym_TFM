@@ -1,52 +1,26 @@
-import React, { useMemo, useState } from "react";
-import { listUsers } from "../../Data/Stores/usuario.store";
-import { checkIn, checkOut, listAttendance } from "../../Data/Stores/aforo.store";
-import BackTo from "../../Componentes/backtoMenu";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export default function MarcarAsistencia(){
-  const clientes = useMemo(()=> listUsers().filter(u=>u.role==="cliente" && u.active!==false), []);
-  const [userId, setUserId] = useState(clientes[0]?.id || "");
-  const [sala, setSala] = useState("Principal");
-  const [logs, setLogs] = useState(()=> listAttendance());
+export default function MarcarAsistencia() {
+  const navigate = useNavigate();
 
-  const entrar = () => { if(!userId) return; checkIn({ userId, sala }); setLogs(listAttendance()); };
-  const salir  = () => { if(!userId) return; checkOut({ userId, sala }); setLogs(listAttendance()); };
+  useEffect(() => {
+    // Redirigir al dashboard con la pestaña de agenda activa
+    navigate("/entrenador", { 
+      replace: true,
+      state: { activeTab: 'agenda' }
+    });
+  }, [navigate]);
 
   return (
     <div className="container page">
-      <BackTo to="/entrenador" label="← Volver al panel" />
-      <h2>Marcar asistencia</h2>
-
-      <div className="grid2">
-        <div className="card">
-          <div className="lbl">Cliente</div>
-          <select className="inp" value={userId} onChange={e=>setUserId(e.target.value)}>
-            {clientes.map(c=> <option key={c.id} value={c.id}>{c.nombre || c.email}</option>)}
-          </select>
-          <div className="lbl" style={{marginTop:8}}>Sala</div>
-          <input className="inp" value={sala} onChange={e=>setSala(e.target.value)} />
-          <div style={{display:"flex", gap:8, marginTop:8}}>
-            <button className="btn" onClick={entrar}>Entrar</button>
-            <button className="btn" onClick={salir}>Salir</button>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="lbl">Movimientos recientes</div>
-          <table className="tbl">
-            <thead><tr><th>Fecha</th><th>Usuario</th><th>Sala</th><th>Tipo</th></tr></thead>
-            <tbody>
-              {logs.slice().reverse().slice(0,50).map(r=>(
-                <tr key={r.id}>
-                  <td>{r.ts.slice(0,16).replace("T"," ")}</td>
-                  <td>{r.userId}</td>
-                  <td>{r.sala}</td>
-                  <td>{r.type}</td>
-                </tr>
-              ))}
-              {!logs.length && <tr><td colSpan={4}>Sin registros</td></tr>}
-            </tbody>
-          </table>
+      <div className="flex items-center justify-center min-h-64">
+        <div className="text-center">
+          <svg className="animate-spin -ml-1 mr-3 h-8 w-8 text-green-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <p className="text-gray-600">Redirigiendo al Panel del Entrenador...</p>
         </div>
       </div>
     </div>
