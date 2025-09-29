@@ -1,31 +1,3 @@
-/*import logo from './logo.svg';
-import './App.css';
-
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
-
-export default App;*/
-
-//export default App;
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import Header from "./Componentes/header";
@@ -36,10 +8,10 @@ import PrivateRoute from "./Auth/PrivateRoute";
 import RequireRole from "./Auth/RequiereRol";
 
 // Páginas públicas
+import Nosotros from "./Paginas/Principal/nosotros";
+import Servicios from "./Paginas/Principal/servicios";
+import Contactos from "./Paginas/Principal/contactos";
 import PaginaPrincipal from "./Paginas/Principal/principal";
-import Nosotros from "./Paginas/nosotros";
-import Servicios from "./Paginas/servicios";
-import Contactos from "./Paginas/contactos";
 import Login from "./Paginas/Principal/login";
 import Registro from "./Paginas/Principal/registro";
 import RecuperarContraseña from "./Paginas/Principal/recuperarPassword";

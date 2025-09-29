@@ -1,6 +1,6 @@
 // src/Paginas/nosotros.js
 import React from 'react';
-import '../Styles/nosotros.css';
+import '../../Styles/nosotros.css';
 
 const Nosotros = () => {
   return (

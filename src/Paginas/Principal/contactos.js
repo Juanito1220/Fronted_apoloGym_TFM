@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import '../Styles/contactos.css';
+import '../../Styles/contactos.css';
 import {
   FaMapMarkerAlt,
   FaPhoneAlt,

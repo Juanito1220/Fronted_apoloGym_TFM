@@ -1,10 +1,10 @@
 import React from 'react';
-import '../Styles/servicios.css';
-import entrenamiento from '../assets/entrenamiento.jpg';
-import grupales from '../assets/grupal.jpg';
-import nutricion from '../assets/alimentacion.jpg';
-import suplementos from '../assets/Suplementos.png';
-import membresia from '../assets/menbresia.jpg';
+import '../../Styles/servicios.css';
+import entrenamiento from '../../assets/entrenamiento.jpg';
+import grupales from '../../assets/grupal.jpg';
+import nutricion from '../../assets/alimentacion.jpg';
+import suplementos from '../../assets/Suplementos.png';
+import membresia from '../../assets/menbresia.jpg';
 
 const servicios = [
   {
