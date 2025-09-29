@@ -146,7 +146,7 @@ const Servicios = () => {
           <div className="cta-content">
             <h2>¿Necesitas ayuda para elegir?</h2>
             <p>Nuestros expertos te ayudarán a encontrar el plan perfecto para ti</p>
-            <div className="cta-buttons">
+            {/* <div className="cta-buttons">
               <button className="cta-primary">
                 <span>Consulta Gratuita</span>
                 <div className="btn-effect"></div>
@@ -154,7 +154,7 @@ const Servicios = () => {
               <button className="cta-secondary">
                 <span>Ver Planes</span>
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="cta-features">

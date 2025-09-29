@@ -209,7 +209,7 @@ const Nosotros = () => {
           <div className="cta-content">
             <h2>¿Listo para transformar tu vida?</h2>
             <p>Únete a la familia Apolo GYM y descubre todo tu potencial</p>
-            <div className="cta-buttons">
+            {/* <div className="cta-buttons">
               <button className="cta-primary">
                 <span>Comenzar Ahora</span>
                 <div className="btn-effect"></div>
@@ -217,12 +217,12 @@ const Nosotros = () => {
               <button className="cta-secondary">
                 <span>Agendar Visita</span>
               </button>
-            </div>
+            </div> */}
           </div>
 
           <div className="cta-stats">
             <div className="stat-item">
-              <div className="stat-number">500+</div>
+              <div className="stat-number">50+</div>
               <div className="stat-label">Miembros Activos</div>
             </div>
             <div className="stat-item">
