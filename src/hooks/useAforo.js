@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { toast } from 'react-hot-toast';
 import {
     getAforoStatus,
     getGlobalSummary,
@@ -60,30 +61,6 @@ export const useAforo = (pollingInterval = 5000) => {
         }
     }, [refreshData, pollingInterval]);
 
-    // Función para registrar entrada
-    const handleCheckIn = useCallback(async (data) => {
-        try {
-            await checkIn(data);
-            // Actualizar inmediatamente después de la acción
-            refreshData();
-            return { success: true };
-        } catch (error) {
-            throw error;
-        }
-    }, [refreshData]);
-
-    // Función para registrar salida
-    const handleCheckOut = useCallback(async (data) => {
-        try {
-            await checkOut(data);
-            // Actualizar inmediatamente después de la acción
-            refreshData();
-            return { success: true };
-        } catch (error) {
-            throw error;
-        }
-    }, [refreshData]);
-
     // Función para obtener el estado de una sala específica
     const getSalaStatus = useCallback((salaName) => {
         return aforoStatus[salaName] || {
@@ -100,6 +77,60 @@ export const useAforo = (pollingInterval = 5000) => {
         const salaStatus = getSalaStatus(salaName);
         return salaStatus.available > 0;
     }, [getSalaStatus]);
+
+    // Función para registrar entrada
+    const handleCheckIn = useCallback(async (data) => {
+        try {
+            // Verificar disponibilidad antes de permitir entrada
+            if (!canEnterSala(data.sala || 'Principal')) {
+                toast.error(`No se puede ingresar a ${data.sala || 'Principal'}. Capacidad máxima alcanzada.`);
+                throw new Error('Capacidad máxima alcanzada');
+            }
+
+            await checkIn(data);
+
+            // Notificación de éxito
+            toast.success(`✅ Entrada registrada: ${data.usuario || 'Usuario'} en ${data.sala || 'Principal'}`);
+
+            // Actualizar inmediatamente después de la acción
+            refreshData();
+
+            // Verificar si se alcanzó un nivel de alerta después del ingreso
+            const newStatus = getAforoStatus();
+            const newSalaStatus = newStatus[data.sala || 'Principal'];
+
+            if (newSalaStatus?.alertLevel === 'critical') {
+                toast.error(`⚠️ ${data.sala || 'Principal'} ha alcanzado su capacidad máxima`);
+            } else if (newSalaStatus?.alertLevel === 'warning') {
+                toast(`⚠️ ${data.sala || 'Principal'} está cerca de su capacidad máxima (${newSalaStatus.percentage}%)`);
+            }
+
+            return { success: true };
+        } catch (error) {
+            console.error('Error en check-in:', error);
+            toast.error(`Error al registrar entrada: ${error.message}`);
+            return { success: false, error: error.message };
+        }
+    }, [canEnterSala, refreshData]);
+
+    // Función para registrar salida
+    const handleCheckOut = useCallback(async (data) => {
+        try {
+            await checkOut(data);
+
+            // Notificación de éxito
+            toast.success(`🚪 Salida registrada: ${data.usuario || 'Usuario'} de ${data.sala || 'Principal'}`);
+
+            // Actualizar inmediatamente después de la acción
+            refreshData();
+
+            return { success: true };
+        } catch (error) {
+            console.error('Error en check-out:', error);
+            toast.error(`Error al registrar salida: ${error.message}`);
+            return { success: false, error: error.message };
+        }
+    }, [refreshData]);
 
     // Obtener salas en estado crítico
     const getCriticalSalas = useCallback(() => {

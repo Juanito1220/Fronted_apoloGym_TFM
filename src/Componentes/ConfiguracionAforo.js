@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { getCapacities, updateCapacities } from '../Data/Stores/aforo.store';
+import { toast } from 'react-hot-toast';
 
 const ConfiguracionAforo = ({ onClose, onSave }) => {
     const [capacities, setCapacities] = useState({});
     const [originalCapacities, setOriginalCapacities] = useState({});
     const [loading, setSaving] = useState(false);
     const [hasChanges, setHasChanges] = useState(false);
+    const [showAddModal, setShowAddModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [newSalaName, setNewSalaName] = useState('');
+    const [salaToDelete, setSalaToDelete] = useState('');
 
     useEffect(() => {
         const current = getCapacities();
@@ -36,9 +41,10 @@ const ConfiguracionAforo = ({ onClose, onSave }) => {
             setHasChanges(false);
             onSave && onSave(capacities);
             onClose && onClose();
+            toast.success('✅ Capacidades guardadas correctamente');
         } catch (error) {
             console.error('Error saving capacities:', error);
-            alert('Error al guardar las capacidades: ' + error.message);
+            toast.error('Error al guardar las capacidades: ' + error.message);
         } finally {
             setSaving(false);
         }
@@ -50,23 +56,41 @@ const ConfiguracionAforo = ({ onClose, onSave }) => {
     };
 
     const addNewSala = () => {
-        const salaName = prompt('Nombre de la nueva sala:');
-        if (salaName && salaName.trim() && !capacities[salaName.trim()]) {
-            setCapacities(prev => ({
-                ...prev,
-                [salaName.trim()]: 20
-            }));
+        setShowAddModal(true);
+    };
+
+    const handleAddSala = () => {
+        if (newSalaName && newSalaName.trim()) {
+            if (!capacities[newSalaName.trim()]) {
+                setCapacities(prev => ({
+                    ...prev,
+                    [newSalaName.trim()]: 20
+                }));
+                toast.success(`Sala "${newSalaName.trim()}" agregada`);
+                setNewSalaName('');
+                setShowAddModal(false);
+            } else {
+                toast.error('Esa sala ya existe');
+            }
+        } else {
+            toast.error('Por favor ingrese un nombre válido');
         }
     };
 
     const removeSala = (salaToRemove) => {
-        if (window.confirm(`¿Está seguro de que desea eliminar la sala "${salaToRemove}"?`)) {
-            setCapacities(prev => {
-                const newCapacities = { ...prev };
-                delete newCapacities[salaToRemove];
-                return newCapacities;
-            });
-        }
+        setSalaToDelete(salaToRemove);
+        setShowDeleteModal(true);
+    };
+
+    const handleRemoveSala = () => {
+        setCapacities(prev => {
+            const newCapacities = { ...prev };
+            delete newCapacities[salaToDelete];
+            return newCapacities;
+        });
+        toast.success(`Sala "${salaToDelete}" eliminada`);
+        setShowDeleteModal(false);
+        setSalaToDelete('');
     };
 
     return (
@@ -217,6 +241,70 @@ const ConfiguracionAforo = ({ onClose, onSave }) => {
                     </div>
                 </div>
             </div>
+            
+            {/* Modal para agregar sala */}
+            {showAddModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-semibold mb-4">Agregar Nueva Sala</h3>
+                        <input
+                            type="text"
+                            value={newSalaName}
+                            onChange={(e) => setNewSalaName(e.target.value)}
+                            placeholder="Nombre de la sala"
+                            className="w-full p-3 border border-gray-300 rounded-lg mb-4"
+                            onKeyPress={(e) => e.key === 'Enter' && handleAddSala()}
+                            autoFocus
+                        />
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={() => {
+                                    setShowAddModal(false);
+                                    setNewSalaName('');
+                                }}
+                                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleAddSala}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                            >
+                                Agregar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Modal para confirmar eliminación */}
+            {showDeleteModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60">
+                    <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+                        <h3 className="text-lg font-semibold mb-4">Confirmar Eliminación</h3>
+                        <p className="text-gray-600 mb-6">
+                            ¿Está seguro de que desea eliminar la sala "{salaToDelete}"?
+                        </p>
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={() => {
+                                    setShowDeleteModal(false);
+                                    setSalaToDelete('');
+                                }}
+                                className="px-4 py-2 text-gray-600 hover:text-gray-800"
+                            >
+                                Cancelar
+                            </button>
+                            <button
+                                onClick={handleRemoveSala}
+                                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                            >
+                                Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

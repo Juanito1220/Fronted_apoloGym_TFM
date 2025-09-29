@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import BackTo from "../../Componentes/backtoMenu.js";
 import AforoDashboard from "../../Componentes/AforoDashboard.js";
 import RegistroAcceso from "../../Componentes/RegistroAcceso.js";
 import HistorialActividad from "../../Componentes/HistorialActividad.js";
@@ -46,7 +45,8 @@ export default function Aforo() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <BackTo to="/admin" label="← Regresar al panel admin" />
+              <h1 className="text-2xl font-bold text-gray-900">Control de Aforo</h1>
+              <p className="text-sm text-gray-600">Gestión y monitoreo en tiempo real</p>
             </div>
             <div className="flex items-center space-x-1">
               <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
