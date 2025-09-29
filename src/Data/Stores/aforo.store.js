@@ -29,7 +29,7 @@ export function updateCapacities(capacities) {
   const config = db.list(CONFIG_KEY);
   if (config.length > 0) {
     // Actualizar el primer elemento
-    const updatedConfig = config.map((item, index) => 
+    const updatedConfig = config.map((item, index) =>
       index === 0 ? { ...item, capacities } : item
     );
     db.save(CONFIG_KEY, updatedConfig);

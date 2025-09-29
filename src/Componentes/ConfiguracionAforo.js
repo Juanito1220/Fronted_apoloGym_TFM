@@ -241,7 +241,7 @@ const ConfiguracionAforo = ({ onClose, onSave }) => {
                     </div>
                 </div>
             </div>
-            
+
             {/* Modal para agregar sala */}
             {showAddModal && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60">
