@@ -1,6 +1,6 @@
 // src/Paginas/principal.js
 import React from 'react';
-import Inicio from '../../Componentes/inicio';
+import Inicio from './inicio';
 import Nosotros from './nosotros';
 import Servicios from './servicios';
 import Contactos from './contactos';

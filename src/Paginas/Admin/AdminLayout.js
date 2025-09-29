@@ -16,7 +16,6 @@ export default function AdminLayout() {
 
         <nav className="admin-nav">
           <div className="admin-section">Gestión</div>
-          <NavLink to="/admin" end className="admin-link">Dashboard</NavLink>
           <NavLink to="/admin/usuarios-roles" className="admin-link">Usuarios y roles</NavLink>
           <NavLink to="/admin/planes" className="admin-link">Planes</NavLink>
           <NavLink to="/admin/aforo" className="admin-link">Aforo</NavLink>

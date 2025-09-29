@@ -1,5 +1,5 @@
 import React from 'react';
-import '../Styles/inicio.css';
+import '../../Styles/inicio.css';
 import { Element } from 'react-scroll';
 
 const Inicio = () => {
