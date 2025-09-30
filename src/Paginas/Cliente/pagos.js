@@ -1,6 +1,23 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import {
+  CreditCard,
+  Building2,
+  Banknote,
+  Shield,
+  Check,
+  AlertCircle,
+  Lock,
+  Receipt,
+  Gift,
+  ArrowLeft,
+  User,
+  Mail,
+  Calendar,
+  Hash
+} from "lucide-react";
 import { paymentsService } from "../../Data/Services/membershipService";
+import { useNotifications } from "../../hooks/useNotifications";
 import "../../Styles/pagos.css";
 
 /* ======= Datos de ejemplo ======= */
@@ -40,6 +57,7 @@ function isFuture(mm, yy) {
 
 export default function Pagos() {
   const navigate = useNavigate();
+  const { showSuccess, showError } = useNotifications();
 
   // estado general
   const [planId, setPlanId] = useState(PLANS[0].id);
@@ -98,26 +116,9 @@ export default function Pagos() {
   const formatCardNumber = (v) =>
     onlyDigits(v).slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ");
 
-  // validaciones
-  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const nameOk = name.trim().length >= 2;
-
-  const cardOk =
-    method !== "card" ||
-    (cardName.trim().length >= 2 &&
-      luhnCheck(cardNumber) &&
-      /^\d{2}$/.test(expMonth) &&
-      /^\d{2}$/.test(expYear) &&
-      Number(expMonth) >= 1 &&
-      Number(expMonth) <= 12 &&
-      isFuture(expMonth, expYear) &&
-      /^\d{3,4}$/.test(cvv));
-
-  const canPay = nameOk && emailOk && (method !== "card" || cardOk) && !submitting;
-
   async function handlePay(e) {
     e.preventDefault();
-    if (!canPay) return;
+    if (submitting) return;
     setSubmitting(true);
     setSuccess(null);
 
@@ -154,6 +155,8 @@ export default function Pagos() {
           transactionId: response.data.transactionId
         });
 
+        showSuccess(`💳 Pago procesado exitosamente - ${response.data.receipt}`);
+
         // Redirigir al historial después de 3 segundos
         setTimeout(() => {
           navigate('/cliente/historial');
@@ -163,210 +166,400 @@ export default function Pagos() {
       }
     } catch (error) {
       console.error('Error processing payment:', error);
-      alert('Error al procesar el pago. Por favor, inténtalo de nuevo.');
+      showError('❌ Error al procesar el pago. Por favor, inténtalo de nuevo.');
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <div className="pay-page">
-      {/* Top */}
-      <div className="pay-top">
-        <h1 className="title">Pagos</h1>
+    <div className="payments-container">
+      {/* Header profesional */}
+      <div className="payments-header">
+        <div className="header-content">
+          <button
+            type="button"
+            className="back-button"
+            onClick={() => navigate('/cliente/planes')}
+          >
+            <ArrowLeft className="back-icon" />
+          </button>
+          <div className="header-info">
+            <h1 className="page-title">
+              <CreditCard className="title-icon" />
+              Procesamiento de Pago
+            </h1>
+            <p className="page-subtitle">Completa tu suscripción de forma segura</p>
+          </div>
+          <div className="security-badge">
+            <Shield className="security-icon" />
+            <span>Pago Seguro</span>
+          </div>
+        </div>
       </div>
 
-      {/* Mensaje de éxito no modal */}
+      {/* Mensaje de éxito moderno */}
       {success && (
-        <div className="success-box" role="status" aria-live="polite">
-          <div className="sb-title">Pago registrado correctamente</div>
-          <div className="sb-body">
-            Comprobante: <strong>{success.id}</strong> · Plan: <strong>{success.plan}</strong> · Total: <strong>{money(success.total)}</strong>
-          </div>
-          <div className="sb-actions">
-            <Link className="btn outline" to="/cliente/historial">Ver historial</Link>
-            <button className="btn link" onClick={() => setSuccess(null)}>Cerrar</button>
+        <div className="success-notification">
+          <div className="success-content">
+            <div className="success-icon-wrapper">
+              <Check className="success-icon" />
+            </div>
+            <div className="success-info">
+              <h3>¡Pago Procesado Exitosamente!</h3>
+              <div className="success-details">
+                <span><Receipt className="detail-icon" />Comprobante: <strong>{success.id}</strong></span>
+                <span><Gift className="detail-icon" />Plan: <strong>{success.plan}</strong></span>
+                <span><Hash className="detail-icon" />Total: <strong>{money(success.total)}</strong></span>
+              </div>
+            </div>
+            <div className="success-actions">
+              <Link className="btn-success primary" to="/cliente/historial">
+                <Receipt className="btn-icon" />
+                Ver Historial
+              </Link>
+              <button className="btn-success secondary" onClick={() => setSuccess(null)}>
+                Cerrar
+              </button>
+            </div>
           </div>
         </div>
       )}
 
-      <form className="grid" onSubmit={handlePay}>
-        {/* Panel izquierdo: datos y método */}
-        <section className="card left">
-          <h2 className="h2">Datos del cliente</h2>
-          <div className="row two">
-            <div>
-              <label>Nombre y apellido</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Ej. Ana López"
-                required
-              />
+      <div className="payments-layout">
+        {/* Panel principal */}
+        <form className="payment-form" onSubmit={handlePay}>
+          {/* Información del cliente */}
+          <section className="form-section">
+            <div className="section-header">
+              <User className="section-icon" />
+              <h2>Información del Cliente</h2>
             </div>
-            <div>
-              <label>Email</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="ana@example.com"
-                required
-              />
-              {!emailOk && email.length > 0 && <small className="err">Email inválido</small>}
-            </div>
-          </div>
 
-          <div className="row">
-            <label>Plan</label>
-            <select value={planId} onChange={(e) => setPlanId(e.target.value)}>
-              {PLANS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} — {money(p.price)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="row two">
-            <div>
-              <label>Cupón</label>
-              <input
-                type="text"
-                value={coupon}
-                onChange={(e) => setCoupon(e.target.value)}
-                placeholder="Ej. BIENVENIDA10"
-              />
-              {discountRate > 0 && (
-                <small className="ok">Cupón aplicado: {Math.round(discountRate * 100)}% off</small>
-              )}
-            </div>
-            <div>
-              <label>Método de pago</label>
-              <div className="tabs">
-                <button type="button" className={`tab ${method === "card" ? "active" : ""}`} onClick={() => setMethod("card")}>Tarjeta</button>
-                <button type="button" className={`tab ${method === "transfer" ? "active" : ""}`} onClick={() => setMethod("transfer")}>Transferencia</button>
-                <button type="button" className={`tab ${method === "cash" ? "active" : ""}`} onClick={() => setMethod("cash")}>Efectivo</button>
-              </div>
-            </div>
-          </div>
-
-          {method === "card" && (
-            <div className="cardbox">
-              <h3>Datos de la tarjeta</h3>
-              <div className="row">
-                <label>Nombre en la tarjeta</label>
+            <div className="form-grid">
+              <div className="form-group">
+                <label htmlFor="customer-name">
+                  <User className="label-icon" />
+                  Nombre y Apellido
+                </label>
                 <input
+                  id="customer-name"
                   type="text"
-                  value={cardName}
-                  onChange={(e) => setCardName(e.target.value)}
-                  placeholder="Como aparece en la tarjeta"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Ej. Ana López"
+                  className="form-input"
                   required
                 />
               </div>
-              <div className="row two">
-                <div>
-                  <label>Número</label>
+
+              <div className="form-group">
+                <label htmlFor="customer-email">
+                  <Mail className="label-icon" />
+                  Email
+                </label>
+                <input
+                  id="customer-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="ana@ejemplo.com"
+                  className="form-input"
+                  required
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Selección de plan */}
+          <section className="form-section">
+            <div className="section-header">
+              <Gift className="section-icon" />
+              <h2>Plan Seleccionado</h2>
+            </div>
+
+            <div className="plan-selector">
+              {PLANS.map((p) => (
+                <div
+                  key={p.id}
+                  className={`plan-option ${planId === p.id ? 'selected' : ''}`}
+                  onClick={() => setPlanId(p.id)}
+                >
+                  <div className="plan-info">
+                    <span className="plan-name">{p.name}</span>
+                    <span className="plan-price">{money(p.price)}/mes</span>
+                  </div>
+                  {planId === p.id && <Check className="check-icon" />}
+                </div>
+              ))}
+            </div>
+
+            {/* Cupón de descuento */}
+            <div className="coupon-section">
+              <div className="form-group">
+                <label htmlFor="coupon-code">
+                  <Gift className="label-icon" />
+                  Código de Descuento (Opcional)
+                </label>
+                <input
+                  id="coupon-code"
+                  type="text"
+                  value={coupon}
+                  onChange={(e) => setCoupon(e.target.value.toUpperCase())}
+                  placeholder="BIENVENIDA10"
+                  className="form-input"
+                />
+                {discountRate > 0 && (
+                  <small className="discount-applied">
+                    <Check className="check-icon" />
+                    ¡Descuento del {(discountRate * 100).toFixed(0)}% aplicado!
+                  </small>
+                )}
+              </div>
+            </div>
+          </section>
+
+          {/* Método de pago */}
+          <section className="form-section">
+            <div className="section-header">
+              <CreditCard className="section-icon" />
+              <h2>Método de Pago</h2>
+            </div>
+
+            <div className="payment-methods">
+              <button
+                type="button"
+                className={`payment-method ${method === "card" ? "active" : ""}`}
+                onClick={() => setMethod("card")}
+              >
+                <CreditCard className="method-icon" />
+                <span>Tarjeta de Crédito/Débito</span>
+                {method === "card" && <Check className="check-icon" />}
+              </button>
+
+              <button
+                type="button"
+                className={`payment-method ${method === "transfer" ? "active" : ""}`}
+                onClick={() => setMethod("transfer")}
+              >
+                <Building2 className="method-icon" />
+                <span>Transferencia Bancaria</span>
+                {method === "transfer" && <Check className="check-icon" />}
+              </button>
+
+              <button
+                type="button"
+                className={`payment-method ${method === "cash" ? "active" : ""}`}
+                onClick={() => setMethod("cash")}
+              >
+                <Banknote className="method-icon" />
+                <span>Efectivo</span>
+                {method === "cash" && <Check className="check-icon" />}
+              </button>
+            </div>
+
+            {/* Formulario de tarjeta */}
+            {method === "card" && (
+              <div className="card-form">
+                <div className="security-notice">
+                  <Lock className="security-icon" />
+                  <span>Tus datos están protegidos con encriptación SSL</span>
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="card-name">
+                    <User className="label-icon" />
+                    Nombre en la Tarjeta
+                  </label>
                   <input
+                    id="card-name"
+                    type="text"
+                    value={cardName}
+                    onChange={(e) => setCardName(e.target.value)}
+                    placeholder="Como aparece en la tarjeta"
+                    className="form-input"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label htmlFor="card-number">
+                    <CreditCard className="label-icon" />
+                    Número de Tarjeta
+                  </label>
+                  <input
+                    id="card-number"
                     inputMode="numeric"
                     value={cardNumber}
                     onChange={(e) => setCardNumber(formatCardNumber(e.target.value))}
                     placeholder="1234 5678 9012 3456"
-                    maxLength={22} // 19 dígitos + 3 espacios
+                    maxLength={22}
+                    className={`form-input ${cardNumber && !luhnCheck(cardNumber) ? 'error' : ''}`}
                     required
                   />
                   {cardNumber && !luhnCheck(cardNumber) && (
-                    <small className="err">Número inválido</small>
+                    <small className="error-message">
+                      <AlertCircle className="error-icon" />
+                      Número de tarjeta inválido
+                    </small>
                   )}
                 </div>
-                <div className="two">
-                  <div>
-                    <label>MM</label>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label htmlFor="exp-month">
+                      <Calendar className="label-icon" />
+                      Mes
+                    </label>
                     <input
+                      id="exp-month"
                       inputMode="numeric"
                       maxLength={2}
                       value={expMonth}
                       onChange={(e) => setExpMonth(onlyDigits(e.target.value).slice(0, 2))}
                       placeholder="MM"
+                      className="form-input"
                       required
                     />
                   </div>
-                  <div>
-                    <label>YY</label>
+
+                  <div className="form-group">
+                    <label htmlFor="exp-year">
+                      <Calendar className="label-icon" />
+                      Año
+                    </label>
                     <input
+                      id="exp-year"
                       inputMode="numeric"
                       maxLength={2}
                       value={expYear}
                       onChange={(e) => setExpYear(onlyDigits(e.target.value).slice(0, 2))}
                       placeholder="YY"
+                      className="form-input"
                       required
                     />
                   </div>
-                  <div>
-                    <label>CVV</label>
+
+                  <div className="form-group">
+                    <label htmlFor="cvv">
+                      <Lock className="label-icon" />
+                      CVV
+                    </label>
                     <input
+                      id="cvv"
                       inputMode="numeric"
                       maxLength={4}
                       value={cvv}
                       onChange={(e) => setCvv(onlyDigits(e.target.value).slice(0, 4))}
-                      placeholder="***"
+                      placeholder="123"
+                      className="form-input"
                       required
                     />
                   </div>
                 </div>
+
+                {expMonth && expYear && !isFuture(expMonth, expYear) && (
+                  <small className="error-message">
+                    <AlertCircle className="error-icon" />
+                    Fecha de vencimiento inválida
+                  </small>
+                )}
               </div>
-              {!isFuture(expMonth, expYear) && expMonth && expYear && (
-                <small className="err">La tarjeta está vencida</small>
-              )}
-            </div>
-          )}
+            )}
 
-          {method === "transfer" && (
-            <div className="help">
-              <h3>Datos para transferencia</h3>
-              <p><strong>Banco:</strong> Banco Demo</p>
-              <p><strong>Cuenta:</strong> 1234567890</p>
-              <p><strong>Titular:</strong> Apolo Gym</p>
-              <p>Envíanos el comprobante a <strong>pagos@apolo-gym.com</strong>. Confirmaremos tu plan al verificarlo.</p>
-            </div>
-          )}
+            {/* Información para transferencia */}
+            {method === "transfer" && (
+              <div className="transfer-info">
+                <div className="info-card">
+                  <Building2 className="info-icon" />
+                  <div className="bank-details">
+                    <h4>Datos para Transferencia</h4>
+                    <p><strong>Banco:</strong> Banco Pichincha</p>
+                    <p><strong>Cuenta:</strong> 1234567890</p>
+                    <p><strong>Beneficiario:</strong> Apolo Gym S.A.</p>
+                    <p><strong>Concepto:</strong> Suscripción {plan.name}</p>
+                  </div>
+                </div>
+              </div>
+            )}
 
-          {method === "cash" && (
-            <div className="help">
-              <h3>Pago en efectivo</h3>
-              <p>Acércate a recepción. Reservaremos el plan por 24 horas.</p>
-            </div>
-          )}
-        </section>
+            {/* Información para efectivo */}
+            {method === "cash" && (
+              <div className="cash-info">
+                <div className="info-card">
+                  <Banknote className="info-icon" />
+                  <div className="cash-details">
+                    <h4>Pago en Efectivo</h4>
+                    <p>Acércate a nuestra recepción con el comprobante de esta compra.</p>
+                    <p><strong>Horarios:</strong> Lunes a Domingo 6:00 AM - 10:00 PM</p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </section>
 
-        {/* Panel derecho: resumen */}
-        <aside className="card right">
-          <h2 className="h2">Resumen</h2>
-          <div className="sum-line"><span>Plan</span><span>{plan.name}</span></div>
-          <div className="sum-line"><span>Subtotal</span><span>{money(subtotal)}</span></div>
-          <div className="sum-line"><span>Descuento</span><span>- {money(discount)}</span></div>
-          <div className="sum-line"><span>Base imponible</span><span>{money(taxedBase)}</span></div>
-          <div className="sum-line"><span>IVA ({Math.round(TAX_RATE * 100)}%)</span><span>{money(tax)}</span></div>
-          <div className="sum-line total"><span>Total</span><span>{money(total)}</span></div>
-
-          <button className="btn primary big" disabled={!canPay} type="submit">
-            {method === "card" ? (submitting ? "Procesando..." : "Pagar ahora") : (submitting ? "Registrando..." : "Registrar pago")}
+          {/* Botón de pago */}
+          <button
+            type="submit"
+            disabled={submitting || !name || !email || (method === "card" && (!cardNumber || !luhnCheck(cardNumber) || !expMonth || !expYear || !cvv || !isFuture(expMonth, expYear)))}
+            className="submit-button"
+          >
+            {submitting ? (
+              <>
+                <div className="spinner"></div>
+                Procesando...
+              </>
+            ) : (
+              <>
+                <Lock className="btn-icon" />
+                Pagar {money(total)}
+              </>
+            )}
           </button>
+        </form>
 
-          {!canPay && (
-            <div className="note">Completa los datos requeridos para continuar.</div>
-          )}
+        {/* Panel de resumen */}
+        <aside className="payment-summary">
+          <div className="summary-card">
+            <h3 className="summary-title">
+              <Receipt className="summary-icon" />
+              Resumen del Pedido
+            </h3>
 
-          <div className="mini-legal">
-            Demo frontend. No se procesa ningún cobro real.
-          </div>
+            <div className="summary-content">
+              <div className="plan-summary">
+                <span className="plan-name">{plan.name}</span>
+                <span className="plan-price">{money(subtotal)}</span>
+              </div>
 
-          <div className="next-links">
-            ¿Quieres ver tus pagos? <Link to="/cliente/historial">Ir al historial</Link>
+              {discount > 0 && (
+                <div className="discount-line">
+                  <span className="discount-label">
+                    <Gift className="discount-icon" />
+                    Descuento
+                  </span>
+                  <span className="discount-amount">-{money(discount)}</span>
+                </div>
+              )}
+
+              <div className="tax-line">
+                <span>IVA (12%)</span>
+                <span>{money(tax)}</span>
+              </div>
+
+              <div className="total-line">
+                <span>Total</span>
+                <span className="total-amount">{money(total)}</span>
+              </div>
+            </div>
+
+            <div className="legal-notice">
+              <Lock className="legal-icon" />
+              <p>Demo frontend. No se procesa ningún cobro real.</p>
+            </div>
           </div>
         </aside>
-      </form>
+      </div>
     </div>
   );
 }
