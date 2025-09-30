@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { Calendar, Clock, Target, Zap, Plus, Save, Trash2, X, Users, TrendingUp } from "lucide-react";
 import "../../Styles/miplan.css";
 
 const DAYS = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"];
@@ -96,99 +97,196 @@ export default function MiPlan() {
   const hours = Array.from({ length: END_HOUR - START_HOUR + 1 }, (_, i) => START_HOUR + i);
 
   return (
-    <div className="mp-page">
-      {/* Top */}
-      <div className="mp-top">
-        <div className="left">
-          <h1 className="mp-title">Mi plan semanal</h1>
-          <div className="mp-sub">Horario de ejercicios en formato calendario</div>
+    <div className="miplan-modern">
+      {/* Header moderno */}
+      <div className="miplan-header">
+        <div className="header-content">
+          <div className="header-left">
+            <div className="title-section">
+              <div className="icon-wrapper">
+                <Calendar className="header-icon" />
+              </div>
+              <div>
+                <h1 className="main-title">Mi Plan de Entrenamiento</h1>
+                <p className="subtitle">Planifica tu semana de ejercicios de forma inteligente</p>
+              </div>
+            </div>
+          </div>
+          <div className="header-actions">
+            <button className="action-btn template-btn" onClick={() => applyTemplate("fullbody")}>
+              <Target className="btn-icon" />
+              Full-Body
+            </button>
+            <button className="action-btn template-btn" onClick={() => applyTemplate("ppl")}>
+              <Zap className="btn-icon" />
+              Push/Pull/Legs
+            </button>
+            <button className="action-btn danger-btn" onClick={clearAll}>
+              <Trash2 className="btn-icon" />
+              Limpiar
+            </button>
+          </div>
         </div>
-        <div className="right">
-          <button className="btn" onClick={() => applyTemplate("fullbody")}>Plantilla Full-Body</button>
-          <button className="btn" onClick={() => applyTemplate("ppl")}>Plantilla Push/Pull/Legs</button>
-          <button className="btn danger" onClick={clearAll}>Limpiar</button>
+      </div>
+
+      {/* Stats cards */}
+      <div className="stats-container">
+        <div className="stat-card">
+          <div className="stat-icon">
+            <TrendingUp className="icon" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-number">{totalSessions}</div>
+            <div className="stat-label">Sesiones esta semana</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">
+            <Clock className="icon" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-number">{totalSessions * 1.5}h</div>
+            <div className="stat-label">Tiempo estimado</div>
+          </div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-icon">
+            <Users className="icon" />
+          </div>
+          <div className="stat-content">
+            <div className="stat-number">{Math.round((totalSessions / 7) * 100)}%</div>
+            <div className="stat-label">Consistencia semanal</div>
+          </div>
         </div>
       </div>
 
-      <div className="mp-meta">
-        <span className="chip">{totalSessions} sesiones esta semana</span>
+      {/* GRID calendario moderno */}
+      <div className="calendar-container">
+        <div className="calendar-grid">
+          {/* esquina vacía */}
+          <div className="corner-cell">
+            <Clock className="corner-icon" />
+          </div>
+
+          {/* cabecera de días */}
+          {DAYS.map((day) => (
+            <div key={day} className="day-header">
+              <span className="day-name">{day}</span>
+            </div>
+          ))}
+
+          {/* filas por hora */}
+          {hours.map((hour) => (
+            <React.Fragment key={hour}>
+              <div className="hour-cell">
+                <span className="hour-time">{pad(hour)}:00</span>
+              </div>
+              {DAYS.map((_, dayIdx) => {
+                const item = schedule[keyOf(dayIdx, hour)];
+                return (
+                  <div
+                    key={`${dayIdx}-${hour}`}
+                    className={`schedule-cell ${item ? "has-session" : "empty-cell"}`}
+                    onClick={() => openEditor(dayIdx, hour)}
+                  >
+                    {item ? (
+                      <div className="session-card" style={{ backgroundColor: item.color }}>
+                        <div className="session-title">{item.title}</div>
+                        {item.notes && <div className="session-notes">{item.notes}</div>}
+                      </div>
+                    ) : (
+                      <div className="add-session">
+                        <Plus className="add-icon" />
+                        <span className="add-text">Agregar</span>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </React.Fragment>
+          ))}
+        </div>
       </div>
 
-      {/* GRID calendario */}
-      <div className="mp-grid card">
-        {/* esquina vacía */}
-        <div className="corner" />
-        {/* cabecera de días */}
-        {DAYS.map((d) => (
-          <div key={d} className="col-head">{d}</div>
-        ))}
-
-        {/* filas por hora */}
-        {hours.map((h) => (
-          <React.Fragment key={h}>
-            <div className="row-head">{pad(h)}:00</div>
-            {DAYS.map((_, dayIdx) => {
-              const item = schedule[keyOf(dayIdx, h)];
-              return (
-                <div
-                  key={`${dayIdx}-${h}`}
-                  className={`cell ${item ? "busy" : ""}`}
-                  onClick={() => openEditor(dayIdx, h)}
-                >
-                  {item ? (
-                    <div className="pill" style={{ background: item.color }}>
-                      <div className="pill-title">{item.title}</div>
-                      {item.notes && <div className="pill-notes">{item.notes}</div>}
-                    </div>
-                  ) : (
-                    <span className="hint">+</span>
-                  )}
-                </div>
-              );
-            })}
-          </React.Fragment>
-        ))}
-      </div>
-
-      {/* Editor dentro de la página */}
+      {/* Editor modal moderno */}
       {editing && (
-        <div className="editor-mask" onClick={() => setEditing(null)}>
-          <div className="editor" onClick={(e) => e.stopPropagation()}>
-            <div className="editor-head">
-              <strong>
-                {DAYS[editing.dayIdx]} – {pad(editing.hour)}:00
-              </strong>
+        <div className="modal-overlay" onClick={() => setEditing(null)}>
+          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div className="modal-title">
+                <Calendar className="modal-icon" />
+                <div>
+                  <h3>{DAYS[editing.dayIdx]} - {pad(editing.hour)}:00</h3>
+                  <p>Configura tu sesión de entrenamiento</p>
+                </div>
+              </div>
+              <button className="close-btn" onClick={() => setEditing(null)}>
+                <X className="close-icon" />
+              </button>
             </div>
 
-            <label>Título</label>
-            <input
-              type="text"
-              placeholder="Ej. Fuerza – Pecho/Tríceps"
-              value={editing.title}
-              onChange={(e) => setEditing((s) => ({ ...s, title: e.target.value }))}
-            />
+            <div className="modal-body">
+              <div className="form-group">
+                <label className="form-label">
+                  <Target className="label-icon" />
+                  Nombre del entrenamiento
+                </label>
+                <input
+                  type="text"
+                  className="form-input"
+                  placeholder="Ej. Entrenamiento de Pecho y Tríceps"
+                  value={editing.title}
+                  onChange={(e) => setEditing((s) => ({ ...s, title: e.target.value }))}
+                />
+              </div>
 
-            <label>Color</label>
-            <input
-              type="color"
-              value={editing.color}
-              onChange={(e) => setEditing((s) => ({ ...s, color: e.target.value }))}
-            />
+              <div className="form-group">
+                <label className="form-label">
+                  <Zap className="label-icon" />
+                  Color del entrenamiento
+                </label>
+                <div className="color-picker-container">
+                  <input
+                    type="color"
+                    className="color-input"
+                    value={editing.color}
+                    onChange={(e) => setEditing((s) => ({ ...s, color: e.target.value }))}
+                  />
+                  <div className="color-preview" style={{ backgroundColor: editing.color }}></div>
+                  <span className="color-label">Selecciona un color identificativo</span>
+                </div>
+              </div>
 
-            <label>Notas</label>
-            <textarea
-              rows={3}
-              placeholder="Series, repeticiones, cardio, etc."
-              value={editing.notes}
-              onChange={(e) => setEditing((s) => ({ ...s, notes: e.target.value }))}
-            />
+              <div className="form-group">
+                <label className="form-label">
+                  <Clock className="label-icon" />
+                  Detalles y notas
+                </label>
+                <textarea
+                  className="form-textarea"
+                  rows={4}
+                  placeholder="Ejemplo: 4 series x 8-12 reps, Banca plana, Inclinado con mancuernas, Press militar..."
+                  value={editing.notes}
+                  onChange={(e) => setEditing((s) => ({ ...s, notes: e.target.value }))}
+                />
+              </div>
+            </div>
 
-            <div className="editor-actions">
-              <button className="btn primary" onClick={saveEditor}>Guardar</button>
+            <div className="modal-footer">
+              <button className="secondary-btn" onClick={() => setEditing(null)}>
+                <X className="btn-icon" />
+                Cancelar
+              </button>
               {schedule[keyOf(editing.dayIdx, editing.hour)] && (
-                <button className="btn danger" onClick={deleteSlot}>Eliminar</button>
+                <button className="danger-btn" onClick={deleteSlot}>
+                  <Trash2 className="btn-icon" />
+                  Eliminar
+                </button>
               )}
-              <button className="btn" onClick={() => setEditing(null)}>Cerrar</button>
+              <button className="primary-btn" onClick={saveEditor}>
+                <Save className="btn-icon" />
+                Guardar
+              </button>
             </div>
           </div>
         </div>
