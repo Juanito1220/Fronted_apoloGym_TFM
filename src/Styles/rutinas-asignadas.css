@@ -1,0 +1,404 @@
+/* Estilos específicos para el módulo de rutinas asignadas */
+
+/* ActiveRoutineCard */
+.routine-card-gradient {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.routine-progress-bar {
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    transition: width 0.5s ease-in-out;
+}
+
+.exercise-row-completed {
+    background-color: #f0f9ff;
+    border-color: #e0f2fe;
+    transform: scale(0.98);
+    transition: all 0.2s ease;
+}
+
+.exercise-row-hover:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+    transform: translateY(-1px);
+}
+
+/* ExerciseDetailModal */
+.modal-backdrop {
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-content {
+    animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.exercise-video-placeholder {
+    background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+    border: 2px dashed #d1d5db;
+}
+
+.technique-tip-item {
+    border-left: 3px solid #10b981;
+    padding-left: 12px;
+    background: linear-gradient(90deg, #f0fdf4 0%, transparent 100%);
+}
+
+.common-mistake-item {
+    border-left: 3px solid #ef4444;
+    padding-left: 12px;
+    background: linear-gradient(90deg, #fef2f2 0%, transparent 100%);
+}
+
+/* ExerciseHistoryList */
+.exercise-filter-bar {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+}
+
+.filter-tag {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.filter-tag:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.exercise-card-expanded {
+    border-color: #3b82f6;
+    box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+
+.history-session-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.history-session-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+/* Muscle group colors */
+.muscle-chest {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+.muscle-back {
+    background-color: #eff6ff;
+    color: #1e40af;
+    border-color: #bfdbfe;
+}
+
+.muscle-legs {
+    background-color: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.muscle-shoulders {
+    background-color: #faf5ff;
+    color: #7c2d12;
+    border-color: #e9d5ff;
+}
+
+.muscle-arms {
+    background-color: #fff7ed;
+    color: #c2410c;
+    border-color: #fed7aa;
+}
+
+.muscle-core {
+    background-color: #fffbeb;
+    color: #a16207;
+    border-color: #fde68a;
+}
+
+.muscle-cardio {
+    background-color: #fdf2f8;
+    color: #be185d;
+    border-color: #fbcfe8;
+}
+
+/* Difficulty levels */
+.difficulty-beginner {
+    background-color: #f0fdf4;
+    color: #166534;
+    border-color: #bbf7d0;
+}
+
+.difficulty-intermediate {
+    background-color: #fffbeb;
+    color: #a16207;
+    border-color: #fde68a;
+}
+
+.difficulty-advanced {
+    background-color: #fef2f2;
+    color: #991b1b;
+    border-color: #fecaca;
+}
+
+/* Performance tracking styles */
+.performance-input {
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+
+.performance-input:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    outline: none;
+}
+
+/* RPE selector */
+.rpe-selector {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.2s ease;
+}
+
+.rpe-selector:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Training calendar */
+.training-day-active {
+    background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+    border: 2px solid #3b82f6;
+    color: #1e40af;
+    font-weight: 600;
+}
+
+.training-day-inactive {
+    background-color: #f9fafb;
+    color: #6b7280;
+    border: 1px solid #e5e7eb;
+}
+
+/* Trainer info card */
+.trainer-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+}
+
+.trainer-tip {
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+/* Tips and recommendations */
+.tip-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 8px;
+}
+
+.tip-green {
+    background-color: #10b981;
+}
+
+.tip-blue {
+    background-color: #3b82f6;
+}
+
+.tip-purple {
+    background-color: #8b5cf6;
+}
+
+.tip-orange {
+    background-color: #f59e0b;
+}
+
+/* Statistics cards */
+.stat-card {
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    transition: all 0.2s ease;
+}
+
+.stat-card:hover {
+    border-color: #3b82f6;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+    transform: translateY(-2px);
+}
+
+.stat-icon-blue {
+    background-color: #dbeafe;
+}
+
+.stat-icon-green {
+    background-color: #dcfce7;
+}
+
+.stat-icon-purple {
+    background-color: #e9d5ff;
+}
+
+.stat-icon-orange {
+    background-color: #fed7aa;
+}
+
+/* Loading states */
+.loading-spinner {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.skeleton-loading {
+    background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .routine-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+
+    .exercise-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .exercise-actions {
+        align-self: stretch;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .training-calendar {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .modal-content {
+        margin: 16px;
+        max-height: calc(100vh - 32px);
+    }
+}
+
+@media (max-width: 480px) {
+    .routine-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-controls {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .sort-buttons {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .training-calendar {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .routine-card-dark {
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #f9fafb;
+    }
+
+    .modal-backdrop-dark {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-content-dark {
+        background-color: #1f2937;
+        border-color: #374151;
+        color: #f9fafb;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    .routine-actions,
+    .exercise-actions,
+    .modal-backdrop {
+        display: none !important;
+    }
+
+    .routine-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+    }
+
+    .exercise-row {
+        break-inside: avoid;
+    }
+}

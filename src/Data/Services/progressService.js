@@ -1,5 +1,3 @@
-import { db } from '../api';
-
 // Servicio para gestión del progreso físico del cliente
 class ProgressService {
     constructor() {
