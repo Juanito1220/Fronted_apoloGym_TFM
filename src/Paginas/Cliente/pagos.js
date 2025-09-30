@@ -1,5 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useMemo, useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { paymentsService } from "../../Data/Services/membershipService";
 import "../../Styles/pagos.css";
 
 /* ======= Datos de ejemplo ======= */
@@ -13,7 +14,6 @@ const COUPONS = {            // cupones demo
   BIENVENIDA10: 0.10,        // 10% off
   GYM5: 0.05
 };
-const PAY_KEY = "demo_pagos"; // clave única para Historial
 
 /* ======= Utilidades ======= */
 const money = (n) => n.toLocaleString("es-EC", { style: "currency", currency: "USD" });
@@ -37,15 +37,15 @@ function isFuture(mm, yy) {
   const exp = new Date(y, m, 0);
   return exp >= new Date(now.getFullYear(), now.getMonth(), 1);
 }
-function randomReceipt() {
-  return "AP-" + Math.random().toString(36).slice(2, 8).toUpperCase();
-}
 
 export default function Pagos() {
+  const navigate = useNavigate();
+
   // estado general
   const [planId, setPlanId] = useState(PLANS[0].id);
   const [coupon, setCoupon] = useState("");
   const [method, setMethod] = useState("card"); // card | transfer | cash
+  const [checkoutData, setCheckoutData] = useState(null);
 
   // datos del cliente
   const [name, setName] = useState("");
@@ -62,6 +62,24 @@ export default function Pagos() {
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(null); // {id, total, plan}
 
+  // Cargar datos de checkout si vienen desde la galería de planes
+  useEffect(() => {
+    const savedCheckoutData = localStorage.getItem('checkout_data');
+    if (savedCheckoutData) {
+      try {
+        const data = JSON.parse(savedCheckoutData);
+        setCheckoutData(data);
+        if (data.subscription) {
+          setPlanId(data.subscription.planId);
+        }
+        // Limpiar datos después de cargar
+        localStorage.removeItem('checkout_data');
+      } catch (error) {
+        console.error('Error loading checkout data:', error);
+      }
+    }
+  }, []);
+
   const plan = PLANS.find((p) => p.id === planId);
 
   const discountRate = useMemo(() => {
@@ -69,8 +87,9 @@ export default function Pagos() {
     return COUPONS[code] || 0;
   }, [coupon]);
 
-  const subtotal = plan.price;
-  const discount = subtotal * discountRate;
+  // Usar precios del checkout si están disponibles
+  const subtotal = checkoutData?.pricing?.totalMonthly || plan.price;
+  const discount = checkoutData?.pricing?.savings || (subtotal * discountRate);
   const taxedBase = Math.max(0, subtotal - discount);
   const tax = taxedBase * TAX_RATE;
   const total = taxedBase + tax;
@@ -102,33 +121,52 @@ export default function Pagos() {
     setSubmitting(true);
     setSuccess(null);
 
-    const receipt = {
-      id: randomReceipt(),
-      ts: new Date().toISOString(),
-      plan: plan.name,
-      subtotal,
-      discount,
-      tax,
-      total,
-      method,
-      name,
-      email,
-      last4: method === "card" ? onlyDigits(cardNumber).slice(-4) : null,
-    };
-
-    // Guardar en localStorage (para Historial)
     try {
-      const prev = JSON.parse(localStorage.getItem(PAY_KEY) || "[]");
-      prev.unshift(receipt);
-      localStorage.setItem(PAY_KEY, JSON.stringify(prev));
-    } catch { }
+      // Preparar datos del pago para el servicio
+      const paymentData = {
+        amount: total,
+        method,
+        planId: plan.id,
+        planName: plan.name,
+        customerName: name,
+        customerEmail: email,
+        metadata: {
+          subtotal,
+          discount,
+          tax,
+          coupon: coupon || null,
+          last4: method === "card" ? onlyDigits(cardNumber).slice(-4) : null
+        }
+      };
 
-    // limpiar datos sensibles de tarjeta
-    setCardNumber("");
-    setCvv("");
+      // Procesar pago a través del servicio
+      const response = await paymentsService.processPayment(paymentData);
 
-    setSuccess({ id: receipt.id, total: receipt.total, plan: receipt.plan });
-    setSubmitting(false);
+      if (response.success) {
+        // limpiar datos sensibles de tarjeta
+        setCardNumber("");
+        setCvv("");
+
+        setSuccess({
+          id: response.data.receipt,
+          total: response.data.amount,
+          plan: response.data.planName,
+          transactionId: response.data.transactionId
+        });
+
+        // Redirigir al historial después de 3 segundos
+        setTimeout(() => {
+          navigate('/cliente/historial');
+        }, 3000);
+      } else {
+        throw new Error(response.message || 'Error al procesar el pago');
+      }
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      alert('Error al procesar el pago. Por favor, inténtalo de nuevo.');
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -146,7 +184,7 @@ export default function Pagos() {
             Comprobante: <strong>{success.id}</strong> · Plan: <strong>{success.plan}</strong> · Total: <strong>{money(success.total)}</strong>
           </div>
           <div className="sb-actions">
-            <Link className="btn outline" to="/historial">Ver historial</Link>
+            <Link className="btn outline" to="/cliente/historial">Ver historial</Link>
             <button className="btn link" onClick={() => setSuccess(null)}>Cerrar</button>
           </div>
         </div>
@@ -325,7 +363,7 @@ export default function Pagos() {
           </div>
 
           <div className="next-links">
-            ¿Quieres ver tus pagos? <Link to="/historial">Ir al historial</Link>
+            ¿Quieres ver tus pagos? <Link to="/cliente/historial">Ir al historial</Link>
           </div>
         </aside>
       </form>

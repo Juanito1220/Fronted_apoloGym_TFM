@@ -32,19 +32,19 @@ export default function ClientLayout() {
                     <div className="pro-nav-section">Servicios</div>
 
                     <NavLink
-                        to="/cliente/notificaciones"
-                        className={({ isActive }) => `pro-nav-link ${isActive ? 'active' : ''}`}
-                    >
-                        <FaBell className="pro-nav-icon" />
-                        <span>Notificaciones</span>
-                    </NavLink>
-
-                    <NavLink
                         to="/cliente/perfil"
                         className={({ isActive }) => `pro-nav-link ${isActive ? 'active' : ''}`}
                     >
                         <FaUserTie className="pro-nav-icon" />
                         <span>Mi perfil</span>
+                    </NavLink>
+
+                    <NavLink
+                        to="/cliente/notificaciones"
+                        className={({ isActive }) => `pro-nav-link ${isActive ? 'active' : ''}`}
+                    >
+                        <FaBell className="pro-nav-icon" />
+                        <span>Notificaciones</span>
                     </NavLink>
 
                     <div className="pro-nav-section">Entrenamientos</div>

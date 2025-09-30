@@ -6,7 +6,7 @@ export default function BackBar({ showHome = true }) {
   const navigate = useNavigate();
   return (
     <div className="backbar">
-      <button className="btn-back" onClick={() => navigate("/menu")}>
+      <button className="btn-back" onClick={() => navigate("/cliente")}>
         ← Regresar al menú
       </button>
       {showHome && (

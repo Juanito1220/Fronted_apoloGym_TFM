@@ -38,7 +38,7 @@ const Login = () => {
             break;
           case 'client':
           default:
-            navigate('/menu');
+            navigate('/cliente');
             break;
         }
       } else {

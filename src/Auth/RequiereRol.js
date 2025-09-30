@@ -9,8 +9,8 @@ export default function RequireRole({ roles = [], children }) {
   if (roles.length && !roles.includes(user.role)) {
     // si está logueado pero no tiene rol adecuado, mándalo a su panel
     const target = user.role === "admin" ? "/admin"
-                 : user.role === "entrenador" ? "/entrenador"
-                 : "/menu";
+      : user.role === "entrenador" ? "/entrenador"
+        : "/cliente";
     return <Navigate to={target} replace />;
   }
   return children;

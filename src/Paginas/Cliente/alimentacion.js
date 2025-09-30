@@ -76,7 +76,7 @@ export default function Alimentacion() {
         </div>
 
         {/*  AQUÍ ESTÁ EL BOTÓN “IR AL INICIO” */}
-        <button className="al-btn-home" onClick={() => navigate("/menu")}>
+        <button className="al-btn-home" onClick={() => navigate("/cliente")}>
           ⮐ Ir al inicio
         </button>
         {/* FIN DEL BOTÓN */}

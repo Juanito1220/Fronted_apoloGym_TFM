@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
  * - label: texto del botón
  * - className: clases extra opcionales
  */
-export default function BackTo({ to = "/menu", label = "← Regresar", className = "" }) {
+export default function BackTo({ to = "/cliente", label = "← Regresar", className = "" }) {
   const navigate = useNavigate();
 
   const go = () => {
