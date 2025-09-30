@@ -1,0 +1,303 @@
+/* Reservation System Styles - Enhanced UI for booking management */
+
+/* Base reservation container */
+.reservation-container {
+    @apply w-full max-w-7xl mx-auto p-4 bg-gray-50 min-h-screen;
+}
+
+/* Tab navigation styles */
+.reservation-tabs {
+    @apply flex border-b border-gray-200 mb-6;
+}
+
+.reservation-tab {
+    @apply px-6 py-3 text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 border-b-2 border-transparent transition-colors duration-200;
+}
+
+.reservation-tab.active {
+    @apply text-blue-600 border-blue-600;
+}
+
+/* Statistics cards */
+.stats-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6;
+}
+
+.stat-card {
+    @apply bg-white rounded-lg shadow-sm p-4 border border-gray-200;
+}
+
+.stat-value {
+    @apply text-2xl font-bold text-gray-900;
+}
+
+.stat-label {
+    @apply text-sm text-gray-500 mt-1;
+}
+
+/* Class availability grid */
+.class-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
+}
+
+.class-card {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200;
+}
+
+.class-card.available {
+    @apply border-green-200 bg-green-50;
+}
+
+.class-card.limited {
+    @apply border-yellow-200 bg-yellow-50;
+}
+
+.class-card.full {
+    @apply border-red-200 bg-red-50;
+}
+
+/* Activity icons */
+.activity-icon {
+    @apply w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold mb-2;
+}
+
+.activity-icon.pesas {
+    @apply bg-blue-500;
+}
+
+.activity-icon.cardio {
+    @apply bg-red-500;
+}
+
+.activity-icon.funcional {
+    @apply bg-green-500;
+}
+
+.activity-icon.spinning {
+    @apply bg-purple-500;
+}
+
+.activity-icon.yoga {
+    @apply bg-pink-500;
+}
+
+.activity-icon.pilates {
+    @apply bg-indigo-500;
+}
+
+.activity-icon.aqua {
+    @apply bg-cyan-500;
+}
+
+.activity-icon.default {
+    @apply bg-gray-500;
+}
+
+/* Booking buttons */
+.book-button {
+    @apply w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors duration-200 font-medium;
+}
+
+.book-button.conflict {
+    @apply bg-red-600 hover:bg-red-700;
+}
+
+/* Cancellation styles */
+.cancel-button {
+    @apply px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors duration-200 text-sm font-medium;
+}
+
+.cancel-button-prominent {
+    @apply px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors duration-200 font-medium shadow-sm;
+}
+
+/* Filter styles */
+.filter-section {
+    @apply bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6;
+}
+
+.filter-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4;
+}
+
+.filter-group {
+    @apply space-y-2;
+}
+
+.filter-label {
+    @apply block text-sm font-medium text-gray-700;
+}
+
+.filter-input {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+.filter-select {
+    @apply w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500;
+}
+
+/* Quick date buttons */
+.quick-date-buttons {
+    @apply flex gap-2 mb-4 flex-wrap;
+}
+
+.quick-date-button {
+    @apply px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-50 transition-colors duration-200;
+}
+
+.quick-date-button.active {
+    @apply bg-blue-600 text-white border-blue-600;
+}
+
+/* Status badges */
+.status-badge {
+    @apply inline-flex items-center px-2 py-1 rounded-full text-xs font-medium;
+}
+
+.status-badge.confirmed {
+    @apply bg-green-100 text-green-800;
+}
+
+.status-badge.pending {
+    @apply bg-yellow-100 text-yellow-800;
+}
+
+.status-badge.cancelled {
+    @apply bg-red-100 text-red-800;
+}
+
+.status-badge.completed {
+    @apply bg-gray-100 text-gray-800;
+}
+
+/* Modal styles */
+.booking-modal {
+    @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+}
+
+.booking-modal-content {
+    @apply bg-white rounded-lg shadow-xl max-w-md w-full mx-4 p-6;
+}
+
+/* Table styles */
+.bookings-table {
+    @apply min-w-full bg-white border border-gray-200 rounded-lg overflow-hidden;
+}
+
+.bookings-table th {
+    @apply px-4 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider;
+}
+
+.bookings-table td {
+    @apply px-4 py-3 border-t border-gray-200 text-sm text-gray-900;
+}
+
+/* View toggle buttons */
+.view-toggle {
+    @apply flex bg-gray-100 rounded-lg p-1;
+}
+
+.view-toggle-button {
+    @apply px-3 py-1 text-sm font-medium rounded-md transition-colors duration-200;
+}
+
+.view-toggle-button.active {
+    @apply bg-white text-gray-900 shadow-sm;
+}
+
+.view-toggle-button.inactive {
+    @apply text-gray-500 hover:text-gray-700;
+}
+
+/* Capacity indicators */
+.capacity-indicator {
+    @apply flex items-center space-x-2;
+}
+
+.capacity-bar {
+    @apply flex-1 h-2 bg-gray-200 rounded-full overflow-hidden;
+}
+
+.capacity-fill {
+    @apply h-full transition-all duration-200;
+}
+
+.capacity-fill.low {
+    @apply bg-green-500;
+}
+
+.capacity-fill.medium {
+    @apply bg-yellow-500;
+}
+
+.capacity-fill.high {
+    @apply bg-red-500;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .reservation-container {
+        @apply p-2;
+    }
+
+    .stats-grid {
+        @apply grid-cols-2;
+    }
+
+    .class-grid {
+        @apply grid-cols-1;
+    }
+
+    .filter-grid {
+        @apply grid-cols-1;
+    }
+
+    .quick-date-buttons {
+        @apply flex-col;
+    }
+}
+
+/* Animation utilities */
+.fade-in {
+    @apply opacity-0 animate-pulse;
+    animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+.slide-up {
+    @apply transform translate-y-4 opacity-0;
+    animation: slideUp 0.3s ease-out forwards;
+}
+
+@keyframes slideUp {
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Toast notification styles */
+.toast-notification {
+    @apply fixed bottom-4 right-4 bg-white border border-gray-200 rounded-lg shadow-lg p-4 max-w-sm z-50;
+}
+
+.toast-success {
+    @apply border-green-200 bg-green-50;
+}
+
+.toast-error {
+    @apply border-red-200 bg-red-50;
+}
+
+.toast-warning {
+    @apply border-yellow-200 bg-yellow-50;
+}
+
+.toast-info {
+    @apply border-blue-200 bg-blue-50;
+}
