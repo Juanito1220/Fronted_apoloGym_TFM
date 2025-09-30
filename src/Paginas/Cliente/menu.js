@@ -5,7 +5,6 @@ import "../../Styles/professional-sidebar.css";
 import {
   FaBell,
   FaUserTie,
-  FaClock,
   FaMoneyBill,
   FaClipboardList,
   FaDumbbell,
@@ -45,7 +44,7 @@ const Menu = () => {
           </Link>
 
           <Link to="/reserva" className="pro-nav-link">
-            <FaClock className="pro-nav-icon" />
+            <FaClipboardList className="pro-nav-icon" />
             <span>Reservas/Turnos</span>
           </Link>
 
@@ -81,13 +80,6 @@ const Menu = () => {
 
 
           <div className="cards-container">
-            <div className="card">
-              <FaClock className="card-icon" />
-              <h3>Calendario</h3>
-              <p>Revisa tus entrenamientos y horarios.</p>
-              <Link className="btn" to="/calendario">Ver calendario</Link>
-            </div>
-
             <div className="card">
               <FaAppleAlt className="card-icon" />
               <h3>Alimentación</h3>

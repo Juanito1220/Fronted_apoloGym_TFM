@@ -2,7 +2,6 @@ import React from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import {
     FaBell,
-    FaClock,
     FaMoneyBill,
     FaClipboardList,
     FaDumbbell,
@@ -55,14 +54,6 @@ export default function ClientLayout() {
                     </NavLink>
 
                     <div className="pro-nav-section">Entrenamientos</div>
-
-                    <NavLink
-                        to="/cliente/calendario"
-                        className={({ isActive }) => `pro-nav-link ${isActive ? 'active' : ''}`}
-                    >
-                        <FaClock className="pro-nav-icon" />
-                        <span>Calendario</span>
-                    </NavLink>
 
                     <NavLink
                         to="/cliente/rutinas"

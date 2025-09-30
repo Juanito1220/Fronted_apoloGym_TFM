@@ -20,7 +20,6 @@ import RecuperarContraseña from "./Paginas/Principal/recuperarPassword";
 // Cliente
 import ClientLayout from "./Paginas/Cliente/ClientLayout";
 import ClienteDashboard from "./Paginas/Cliente/cliente_dashboard";
-import Calendario from "./Paginas/Cliente/calendario";
 import Alimentacion from "./Paginas/Cliente/alimentacion";
 import Progreso from "./Paginas/Cliente/progreso";
 import MiPlan from "./Paginas/Cliente/miplan";
@@ -74,7 +73,6 @@ function AppContent() {
         {/* Cliente (anidadas con layout) */}
         <Route path="/cliente" element={<ClientLayout />}>
           <Route index element={<ClienteDashboard />} />
-          <Route path="calendario" element={<Calendario />} />
           <Route path="progreso" element={<Progreso />} />
           <Route path="miplan" element={<MiPlan />} />
           <Route path="alimentacion" element={<Alimentacion />} />
@@ -89,7 +87,6 @@ function AppContent() {
 
         {/* Rutas legacy para compatibilidad (redirigen al nuevo layout) */}
         <Route path="/menu" element={<Navigate to="/cliente" replace />} />
-        <Route path="/calendario" element={<Navigate to="/cliente/calendario" replace />} />
         <Route path="/progreso" element={<Navigate to="/cliente/progreso" replace />} />
         <Route path="/miplan" element={<Navigate to="/cliente/miplan" replace />} />
         <Route path="/alimentacion" element={<Navigate to="/cliente/alimentacion" replace />} />
