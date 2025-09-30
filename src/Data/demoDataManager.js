@@ -16,10 +16,7 @@ const initializeDemoData = () => {
         benefits: [
             "Área de peso libre, peso integrado, cardio y clases grupales",
             "Acceso a todas las áreas del gimnasio",
-            "Acceso a otros Smart Fit en el mundo",
             "Sin cargo por cancelación",
-            "Smart Fit App",
-            "Smart Fit Go",
             "Invitar un amigo a entrenar",
             "Sillones de masaje"
         ],

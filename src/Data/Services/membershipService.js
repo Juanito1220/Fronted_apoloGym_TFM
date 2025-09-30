@@ -18,10 +18,7 @@ export const plansService = {
                     benefits: [
                         "Área de peso libre, peso integrado, cardio y clases grupales",
                         "Acceso a todas las áreas del gimnasio",
-                        "Acceso a otros Smart Fit en el mundo",
                         "Sin cargo por cancelación",
-                        "Smart Fit App",
-                        "Smart Fit Go",
                         "Invitar un amigo a entrenar",
                         "Sillones de masaje"
                     ],
@@ -38,8 +35,6 @@ export const plansService = {
                     benefits: [
                         "Área de peso libre, peso integrado, cardio y clases grupales",
                         "Acceso a todas las áreas del gimnasio",
-                        "Smart Fit App",
-                        "Smart Fit Go",
                         "Sin cargo por cancelación"
                     ],
                     isActive: true,
@@ -55,7 +50,6 @@ export const plansService = {
                     benefits: [
                         "Área de peso libre, peso integrado, cardio y clases grupales",
                         "Acceso a todas las áreas del gimnasio",
-                        "Smart Fit App",
                         "Sin cargo por cancelación"
                     ],
                     isActive: true,

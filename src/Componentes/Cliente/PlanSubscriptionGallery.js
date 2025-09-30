@@ -177,7 +177,7 @@ const PlanSubscriptionGallery = () => {
         console.log('✅ Addon toggled successfully');
     };
 
-    // Componente para el resumen de precios (evita re-renders problemáticos)
+    // Componente para el resumen de precios - Ultra moderno
     const renderPricingSummary = () => {
         if (!selectedPlan) return null;
 
@@ -185,61 +185,130 @@ const PlanSubscriptionGallery = () => {
         if (!pricing) return null;
 
         return (
-            <div className="space-y-4">
-                <div className="border-b border-gray-200 pb-4">
-                    <div className="flex justify-between items-center mb-2">
-                        <span className="text-gray-600">{selectedPlan.name} - {membershipTypes[membershipType]?.label}</span>
-                        <span className="font-medium">${pricing.basePrice}</span>
+            <div className="space-y-6">
+                {/* Plan base */}
+                <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-white/80">
+                    <div className="flex justify-between items-center mb-3">
+                        <div>
+                            <span className="font-bold text-gray-900 text-lg">{selectedPlan.name}</span>
+                            <div className="text-sm text-gray-600">{membershipTypes[membershipType]?.label}</div>
+                        </div>
+                        <div className="text-right">
+                            <span className="font-black text-xl text-gray-900">${pricing.basePrice}</span>
+                            <div className="text-sm text-gray-500">
+                                {billingCycle === 'annual' ? 'anual' : 'mensual'}
+                            </div>
+                        </div>
                     </div>
-                    <div className="text-sm text-gray-500">
+
+                    {/* Badge de facturación */}
+                    <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-800 text-xs font-semibold px-3 py-1 rounded-full">
+                        <span className="w-1.5 h-1.5 bg-blue-500 rounded-full"></span>
                         {billingCycle === 'annual' ? 'Facturación anual' : 'Facturación mensual'}
                     </div>
                 </div>
 
+                {/* Add-ons si existen */}
                 {pricing.addonsTotal > 0 && (
-                    <div className="border-b border-gray-200 pb-4">
-                        <div className="flex justify-between items-center">
-                            <span className="text-gray-600">Servicios adicionales</span>
-                            <span className="font-medium">${pricing.addonsTotal}</span>
+                    <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-white/80">
+                        <div className="flex justify-between items-center mb-3">
+                            <div>
+                                <span className="font-bold text-gray-900 text-lg">Servicios adicionales</span>
+                                <div className="text-sm text-gray-600">{addons.length} servicio{addons.length > 1 ? 's' : ''} seleccionado{addons.length > 1 ? 's' : ''}</div>
+                            </div>
+                            <span className="font-black text-xl text-gray-900">${pricing.addonsTotal}</span>
+                        </div>
+
+                        {/* Lista de addons seleccionados */}
+                        <div className="space-y-2">
+                            {addons.map(addonId => {
+                                const addon = availableAddons.find(a => a.id === addonId);
+                                return addon ? (
+                                    <div key={addonId} className="flex items-center gap-3 text-sm">
+                                        <span className="text-lg">{addon.icon}</span>
+                                        <span className="text-gray-700">{addon.name}</span>
+                                        <span className="ml-auto font-semibold text-gray-600">+${addon.price}</span>
+                                    </div>
+                                ) : null;
+                            })}
                         </div>
                     </div>
                 )}
 
+                {/* Ahorro anual */}
                 {billingCycle === 'annual' && pricing.savings > 0 && (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-3">
-                        <div className="flex justify-between items-center">
-                            <span className="text-green-800 font-medium">Ahorro anual</span>
-                            <span className="text-green-600 font-bold">${pricing.savings}</span>
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-green-400/10 rounded-full -translate-y-10 translate-x-10"></div>
+                        <div className="relative flex justify-between items-center">
+                            <div className="flex items-center gap-3">
+                                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                                    <span className="text-sm">💰</span>
+                                </div>
+                                <div>
+                                    <span className="text-green-800 font-bold text-lg">¡Ahorro anual!</span>
+                                    <div className="text-sm text-green-700">10% de descuento</div>
+                                </div>
+                            </div>
+                            <span className="text-green-600 font-black text-2xl">${pricing.savings}</span>
                         </div>
                     </div>
                 )}
 
-                <div className="border-t border-gray-300 pt-4">
-                    <div className="flex justify-between items-center mb-6">
-                        <span className="text-xl font-bold text-gray-900">Total</span>
-                        <div className="text-right">
-                            <span className="text-2xl font-bold text-blue-600">${pricing.finalPrice}</span>
-                            <div className="text-sm text-gray-500">
-                                {billingCycle === 'annual' ? 'por año' : 'por mes'}
+                {/* Total final */}
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-6 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-24 h-24 bg-blue-400/10 rounded-full -translate-y-12 translate-x-12"></div>
+                    <div className="relative">
+                        <div className="flex justify-between items-center mb-6">
+                            <div>
+                                <span className="text-2xl font-black text-gray-900">Total a pagar</span>
+                                <div className="text-sm text-gray-600 mt-1">
+                                    {billingCycle === 'annual' ? 'Pago único anual' : 'Pago mensual recurrente'}
+                                </div>
+                            </div>
+                            <div className="text-right">
+                                <span className="text-4xl font-black bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                    ${pricing.finalPrice}
+                                </span>
+                                <div className="text-sm text-gray-500 font-semibold">
+                                    {billingCycle === 'annual' ? 'por año' : 'por mes'}
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    {/* Botón Ir a Pagos */}
-                    <button
-                        onClick={handleSubscribe}
-                        disabled={isSubscribing}
-                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 disabled:scale-100 shadow-lg hover:shadow-xl disabled:shadow-none"
-                    >
-                        {isSubscribing ? (
-                            <div className="flex items-center justify-center">
-                                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                                Procesando...
+                        {/* Botón de suscripción ultra moderno */}
+                        <button
+                            onClick={handleSubscribe}
+                            disabled={isSubscribing}
+                            className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-black text-lg py-5 px-8 rounded-2xl transition-all duration-500 transform hover:scale-105 disabled:scale-100 shadow-xl hover:shadow-2xl disabled:shadow-none relative overflow-hidden group"
+                        >
+                            {/* Efecto de brillo */}
+                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000"></div>
+
+                            <div className="relative flex items-center justify-center gap-3">
+                                {isSubscribing ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                                        <span>Procesando pago...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <span>🚀 Finalizar Suscripción</span>
+                                        <svg className="w-6 h-6 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                        </svg>
+                                    </>
+                                )}
                             </div>
-                        ) : (
-                            'Ir a Pagos 💳'
-                        )}
-                    </button>
+                        </button>
+
+                        {/* Garantía */}
+                        <div className="flex items-center justify-center gap-2 mt-4 text-xs text-gray-600">
+                            <svg className="w-4 h-4 text-green-500" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span>Pago 100% seguro • Cancela cuando quieras</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -487,268 +556,332 @@ const PlanSubscriptionGallery = () => {
     }
 
     return (
-        <div className="bg-gradient-to-br from-gray-50 to-blue-50" style={{
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50" style={{
             scrollBehavior: 'smooth',
-            minHeight: '100vh',
-            // Prevenir auto-scroll del navegador
             scrollPadding: '0px'
         }}>
-            <PaymentModal />
+            <div className="relative">
+                <PaymentModal />
 
-            {/* Header Mejorado */}
-            <div className="relative overflow-hidden bg-white">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 opacity-10"></div>
-                <div className="relative max-w-7xl mx-auto px-4 py-16 text-center">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-6">
-                        <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
+                {/* Header Ultra Moderno - Simplificado */}
+                <div className="relative min-h-[60vh] flex items-center justify-center">
+                    {/* Background suave */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white via-blue-50 to-indigo-50"></div>
+
+                    <div className="relative max-w-6xl mx-auto px-4 text-center">
+                        {/* Badge superior */}
+                        <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-sm border border-blue-200 rounded-full px-6 py-3 mb-8 shadow-lg">
+                            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                            <span className="text-sm font-medium text-gray-700">¡Ofertas especiales disponibles!</span>
+                        </div>
+
+                        {/* Título principal */}
+                        <h1 className="text-6xl md:text-7xl font-black bg-gradient-to-r from-gray-900 via-blue-900 to-purple-900 bg-clip-text text-transparent mb-6 leading-tight">
+                            Planes y<br />
+                            <span className="text-blue-600">Membresías</span>
+                        </h1>
+
+                        {/* Subtítulo */}
+                        <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed mb-8">
+                            Diseñados para <span className="font-bold text-gray-900">transformar tu vida</span>.
+                            <br className="hidden md:block" />
+                            Entrenamientos ilimitados, tecnología de vanguardia y resultados garantizados.
+                        </p>
+
+                        {/* Stats rápidas */}
+                        <div className="flex flex-wrap justify-center gap-8 md:gap-12 text-center">
+                            <div className="group cursor-default">
+                                <div className="text-3xl font-bold text-blue-600">500+</div>
+                                <div className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Miembros activos</div>
+                            </div>
+                            <div className="group cursor-default">
+                                <div className="text-3xl font-bold text-purple-600">24/7</div>
+                                <div className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Acceso completo</div>
+                            </div>
+                            <div className="group cursor-default">
+                                <div className="text-3xl font-bold text-indigo-600">15+</div>
+                                <div className="text-sm text-gray-600 group-hover:text-gray-900 transition-colors">Años de experiencia</div>
+                            </div>
+                        </div>
                     </div>
-                    <h1 className="text-5xl font-bold text-gray-900 mb-4">Planes y Membresías</h1>
-                    <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
-                        Elige el plan perfecto para alcanzar tus objetivos de fitness.
-                        <span className="text-blue-600 font-semibold"> Entrenamientos ilimitados</span>,
-                        equipos de última generación y mucho más.
-                    </p>
                 </div>
-            </div>
 
-            <div className="max-w-7xl mx-auto px-4 py-12">
-                {/* Plan Selection - Diseño más limpio */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
-                    {plans.map((plan) => (
-                        <div
-                            key={plan.id}
-                            className={`group relative bg-white rounded-3xl shadow-lg overflow-hidden cursor-pointer 
+                <div className="max-w-7xl mx-auto px-4 py-16">
+                    {/* Plan Selection - Diseño moderno y limpio */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-20">
+                        {plans.map((plan, index) => (
+                            <div
+                                key={plan.id}
+                                className={`group relative bg-white rounded-3xl shadow-xl overflow-hidden cursor-pointer 
                                 transform transition-all duration-500 hover:scale-105 hover:shadow-2xl
-                                ${selectedPlan?.id === plan.id ? 'ring-4 ring-blue-500 scale-105' : ''}
-                                ${plan.isBestSeller ? 'border-2 border-yellow-400' : ''}`}
-                            onClick={() => handleSelectPlan(plan)}
-                        >
-                            {/* Best Seller Badge */}
-                            {plan.isBestSeller && (
-                                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                                    <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
-                                        ⭐ Más Popular
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Plan Header con gradiente mejorado */}
-                            <div className={`relative p-8 text-white overflow-hidden
-                                ${plan.id === 'black' ? 'bg-gradient-to-br from-gray-800 via-gray-900 to-black' :
-                                    plan.id === 'fit' ? 'bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800' :
-                                        'bg-gradient-to-br from-green-600 via-green-700 to-green-800'}`}>
-
-                                {/* Patrón de fondo */}
-                                <div className="absolute inset-0 opacity-10">
-                                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent transform rotate-45"></div>
-                                </div>
-
-                                <div className="relative">
-                                    <div className="flex items-center justify-between mb-4">
-                                        <h3 className="text-2xl font-bold">{plan.name}</h3>
-                                        <div className="text-3xl">
-                                            {plan.id === 'black' ? '🏆' : plan.id === 'fit' ? '💪' : '⚡'}
+                                ${selectedPlan?.id === plan.id ? 'ring-4 ring-blue-500 scale-105 shadow-2xl' : ''}
+                                ${plan.isBestSeller ? 'border-2 border-yellow-400' : 'border border-gray-100'}`}
+                                onClick={() => handleSelectPlan(plan)}
+                            >
+                                {/* Best Seller Badge */}
+                                {plan.isBestSeller && (
+                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                                        <div className="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg">
+                                            ⭐ Más Popular
                                         </div>
                                     </div>
-                                    <p className="text-sm opacity-90 mb-6 leading-relaxed">{plan.description}</p>
-                                    <div className="flex items-baseline">
-                                        <span className="text-4xl font-bold">${plan.price}</span>
-                                        <span className="text-lg opacity-75 ml-2">/mes</span>
+                                )}
+
+                                {/* Plan Header con nuevo diseño */}
+                                <div className={`relative p-8 text-white overflow-hidden
+                                ${plan.id === 'black' ? 'bg-gradient-to-br from-gray-700 via-gray-800 to-black' :
+                                        plan.id === 'fit' ? 'bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-700' :
+                                            'bg-gradient-to-br from-emerald-500 via-teal-600 to-cyan-700'}`}>
+
+                                    {/* Patrón de fondo mejorado */}
+                                    <div className="absolute inset-0 opacity-20">
+                                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent transform rotate-45 translate-x-full group-hover:translate-x-[-200%] transition-transform duration-1000"></div>
+                                    </div>
+
+                                    <div className="relative">
+                                        <div className="flex items-center justify-between mb-6">
+                                            <h3 className="text-3xl font-black tracking-tight">{plan.name}</h3>
+                                            <div className="text-4xl filter drop-shadow-lg">
+                                                {plan.id === 'black' ? '🏆' : plan.id === 'fit' ? '💪' : '⚡'}
+                                            </div>
+                                        </div>
+                                        <p className="text-sm opacity-90 mb-8 leading-relaxed">{plan.description}</p>
+                                        <div className="flex items-baseline mb-4">
+                                            <span className="text-5xl font-black">${plan.price}</span>
+                                            <span className="text-xl opacity-75 ml-3">/mes</span>
+                                        </div>
+
+                                        {/* Indicador de ahorro */}
+                                        {plan.id === 'fit' && (
+                                            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-4 py-2">
+                                                <span className="text-xs font-semibold">🔥 Mejor relación calidad-precio</span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
-                            </div>
 
-                            {/* Plan Benefits con animación */}
-                            <div className="p-6">
-                                <ul className="space-y-3 mb-6">
-                                    {plan.benefits.slice(0, 4).map((benefit, index) => (
-                                        <li key={index} className="flex items-start group-hover:translate-x-1 transition-transform duration-300"
-                                            style={{ transitionDelay: `${index * 50}ms` }}>
-                                            <div className="flex-shrink-0 w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-0.5">
-                                                <svg className="w-3 h-3 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                                </svg>
-                                            </div>
-                                            <span className="text-sm text-gray-700 leading-relaxed">{benefit}</span>
-                                        </li>
-                                    ))}
-                                    {plan.benefits.length > 4 && (
-                                        <li className="text-sm text-gray-500 ml-8 italic">
-                                            +{plan.benefits.length - 4} beneficios adicionales
-                                        </li>
-                                    )}
-                                </ul>
+                                {/* Plan Benefits con nuevo diseño */}
+                                <div className="p-8">
+                                    <ul className="space-y-4 mb-8">
+                                        {plan.benefits.slice(0, 4).map((benefit, index) => (
+                                            <li key={index} className="flex items-start group-hover:translate-x-2 transition-all duration-500"
+                                                style={{ transitionDelay: `${index * 100}ms` }}>
+                                                <div className="flex-shrink-0 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mr-4 mt-0.5">
+                                                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <span className="text-sm text-gray-700 leading-relaxed font-medium">{benefit}</span>
+                                            </li>
+                                        ))}
+                                        {plan.benefits.length > 4 && (
+                                            <li className="text-sm text-gray-500 ml-10 italic font-medium">
+                                                +{plan.benefits.length - 4} beneficios adicionales
+                                            </li>
+                                        )}
+                                    </ul>
 
-                                <button className={`w-full py-3 px-6 rounded-xl font-semibold transition-all duration-300 transform
+                                    <button className={`w-full py-4 px-6 rounded-2xl font-bold text-lg transition-all duration-300 transform
                                     ${selectedPlan?.id === plan.id
-                                        ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg scale-105'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 hover:scale-105'
-                                    }`}>
-                                    {selectedPlan?.id === plan.id ? '✓ Seleccionado' : 'Seleccionar Plan'}
-                                </button>
+                                            ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-xl scale-105'
+                                            : 'bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 hover:from-gray-200 hover:to-gray-300 hover:scale-105 shadow-lg'
+                                        }`}>
+                                        {selectedPlan?.id === plan.id ? '✓ Plan Seleccionado' : 'Seleccionar Plan'}
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
+                        ))}
+                    </div>
 
-                {/* Configuration Panel - Diseño mejorado */}
-                {selectedPlan && (
-                    <div className="bg-white rounded-3xl shadow-xl overflow-visible mb-8">
-                        {/* Header del Panel */}
-                        <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8">
-                            <h2 className="text-3xl font-bold mb-2">Personaliza tu membresía</h2>
-                            <p className="opacity-90">Configura todos los detalles de tu plan {selectedPlan.name}</p>
-                        </div>
+                    {/* Configuration Panel - Diseño moderno y limpio */}
+                    {selectedPlan && (
+                        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 mb-8">
+                            {/* Header del Panel */}
+                            <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8 relative">
+                                <div className="relative">
+                                    <div className="flex items-center gap-4 mb-4">
+                                        <div className="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
+                                            <span className="text-2xl">⚙️</span>
+                                        </div>
+                                        <div>
+                                            <h2 className="text-3xl font-black">Personaliza tu membresía</h2>
+                                            <p className="text-white/80 text-lg">Configura tu plan {selectedPlan.name} según tus necesidades</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>                            <div className="p-8" style={{ overflow: 'visible' }}>
+                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                                    {/* Left Column - Configuration */}
+                                    <div className="space-y-8">
+                                        {/* Membership Type - Diseño mejorado */}
+                                        <div>
+                                            <label className="block text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                                <span className="text-2xl">👥</span>
+                                                Tipo de Membresía
+                                            </label>
+                                            <div className="space-y-4" style={{ scrollMargin: '0px' }}>
+                                                {Object.entries(membershipTypes).map(([key, type]) => (
+                                                    <label key={key} className={`group flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:scale-105
+                                                    ${membershipType === key ? 'border-indigo-500 bg-gradient-to-r from-indigo-50 to-purple-50 shadow-lg' : 'border-gray-200 hover:border-indigo-300 bg-white/50'}`}
+                                                        style={{ scrollMargin: '0px' }}>
+                                                        <input
+                                                            type="radio"
+                                                            name="membershipType"
+                                                            value={key}
+                                                            checked={membershipType === key}
+                                                            onChange={handleMembershipTypeChange}
+                                                            className="sr-only"
+                                                            style={{ scrollMargin: '0px' }}
+                                                        />
+                                                        <div className="text-3xl mr-5">{type.icon}</div>
+                                                        <div className="flex-1">
+                                                            <div className="font-bold text-gray-900 text-lg">{type.label}</div>
+                                                            <div className="text-sm text-gray-600">{type.description}</div>
+                                                            <div className="text-xs text-indigo-600 font-semibold mt-1">
+                                                                Factor: {type.factor}x
+                                                            </div>
+                                                        </div>
+                                                        {membershipType === key && (
+                                                            <div className="text-indigo-600 transform scale-110">
+                                                                <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
+                                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                                </svg>
+                                                            </div>
+                                                        )}
+                                                    </label>
+                                                ))}
+                                            </div>
+                                        </div>
 
-                        <div className="p-8" style={{ overflow: 'visible' }}>
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                                {/* Left Column - Configuration */}
-                                <div className="space-y-8">
-                                    {/* Membership Type */}
-                                    <div>
-                                        <label className="block text-lg font-semibold text-gray-900 mb-4">
-                                            Tipo de Membresía
-                                        </label>
-                                        <div className="space-y-3" style={{ scrollMargin: '0px' }}>
-                                            {Object.entries(membershipTypes).map(([key, type]) => (
-                                                <label key={key} className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg
-                                                    ${membershipType === key ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
+                                        {/* Billing Cycle - Diseño mejorado */}
+                                        <div>
+                                            <label className="block text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                                <span className="text-2xl">💳</span>
+                                                Ciclo de Facturación
+                                            </label>
+                                            <div className="space-y-4" style={{ scrollMargin: '0px' }}>
+                                                <label className={`group flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:scale-105
+                                                ${billingCycle === 'monthly' ? 'border-blue-500 bg-gradient-to-r from-blue-50 to-cyan-50 shadow-lg' : 'border-gray-200 hover:border-blue-300 bg-white/50'}`}
                                                     style={{ scrollMargin: '0px' }}>
                                                     <input
                                                         type="radio"
-                                                        name="membershipType"
-                                                        value={key}
-                                                        checked={membershipType === key}
-                                                        onChange={handleMembershipTypeChange}
+                                                        name="billingCycle"
+                                                        value="monthly"
+                                                        checked={billingCycle === 'monthly'}
+                                                        onChange={handleBillingCycleChange}
                                                         className="sr-only"
                                                         style={{ scrollMargin: '0px' }}
                                                     />
-                                                    <div className="text-2xl mr-4">{type.icon}</div>
+                                                    <div className="text-3xl mr-5">📅</div>
                                                     <div className="flex-1">
-                                                        <div className="font-semibold text-gray-900">{type.label}</div>
-                                                        <div className="text-sm text-gray-600">{type.description}</div>
+                                                        <div className="font-bold text-gray-900 text-lg">Mensual</div>
+                                                        <div className="text-sm text-gray-600">Pago cada mes - máxima flexibilidad</div>
                                                     </div>
-                                                    {membershipType === key && (
-                                                        <div className="text-blue-600">
-                                                            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                                                    {billingCycle === 'monthly' && (
+                                                        <div className="text-blue-600 transform scale-110">
+                                                            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
                                                                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                                                             </svg>
                                                         </div>
                                                     )}
                                                 </label>
-                                            ))}
-                                        </div>
-                                    </div>
 
-                                    {/* Billing Cycle */}
-                                    <div>
-                                        <label className="block text-lg font-semibold text-gray-900 mb-4">
-                                            Ciclo de Facturación
-                                        </label>
-                                        <div className="space-y-3" style={{ scrollMargin: '0px' }}>
-                                            <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg
-                                                ${billingCycle === 'monthly' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
-                                                style={{ scrollMargin: '0px' }}>
-                                                <input
-                                                    type="radio"
-                                                    name="billingCycle"
-                                                    value="monthly"
-                                                    checked={billingCycle === 'monthly'}
-                                                    onChange={handleBillingCycleChange}
-                                                    className="sr-only"
-                                                    style={{ scrollMargin: '0px' }}
-                                                />
-                                                <div className="text-2xl mr-4">📅</div>
-                                                <div className="flex-1">
-                                                    <div className="font-semibold text-gray-900">Mensual</div>
-                                                    <div className="text-sm text-gray-600">Pago cada mes</div>
-                                                </div>
-                                                {billingCycle === 'monthly' && (
-                                                    <div className="text-blue-600">
-                                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                        </svg>
+                                                <label className={`group flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:scale-105 relative overflow-hidden
+                                                ${billingCycle === 'annual' ? 'border-emerald-500 bg-gradient-to-r from-emerald-50 to-green-50 shadow-lg' : 'border-gray-200 hover:border-emerald-300 bg-white/50'}`}
+                                                    style={{ scrollMargin: '0px' }}>
+                                                    {/* Badge de descuento */}
+                                                    <div className="absolute top-2 right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                                                        10% OFF
                                                     </div>
-                                                )}
-                                            </label>
-
-                                            <label className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg
-                                                ${billingCycle === 'annual' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'}`}
-                                                style={{ scrollMargin: '0px' }}>
-                                                <input
-                                                    type="radio"
-                                                    name="billingCycle"
-                                                    value="annual"
-                                                    checked={billingCycle === 'annual'}
-                                                    onChange={handleBillingCycleChange}
-                                                    className="sr-only"
-                                                    style={{ scrollMargin: '0px' }}
-                                                />
-                                                <div className="text-2xl mr-4">💰</div>
-                                                <div className="flex-1">
-                                                    <div className="font-semibold text-gray-900">
-                                                        Anual <span className="text-green-600 font-bold">(10% descuento)</span>
-                                                    </div>
-                                                    <div className="text-sm text-gray-600">Pago una vez al año</div>
-                                                </div>
-                                                {billingCycle === 'annual' && (
-                                                    <div className="text-blue-600">
-                                                        <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                        </svg>
-                                                    </div>
-                                                )}
-                                            </label>
-                                        </div>
-                                    </div>
-
-                                    {/* Add-ons */}
-                                    <div>
-                                        <label className="block text-lg font-semibold text-gray-900 mb-4">
-                                            Servicios Adicionales
-                                        </label>
-                                        <div className="space-y-3">
-                                            {availableAddons.map((addon) => (
-                                                <label key={addon.id} className={`flex items-center p-4 border-2 rounded-xl cursor-pointer transition-all duration-300 hover:shadow-lg
-                                                    ${addons.includes(addon.id) ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'}`}>
                                                     <input
-                                                        type="checkbox"
-                                                        checked={addons.includes(addon.id)}
-                                                        onChange={() => handleAddonToggle(addon.id)}
+                                                        type="radio"
+                                                        name="billingCycle"
+                                                        value="annual"
+                                                        checked={billingCycle === 'annual'}
+                                                        onChange={handleBillingCycleChange}
                                                         className="sr-only"
+                                                        style={{ scrollMargin: '0px' }}
                                                     />
-                                                    <div className="text-2xl mr-4">{addon.icon}</div>
+                                                    <div className="text-3xl mr-5">💰</div>
                                                     <div className="flex-1">
-                                                        <div className="font-semibold text-gray-900">{addon.name}</div>
-                                                        <div className="text-sm text-gray-600">{addon.description}</div>
+                                                        <div className="font-bold text-gray-900 text-lg">
+                                                            Anual <span className="text-green-600 font-black">(Ahorra 10%)</span>
+                                                        </div>
+                                                        <div className="text-sm text-gray-600">Pago una vez al año - mejor precio</div>
                                                     </div>
-                                                    <div className="text-right">
-                                                        <div className="font-bold text-blue-600">+${addon.price}/mes</div>
-                                                        {addons.includes(addon.id) && (
-                                                            <div className="text-green-600">
-                                                                <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-                                                                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                                                </svg>
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                                    {billingCycle === 'annual' && (
+                                                        <div className="text-emerald-600 transform scale-110">
+                                                            <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                            </svg>
+                                                        </div>
+                                                    )}
                                                 </label>
-                                            ))}
+                                            </div>
+                                        </div>
+
+                                        {/* Add-ons - Diseño mejorado */}
+                                        <div>
+                                            <label className="block text-xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+                                                <span className="text-2xl">✨</span>
+                                                Servicios Adicionales
+                                            </label>
+                                            <div className="space-y-4">
+                                                {availableAddons.map((addon) => (
+                                                    <label key={addon.id} className={`group flex items-center p-5 border-2 rounded-2xl cursor-pointer transition-all duration-300 hover:shadow-xl transform hover:scale-105 relative overflow-hidden
+                                                    ${addons.includes(addon.id) ? 'border-green-500 bg-gradient-to-r from-green-50 to-emerald-50 shadow-lg' : 'border-gray-200 hover:border-green-300 bg-white/50'}`}>
+
+                                                        {/* Efecto de brillo al seleccionar */}
+                                                        {addons.includes(addon.id) && (
+                                                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-green-200/30 to-transparent transform -skew-x-12 animate-pulse"></div>
+                                                        )}
+
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={addons.includes(addon.id)}
+                                                            onChange={() => handleAddonToggle(addon.id)}
+                                                            className="sr-only"
+                                                        />
+                                                        <div className="text-3xl mr-5 filter drop-shadow-lg">{addon.icon}</div>
+                                                        <div className="flex-1 relative">
+                                                            <div className="font-bold text-gray-900 text-lg">{addon.name}</div>
+                                                            <div className="text-sm text-gray-600 leading-relaxed">{addon.description}</div>
+                                                        </div>
+                                                        <div className="text-right ml-4">
+                                                            <div className="font-black text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                                                                +${addon.price}/mes
+                                                            </div>
+                                                            {addons.includes(addon.id) && (
+                                                                <div className="text-green-600 transform scale-110 mt-2 flex justify-center">
+                                                                    <svg className="w-7 h-7" fill="currentColor" viewBox="0 0 20 20">
+                                                                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                                                                    </svg>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    </label>
+                                                ))}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                {/* Right Column - Summary */}
-                                <div className="bg-gray-50 rounded-2xl p-8">
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-6">Resumen de tu membresía</h3>
-                                    {renderPricingSummary()}
+                                    {/* Right Column - Summary Ultra Moderno */}
+                                    <div className="bg-gray-50 rounded-3xl p-8 border border-gray-100 shadow-lg relative">
+                                        <div className="relative">
+                                            <div className="flex items-center gap-3 mb-8">
+                                                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
+                                                    <span className="text-xl">📄</span>
+                                                </div>
+                                                <h3 className="text-2xl font-black text-gray-900">Resumen de tu membresía</h3>
+                                            </div>
+                                            {renderPricingSummary()}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     );

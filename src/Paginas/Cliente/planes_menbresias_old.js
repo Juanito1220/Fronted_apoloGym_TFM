@@ -7,10 +7,7 @@ import { useNavigate } from "react-router-dom";
 const FEATURES = [
   "Área de peso libre, peso integrado, cardio y clases grupales",
   "Acceso a todas las áreas del gimnasio",
-  "Acceso a otros Smart Fit en el mundo",
   "Sin cargo por cancelación",
-  "Smart Fit App",
-  "Smart Fit Go",
   "Invitar un amigo a entrenar",
   "Sillones de masaje",
 ];
@@ -28,10 +25,7 @@ const PLANS = [
     features: {
       "Área de peso libre, peso integrado, cardio y clases grupales": true,
       "Acceso a todas las áreas del gimnasio": true,
-      "Acceso a otros Smart Fit en el mundo": true,
       "Sin cargo por cancelación": true,
-      "Smart Fit App": true,
-      "Smart Fit Go": true,
       "Invitar un amigo a entrenar": true,
       "Sillones de masaje": true,
     },
@@ -47,10 +41,7 @@ const PLANS = [
     features: {
       "Área de peso libre, peso integrado, cardio y clases grupales": true,
       "Acceso a todas las áreas del gimnasio": true,
-      "Acceso a otros Smart Fit en el mundo": false,
       "Sin cargo por cancelación": true,
-      "Smart Fit App": true,
-      "Smart Fit Go": true,
       "Invitar un amigo a entrenar": false,
       "Sillones de masaje": false,
     },
@@ -66,10 +57,7 @@ const PLANS = [
     features: {
       "Área de peso libre, peso integrado, cardio y clases grupales": true,
       "Acceso a todas las áreas del gimnasio": true,
-      "Acceso a otros Smart Fit en el mundo": false,
       "Sin cargo por cancelación": false,
-      "Smart Fit App": true,
-      "Smart Fit Go": false,
       "Invitar un amigo a entrenar": false,
       "Sillones de masaje": false,
     },
