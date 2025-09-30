@@ -137,7 +137,7 @@ base */ .header {
 .nav-text {
   font-size: 15px;
   font-weight: 600;
-  color: var(--text-secondary);
+  color: var(--text-secondary) !important;
   transition: color 0.3s ease;
   z-index: 2;
   position: relative;
@@ -161,7 +161,7 @@ base */ .header {
 }
 
 .nav-link:hover .nav-text {
-  color: var(--text-primary);
+  color: var(--text-primary) !important;
 }
 
 .nav-link:hover .nav-indicator {
@@ -169,11 +169,37 @@ base */ .header {
 }
 
 .nav-link.active .nav-text {
-  color: var(--accent-primary);
+  color: var(--accent-primary) !important;
 }
 
 .nav-link.active .nav-indicator {
   width: 30px;
+}
+
+/* Estilos adicionales para asegurar visibilidad */
+.nav-link {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px;
+  text-decoration: none !important;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.nav-link:visited,
+.nav-link:focus,
+.nav-link:active {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.nav-link:visited .nav-text,
+.nav-link:focus .nav-text,
+.nav-link:active .nav-text {
+  color: var(--text-secondary) !important;
 }
 
 /* Sección de autenticación */
@@ -317,4 +343,102 @@ base */ .header {
   .header-spacer {
     height: 70px;
   }
+}
+
+/* Reglas específicas para asegurar la visibilidad del texto de navegación */
+.modern-header .nav-menu .nav-item .nav-link .nav-text {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.modern-header .nav-menu .nav-item .nav-link:hover .nav-text {
+  color: #ffffff !important;
+}
+
+.modern-header .nav-menu .nav-item .nav-link.active .nav-text {
+  color: #4facfe !important;
+}
+
+/* Asegurar que solo los enlaces de navegación no hereden colores no deseados */
+.modern-header .nav-menu .nav-item .nav-link,
+.modern-header .nav-menu .nav-item .nav-link:link,
+.modern-header .nav-menu .nav-item .nav-link:visited,
+.modern-header .nav-menu .nav-item .nav-link:focus,
+.modern-header .nav-menu .nav-item .nav-link:active {
+  text-decoration: none !important;
+}
+
+/* REGLAS MUY ESPECÍFICAS PARA FORZAR EL COLOR BLANCO */
+header.modern-header nav.desktop-nav ul.nav-menu li.nav-item a.nav-link span.nav-text,
+.modern-header .desktop-nav .nav-menu .nav-item .nav-link .nav-text,
+.nav-text {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+}
+
+header.modern-header nav.desktop-nav ul.nav-menu li.nav-item a.nav-link:hover span.nav-text,
+.modern-header .desktop-nav .nav-menu .nav-item .nav-link:hover .nav-text {
+  color: #ffffff !important;
+}
+
+/* Asegurar que el logo mantenga sus colores originales */
+.modern-header .logo-main {
+  color: var(--text-primary) !important;
+}
+
+.modern-header .logo-accent {
+  background: var(--accent-gradient) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Asegurar que los botones de auth mantengan sus colores */
+.modern-header .login-btn {
+  color: var(--text-secondary) !important;
+}
+
+.modern-header .register-btn {
+  color: white !important;
+}
+
+/* Asegurar que el botón hamburger mantenga el color blanco */
+.modern-header .hamburger span {
+  background: var(--text-primary) !important;
+}
+
+/* REGLA FINAL DE MÁXIMA PRIORIDAD PARA NAVEGACIÓN */
+* .modern-header * .nav-text,
+.modern-header .nav-text,
+[class*="nav-text"],
+.nav-menu .nav-text,
+.nav-item .nav-text {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+* .modern-header * .nav-link:hover .nav-text,
+.modern-header .nav-link:hover .nav-text {
+  color: #ffffff !important;
+}
+
+/* Resetear cualquier color heredado de frameworks */
+.modern-header * {
+  color: inherit;
+}
+
+.modern-header .nav-menu * {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* SOBRESCRIBIR TAILWINDCSS Y BOOTSTRAP SI ESTÁN INTERFIRIENDO */
+.modern-header .nav-text.text-black,
+.modern-header .nav-text.text-gray-900,
+.modern-header .nav-link.text-black,
+.modern-header .nav-link.text-gray-900 {
+  color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Forzar estilo inline si es necesario */
+.modern-header .nav-text[style*="color"] {
+  color: rgba(255, 255, 255, 0.8) !important;
 }
