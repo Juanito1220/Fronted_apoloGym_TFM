@@ -15,9 +15,11 @@ import {
 import "../../Styles/menu.css";
 import "../../Styles/professional-sidebar.css";
 import AvatarMenu from "../../Componentes/AvatarMenu";
+import { useNotificationBadge } from "../../hooks/useSystemNotifications";
 
 export default function ClientLayout() {
     const navigate = useNavigate();
+    const unreadCount = useNotificationBadge();
 
     return (
         <div className="menu-wrapper">
@@ -45,6 +47,11 @@ export default function ClientLayout() {
                     >
                         <FaBell className="pro-nav-icon" />
                         <span>Notificaciones</span>
+                        {unreadCount > 0 && (
+                            <span className="notification-badge">
+                                {unreadCount > 99 ? '99+' : unreadCount}
+                            </span>
+                        )}
                     </NavLink>
 
                     <div className="pro-nav-section">Entrenamientos</div>

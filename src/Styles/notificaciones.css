@@ -1,9 +1,192 @@
-.notifs-head{ display:flex; justify-content:flex-end; margin-bottom:8px; }
-.notif-list{ list-style:none; padding:0; margin:0; display:grid; gap:10px; }
-.notif{
-  border:1px solid #e5e7eb; border-radius:12px; padding:12px; background:#fff;
+/* Notificaciones - Sistema moderno */
+
+/* Utility classes para line-clamp */
+.line-clamp-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
-.notif .title{ font-weight:900; margin-bottom:4px; }
-.notif .body{ color:#111827; margin-bottom:6px; }
-.notif .date{ color:#6b7280; font-size:12px; }
-.muted{ color:#6b7280; }
+
+/* Animaciones para las notificaciones */
+@keyframes slideInFromTop {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+/* Efectos hover para las tarjetas */
+.notification-card {
+  animation: slideInFromTop 0.3s ease-out;
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Badge de prioridad con efecto glow */
+.priority-badge-high {
+  position: relative;
+  overflow: hidden;
+}
+
+.priority-badge-high::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+/* Estilos para indicadores de estado */
+.unread-indicator {
+  width: 8px;
+  height: 8px;
+  background: #3b82f6;
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+/* Custom scrollbar para el área de notificaciones */
+.notifications-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.notifications-scroll::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.notifications-scroll::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.notifications-scroll::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Loading skeleton */
+.notification-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .notification-card {
+    margin: 0 -1rem;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+}
+
+/* Custom styles para el modal de preferencias */
+.preferences-modal {
+  backdrop-filter: blur(4px);
+}
+
+/* Estados de hover para botones */
+.btn-notification:hover {
+  transform: scale(1.05);
+  transition: transform 0.1s ease-in-out;
+}
+
+/* Iconos con efectos */
+.notification-icon {
+  transition: all 0.2s ease-in-out;
+}
+
+.notification-icon:hover {
+  transform: rotate(10deg) scale(1.1);
+}
+
+/* Compatibilidad con el sistema anterior */
+.notifs-head {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.notif-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.notif {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 12px;
+  background: #fff;
+  transition: all 0.2s ease-in-out;
+}
+
+.notif:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.notif .title {
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.notif .body {
+  color: #111827;
+  margin-bottom: 6px;
+}
+
+.notif .date {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+.muted {
+  color: #6b7280;
+}
