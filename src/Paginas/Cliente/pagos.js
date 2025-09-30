@@ -1,12 +1,12 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import {
-  CreditCard,
-  Building2,
-  Banknote,
-  Shield,
-  Check,
-  AlertCircle,
+import { 
+  CreditCard, 
+  Building2, 
+  Banknote, 
+  Shield, 
+  Check, 
+  AlertCircle, 
   Lock,
   Receipt,
   Gift,
@@ -20,35 +20,43 @@ import { paymentsService } from "../../Data/Services/membershipService";
 import { useNotifications } from "../../hooks/useNotifications";
 import "../../Styles/pagos.css";
 
-/* ======= Datos de ejemplo ======= */
+// Datos de ejemplo
 const PLANS = [
   { id: "black", name: "Plan Black", price: 29.9 },
   { id: "fit", name: "Plan Fit", price: 21.9 },
   { id: "smart", name: "Plan Smart", price: 25.9 },
 ];
-const TAX_RATE = 0.12;       // IVA 12%
-const COUPONS = {            // cupones demo
-  BIENVENIDA10: 0.10,        // 10% off
+
+const TAX_RATE = 0.12; // IVA 12%
+const COUPONS = {
+  BIENVENIDA10: 0.10, // 10% off
   GYM5: 0.05
 };
 
-/* ======= Utilidades ======= */
+// Utilidades
 const money = (n) => n.toLocaleString("es-EC", { style: "currency", currency: "USD" });
 const onlyDigits = (s) => s.replace(/\D+/g, "");
 
 // Luhn (verificación básica de tarjeta)
 function luhnCheck(num) {
   const s = onlyDigits(num);
-  let sum = 0, alt = false;
+  let sum = 0;
+  let alt = false;
   for (let i = s.length - 1; i >= 0; i--) {
     let n = parseInt(s[i], 10);
-    if (alt) { n *= 2; if (n > 9) n -= 9; }
-    sum += n; alt = !alt;
+    if (alt) { 
+      n *= 2; 
+      if (n > 9) n -= 9; 
+    }
+    sum += n; 
+    alt = !alt;
   }
   return (sum % 10) === 0 && s.length >= 13 && s.length <= 19;
 }
+
 function isFuture(mm, yy) {
-  const m = Number(mm), y = Number("20" + yy);
+  const m = Number(mm);
+  const y = Number("20" + yy);
   if (!m || !y) return false;
   const now = new Date();
   const exp = new Date(y, m, 0);
@@ -59,17 +67,17 @@ export default function Pagos() {
   const navigate = useNavigate();
   const { showSuccess, showError } = useNotifications();
 
-  // estado general
+  // Estado general
   const [planId, setPlanId] = useState(PLANS[0].id);
   const [coupon, setCoupon] = useState("");
-  const [method, setMethod] = useState("card"); // card | transfer | cash
+  const [method, setMethod] = useState("card");
   const [checkoutData, setCheckoutData] = useState(null);
 
-  // datos del cliente
+  // Datos del cliente
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
 
-  // tarjeta
+  // Tarjeta
   const [cardName, setCardName] = useState("");
   const [cardNumber, setCardNumber] = useState("");
   const [expMonth, setExpMonth] = useState("");
@@ -78,7 +86,7 @@ export default function Pagos() {
 
   // UI
   const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(null); // {id, total, plan}
+  const [success, setSuccess] = useState(null);
 
   // Cargar datos de checkout si vienen desde la galería de planes
   useEffect(() => {
@@ -90,7 +98,6 @@ export default function Pagos() {
         if (data.subscription) {
           setPlanId(data.subscription.planId);
         }
-        // Limpiar datos después de cargar
         localStorage.removeItem('checkout_data');
       } catch (error) {
         console.error('Error loading checkout data:', error);
@@ -112,7 +119,7 @@ export default function Pagos() {
   const tax = taxedBase * TAX_RATE;
   const total = taxedBase + tax;
 
-  // formateo de número de tarjeta (XXXX XXXX XXXX ...)
+  // Formateo de número de tarjeta
   const formatCardNumber = (v) =>
     onlyDigits(v).slice(0, 19).replace(/(\d{4})(?=\d)/g, "$1 ");
 
@@ -144,7 +151,6 @@ export default function Pagos() {
       const response = await paymentsService.processPayment(paymentData);
 
       if (response.success) {
-        // limpiar datos sensibles de tarjeta
         setCardNumber("");
         setCvv("");
 
@@ -157,7 +163,6 @@ export default function Pagos() {
 
         showSuccess(`💳 Pago procesado exitosamente - ${response.data.receipt}`);
 
-        // Redirigir al historial después de 3 segundos
         setTimeout(() => {
           navigate('/cliente/historial');
         }, 3000);
@@ -177,10 +182,10 @@ export default function Pagos() {
       {/* Header profesional */}
       <div className="payments-header">
         <div className="header-content">
-          <button
-            type="button"
+          <button 
+            type="button" 
             className="back-button"
-            onClick={() => navigate('/cliente/planes')}
+            onClick={() => navigate(-1)}
           >
             <ArrowLeft className="back-icon" />
           </button>
@@ -235,7 +240,7 @@ export default function Pagos() {
               <User className="section-icon" />
               <h2>Información del Cliente</h2>
             </div>
-
+            
             <div className="form-grid">
               <div className="form-group">
                 <label htmlFor="customer-name">
@@ -252,7 +257,7 @@ export default function Pagos() {
                   required
                 />
               </div>
-
+              
               <div className="form-group">
                 <label htmlFor="customer-email">
                   <Mail className="label-icon" />
@@ -277,11 +282,11 @@ export default function Pagos() {
               <Gift className="section-icon" />
               <h2>Plan Seleccionado</h2>
             </div>
-
+            
             <div className="plan-selector">
               {PLANS.map((p) => (
-                <div
-                  key={p.id}
+                <div 
+                  key={p.id} 
                   className={`plan-option ${planId === p.id ? 'selected' : ''}`}
                   onClick={() => setPlanId(p.id)}
                 >
@@ -325,10 +330,10 @@ export default function Pagos() {
               <CreditCard className="section-icon" />
               <h2>Método de Pago</h2>
             </div>
-
+            
             <div className="payment-methods">
-              <button
-                type="button"
+              <button 
+                type="button" 
                 className={`payment-method ${method === "card" ? "active" : ""}`}
                 onClick={() => setMethod("card")}
               >
@@ -336,9 +341,9 @@ export default function Pagos() {
                 <span>Tarjeta de Crédito/Débito</span>
                 {method === "card" && <Check className="check-icon" />}
               </button>
-
-              <button
-                type="button"
+              
+              <button 
+                type="button" 
                 className={`payment-method ${method === "transfer" ? "active" : ""}`}
                 onClick={() => setMethod("transfer")}
               >
@@ -346,9 +351,9 @@ export default function Pagos() {
                 <span>Transferencia Bancaria</span>
                 {method === "transfer" && <Check className="check-icon" />}
               </button>
-
-              <button
-                type="button"
+              
+              <button 
+                type="button" 
                 className={`payment-method ${method === "cash" ? "active" : ""}`}
                 onClick={() => setMethod("cash")}
               >
@@ -365,7 +370,7 @@ export default function Pagos() {
                   <Lock className="security-icon" />
                   <span>Tus datos están protegidos con encriptación SSL</span>
                 </div>
-
+                
                 <div className="form-group">
                   <label htmlFor="card-name">
                     <User className="label-icon" />
@@ -381,7 +386,7 @@ export default function Pagos() {
                     required
                   />
                 </div>
-
+                
                 <div className="form-group">
                   <label htmlFor="card-number">
                     <CreditCard className="label-icon" />
@@ -404,7 +409,7 @@ export default function Pagos() {
                     </small>
                   )}
                 </div>
-
+                
                 <div className="form-grid">
                   <div className="form-group">
                     <label htmlFor="exp-month">
@@ -422,7 +427,7 @@ export default function Pagos() {
                       required
                     />
                   </div>
-
+                  
                   <div className="form-group">
                     <label htmlFor="exp-year">
                       <Calendar className="label-icon" />
@@ -439,7 +444,7 @@ export default function Pagos() {
                       required
                     />
                   </div>
-
+                  
                   <div className="form-group">
                     <label htmlFor="cvv">
                       <Lock className="label-icon" />
@@ -457,7 +462,7 @@ export default function Pagos() {
                     />
                   </div>
                 </div>
-
+                
                 {expMonth && expYear && !isFuture(expMonth, expYear) && (
                   <small className="error-message">
                     <AlertCircle className="error-icon" />
@@ -499,8 +504,8 @@ export default function Pagos() {
           </section>
 
           {/* Botón de pago */}
-          <button
-            type="submit"
+          <button 
+            type="submit" 
             disabled={submitting || !name || !email || (method === "card" && (!cardNumber || !luhnCheck(cardNumber) || !expMonth || !expYear || !cvv || !isFuture(expMonth, expYear)))}
             className="submit-button"
           >
@@ -525,38 +530,57 @@ export default function Pagos() {
               <Receipt className="summary-icon" />
               Resumen del Pedido
             </h3>
-
+            
             <div className="summary-content">
               <div className="plan-summary">
-                <span className="plan-name">{plan.name}</span>
+                <div className="plan-details">
+                  <span className="plan-name">
+                    {checkoutData?.subscription?.planName || plan.name}
+                  </span>
+                  {checkoutData?.membershipTypeInfo && (
+                    <span className="membership-type">
+                      {checkoutData.membershipTypeInfo.label} - {checkoutData.subscription.billingCycle === 'annual' ? 'Anual' : 'Mensual'}
+                    </span>
+                  )}
+                </div>
                 <span className="plan-price">{money(subtotal)}</span>
               </div>
+              
+              {/* Mostrar add-ons si los hay */}
+              {checkoutData?.subscription?.addons && checkoutData.subscription.addons.length > 0 && (
+                <div className="addons-section">
+                  <h4 className="addons-title">Servicios Adicionales</h4>
+                  {checkoutData.subscription.addons.map((addon) => (
+                    <div key={addon.id} className="addon-line">
+                      <span className="addon-name">{addon.name}</span>
+                      <span className="addon-price">{money(addon.price)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
 
               {discount > 0 && (
                 <div className="discount-line">
                   <span className="discount-label">
                     <Gift className="discount-icon" />
-                    Descuento
+                    Descuento {checkoutData?.subscription?.billingCycle === 'annual' ? '(Plan Anual)' : ''}
                   </span>
                   <span className="discount-amount">-{money(discount)}</span>
                 </div>
               )}
-
+              
               <div className="tax-line">
                 <span>IVA (12%)</span>
                 <span>{money(tax)}</span>
               </div>
-
+              
               <div className="total-line">
                 <span>Total</span>
                 <span className="total-amount">{money(total)}</span>
               </div>
             </div>
-
-            <div className="legal-notice">
-              <Lock className="legal-icon" />
-              <p>Demo frontend. No se procesa ningún cobro real.</p>
-            </div>
+            
+           
           </div>
         </aside>
       </div>

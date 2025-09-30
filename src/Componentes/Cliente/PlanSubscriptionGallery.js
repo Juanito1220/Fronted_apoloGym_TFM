@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { plansService, membershipsService } from '../../Data/Services/membershipService';
+import { plansService } from '../../Data/Services/membershipService';
 
 // Tipos de membresía con factores de precio (fuera del componente para evitar re-renders)
 const membershipTypes = {
@@ -27,9 +27,6 @@ const PlanSubscriptionGallery = () => {
     const [membershipType, setMembershipType] = useState('individual');
     const [billingCycle, setBillingCycle] = useState('monthly');
     const [addons, setAddons] = useState([]);
-    const [isSubscribing, setIsSubscribing] = useState(false);
-    const [showPaymentModal, setShowPaymentModal] = useState(false);
-    const [paymentStep, setPaymentStep] = useState('processing'); // 'processing', 'success', 'error'
 
     useEffect(() => {
         fetchPlans();
@@ -43,10 +40,9 @@ const PlanSubscriptionGallery = () => {
             selectedPlan: selectedPlan?.name,
             addons: addons.length,
             loading,
-            error,
-            showPaymentModal
+            error
         });
-    }, [membershipType, billingCycle, selectedPlan, addons, loading, error, showPaymentModal]);
+    }, [membershipType, billingCycle, selectedPlan, addons, loading, error]);
 
     const fetchPlans = async () => {
         try {
@@ -278,26 +274,16 @@ const PlanSubscriptionGallery = () => {
                         {/* Botón de suscripción ultra moderno */}
                         <button
                             onClick={handleSubscribe}
-                            disabled={isSubscribing}
-                            className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-black text-lg py-5 px-8 rounded-2xl transition-all duration-500 transform hover:scale-105 disabled:scale-100 shadow-xl hover:shadow-2xl disabled:shadow-none relative overflow-hidden group"
+                            className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white font-black text-lg py-5 px-8 rounded-2xl transition-all duration-500 transform hover:scale-105 shadow-xl hover:shadow-2xl relative overflow-hidden group"
                         >
                             {/* Efecto de brillo */}
                             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent transform -skew-x-12 group-hover:translate-x-full transition-transform duration-1000"></div>
 
                             <div className="relative flex items-center justify-center gap-3">
-                                {isSubscribing ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
-                                        <span>Procesando pago...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <span>🚀 Finalizar Suscripción</span>
-                                        <svg className="w-6 h-6 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                                        </svg>
-                                    </>
-                                )}
+                                <span>🚀 Finalizar Suscripción</span>
+                                <svg className="w-6 h-6 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
                             </div>
                         </button>
 
@@ -333,190 +319,46 @@ const PlanSubscriptionGallery = () => {
         }
 
         try {
-            setIsSubscribing(true);
-            setShowPaymentModal(true);
-            setPaymentStep('processing');
-            setError(null); // Limpiar errores previos
-
-            const startDate = new Date();
-            const expirationDate = new Date();
-
-            if (billingCycle === 'annual') {
-                expirationDate.setFullYear(expirationDate.getFullYear() + 1);
-            } else {
-                expirationDate.setMonth(expirationDate.getMonth() + 1);
-            }
-
-            const subscriptionData = {
-                planId: selectedPlan.id,
-                planName: selectedPlan.name,
-                membershipType,
-                billingCycle,
-                addons: addons.map(id => availableAddons.find(a => a.id === id)).filter(Boolean),
-                startDate: startDate.toISOString(),
-                expirationDate: expirationDate.toISOString(),
-                totalAmount: pricing.finalPrice
+            // Preparar datos para enviar al componente de pagos
+            const checkoutData = {
+                subscription: {
+                    planId: selectedPlan.id,
+                    planName: selectedPlan.name,
+                    planDescription: selectedPlan.description || selectedPlan.features?.join(', ') || '',
+                    membershipType,
+                    billingCycle,
+                    addons: addons.map(id => {
+                        const addon = availableAddons.find(a => a.id === id);
+                        return addon ? {
+                            id: addon.id,
+                            name: addon.name,
+                            price: addon.price,
+                            description: addon.description
+                        } : null;
+                    }).filter(Boolean)
+                },
+                pricing: {
+                    basePrice: pricing.basePrice,
+                    addonsTotal: pricing.addonsTotal,
+                    totalMonthly: pricing.totalMonthly,
+                    finalPrice: pricing.finalPrice,
+                    savings: pricing.savings,
+                    membershipFactor: membershipTypes[membershipType]?.factor || 1,
+                    billingDiscount: billingCycle === 'annual' ? 0.9 : 1
+                },
+                membershipTypeInfo: membershipTypes[membershipType]
             };
 
-            // Simular procesamiento de pago (2-4 segundos)
-            const processingTime = Math.random() * 2000 + 2000;
+            // Guardar los datos en localStorage para que los recoja el componente de pagos
+            localStorage.setItem('checkout_data', JSON.stringify(checkoutData));
 
-            // Agregar timeout de seguridad (máximo 10 segundos)
-            const timeoutPromise = new Promise((_, reject) =>
-                setTimeout(() => reject(new Error('Timeout en el procesamiento')), 10000)
-            );
+            // Redirigir al componente de pagos
+            navigate('/cliente/pagos');
 
-            const processingPromise = new Promise(resolve => setTimeout(resolve, processingTime));
-
-            await Promise.race([processingPromise, timeoutPromise]);
-
-            // Simular 90% de éxito, 10% de error
-            const isSuccess = Math.random() > 0.1;
-
-            if (isSuccess) {
-                const response = await membershipsService.subscribeToPlan(selectedPlan.id, subscriptionData);
-
-                if (response.success) {
-                    setPaymentStep('success');
-
-                    // Simular procesamiento exitoso de pago
-                    setTimeout(() => {
-                        try {
-                            // Guardar datos de checkout para el proceso de pago
-                            localStorage.setItem('checkout_data', JSON.stringify({
-                                subscription: response.data,
-                                pricing,
-                                paymentResult: 'success'
-                            }));
-
-                            // Redirigir al historial después del éxito usando navigate
-                            navigate('/cliente/historial');
-                        } catch (navError) {
-                            console.error('Error en la navegación:', navError);
-                            setError('Pago procesado exitosamente. Redirigiendo...');
-                            // Fallback manual
-                            window.location.href = '/cliente/historial';
-                        }
-                    }, 2000);
-                } else {
-                    throw new Error('Error en la respuesta del servicio');
-                }
-            } else {
-                setPaymentStep('error');
-                setTimeout(() => {
-                    setShowPaymentModal(false);
-                    setPaymentStep('processing');
-                    setIsSubscribing(false);
-                }, 3000);
-            }
-        } catch (err) {
-            console.error('Error subscribing to plan:', err);
-            setPaymentStep('error');
-
-            // Auto-cerrar el modal después de 5 segundos en caso de error
-            setTimeout(() => {
-                setShowPaymentModal(false);
-                setPaymentStep('processing');
-                setIsSubscribing(false);
-                setError('Error al procesar la suscripción. Por favor, intenta nuevamente.');
-            }, 5000);
+        } catch (error) {
+            console.error('Error preparando datos de checkout:', error);
+            setError('Error al procesar la suscripción. Por favor, intenta nuevamente.');
         }
-    };
-
-    // Modal de Pago
-    const PaymentModal = () => {
-        if (!showPaymentModal) return null;
-
-        const handleCloseModal = () => {
-            setShowPaymentModal(false);
-            setPaymentStep('processing');
-            setIsSubscribing(false);
-        };
-
-        return (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center relative">
-                    {/* Botón de cierre */}
-                    {paymentStep !== 'processing' && (
-                        <button
-                            onClick={handleCloseModal}
-                            className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                        </button>
-                    )}
-
-                    {paymentStep === 'processing' && (
-                        <>
-                            <div className="flex justify-center mb-6">
-                                <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
-                            </div>
-                            <h3 className="text-2xl font-bold text-gray-900 mb-4">Procesando Pago</h3>
-                            <p className="text-gray-600">
-                                Por favor espera mientras validamos tu información y procesamos tu suscripción...
-                            </p>
-                        </>
-                    )}
-
-                    {paymentStep === 'success' && (
-                        <>
-                            <div className="flex justify-center mb-6">
-                                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                                    <svg className="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 className="text-2xl font-bold text-green-600 mb-4">¡Pago Exitoso!</h3>
-                            <p className="text-gray-600 mb-4">
-                                Tu suscripción ha sido procesada correctamente.
-                                <br />Redirigiendo a tu historial...
-                            </p>
-                            <div className="text-sm text-gray-500">
-                                Plan: {selectedPlan?.name} - {membershipTypes[membershipType].label}
-                            </div>
-                        </>
-                    )}
-
-                    {paymentStep === 'error' && (
-                        <>
-                            <div className="flex justify-center mb-6">
-                                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
-                                    <svg className="w-10 h-10 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <h3 className="text-2xl font-bold text-red-600 mb-4">Error en el Pago</h3>
-                            <p className="text-gray-600 mb-6">
-                                Hubo un problema al procesar tu pago. Por favor, intenta nuevamente.
-                            </p>
-                            <div className="flex gap-3 justify-center">
-                                <button
-                                    onClick={() => {
-                                        setShowPaymentModal(false);
-                                        setPaymentStep('processing');
-                                        setIsSubscribing(false);
-                                    }}
-                                    className="bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors"
-                                >
-                                    Cancelar
-                                </button>
-                                <button
-                                    onClick={handleSubscribe}
-                                    className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-                                    disabled={isSubscribing}
-                                >
-                                    Intentar de Nuevo
-                                </button>
-                            </div>
-                        </>
-                    )}
-                </div>
-            </div>
-        );
     };
 
     if (loading) {
@@ -561,8 +403,6 @@ const PlanSubscriptionGallery = () => {
             scrollPadding: '0px'
         }}>
             <div className="relative">
-                <PaymentModal />
-
                 {/* Header Ultra Moderno - Simplificado */}
                 <div className="relative min-h-[60vh] flex items-center justify-center">
                     {/* Background suave */}

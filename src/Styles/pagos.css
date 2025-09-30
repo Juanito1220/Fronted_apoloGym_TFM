@@ -564,8 +564,13 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Panel de resumen */
@@ -607,27 +612,72 @@
   gap: 16px;
 }
 
-.plan-summary,
+.plan-summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.plan-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.plan-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.membership-type {
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.plan-price {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+/* Sección de add-ons */
+.addons-section {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.addons-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 12px 0;
+}
+
+.addon-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.addon-name {
+  color: var(--text-secondary);
+}
+
+.addon-price {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
 .discount-line,
 .tax-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-size: 16px;
-}
-
-.plan-summary {
-  padding-bottom: 16px;
-  border-bottom: 1px solid var(--border-color);
-}
-
-.plan-name {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.plan-price {
-  color: var(--text-secondary);
 }
 
 .discount-line {
@@ -697,36 +747,36 @@
     grid-template-columns: 1fr;
     gap: 20px;
   }
-  
+
   .payment-summary {
     position: static;
     order: -1;
   }
-  
+
   .form-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .payment-methods {
     grid-template-columns: 1fr;
   }
-  
+
   .header-content {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
   }
-  
+
   .security-badge {
     align-self: stretch;
     justify-content: center;
   }
-  
+
   .success-content {
     flex-direction: column;
     gap: 16px;
   }
-  
+
   .success-actions {
     justify-content: center;
   }
@@ -736,17 +786,17 @@
   .payments-container {
     padding: 16px;
   }
-  
+
   .payments-header,
   .form-section,
   .summary-card {
     padding: 20px;
   }
-  
+
   .page-title {
     font-size: 24px;
   }
-  
+
   .submit-button {
     font-size: 16px;
     padding: 14px 20px;
