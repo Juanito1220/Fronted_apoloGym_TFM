@@ -18,7 +18,7 @@ class ProgressService {
             if (this.isDevelopment) {
                 return this.getMockData();
             }
-            
+
             // En producción, hacer llamada real a la API
             const response = await fetch(`${this.baseURL}/progress/my-history`, {
                 method: 'GET',
@@ -27,11 +27,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
@@ -55,7 +55,7 @@ class ProgressService {
                     data: mockData.exercises
                 };
             }
-            
+
             const response = await fetch(`${this.baseURL}/progress/exercises`, {
                 method: 'GET',
                 headers: {
@@ -63,11 +63,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
@@ -86,9 +86,9 @@ class ProgressService {
         try {
             if (this.isDevelopment) {
                 const mockData = this.generateMockData();
-                const filtered = mockData.progressHistory.filter(p => 
-                    p.exerciseId === exerciseId && 
-                    p.date >= startDate && 
+                const filtered = mockData.progressHistory.filter(p =>
+                    p.exerciseId === exerciseId &&
+                    p.date >= startDate &&
                     p.date <= endDate
                 );
                 return {
@@ -96,13 +96,13 @@ class ProgressService {
                     data: filtered
                 };
             }
-            
+
             const params = new URLSearchParams({
                 exerciseId: exerciseId.toString(),
                 startDate,
                 endDate
             });
-            
+
             const response = await fetch(`${this.baseURL}/progress/exercise?${params}`, {
                 method: 'GET',
                 headers: {
@@ -110,11 +110,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
@@ -140,12 +140,12 @@ class ProgressService {
                     data: mockData.attendanceHistory.slice(0, limit)
                 };
             }
-            
-            const params = new URLSearchParams({ 
-                limit: limit.toString(), 
-                page: page.toString() 
+
+            const params = new URLSearchParams({
+                limit: limit.toString(),
+                page: page.toString()
             });
-            
+
             const response = await fetch(`${this.baseURL}/attendance/history/client?${params}`, {
                 method: 'GET',
                 headers: {
@@ -153,11 +153,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
@@ -183,7 +183,7 @@ class ProgressService {
                     data: mockData.membershipHistory
                 };
             }
-            
+
             const response = await fetch(`${this.baseURL}/memberships/history`, {
                 method: 'GET',
                 headers: {
@@ -191,11 +191,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
@@ -221,7 +221,7 @@ class ProgressService {
                     data: mockData.biometricData.personalInfo
                 };
             }
-            
+
             const response = await fetch(`${this.baseURL}/users/profile/data`, {
                 method: 'GET',
                 headers: {
@@ -229,11 +229,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
@@ -257,7 +257,7 @@ class ProgressService {
                     data: mockData.biometricData
                 };
             }
-            
+
             const response = await fetch(`${this.baseURL}/progress/biometric`, {
                 method: 'GET',
                 headers: {
@@ -265,11 +265,11 @@ class ProgressService {
                     'Authorization': `Bearer ${localStorage.getItem('token') || ''}`
                 }
             });
-            
+
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            
+
             const data = await response.json();
             return {
                 success: true,
